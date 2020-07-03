@@ -1,13 +1,15 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import PersonalBlog from './views/PersonalBlog.vue';
+import Dashboard from './views/Dashboard.vue';
 import UserProfileLite from './views/UserProfileLite.vue';
 import AddNewPost from './views/AddNewPost.vue';
 import Errors from './views/Errors.vue';
 import ComponentsOverview from './views/ComponentsOverview.vue';
 import Tables from './views/Tables.vue';
 import BlogPosts from './views/BlogPosts.vue';
+import Home from './views/Home.vue';
+import Login from './views/Login.vue';
 
 Vue.use(Router);
 
@@ -25,9 +27,19 @@ export default new Router({
       redirect: '/blog-overview',
     },
     {
-      path: '/blog-overview',
-      name: 'blog-overview',
-      component: PersonalBlog,
+      path: '/home',
+      name: 'home',
+      component: Home,
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login,
+    },
+    {
+      path: '/dashbaord',
+      name: 'dashboard',
+      component: Dashboard,
     },
     {
       path: '/user-profile-lite',
