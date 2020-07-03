@@ -2,14 +2,14 @@ import Vue from 'vue';
 import Router from 'vue-router';
 
 import Dashboard from './views/Dashboard.vue';
-import UserProfileLite from './views/UserProfileLite.vue';
 import AddNewPost from './views/AddNewPost.vue';
 import Errors from './views/Errors.vue';
-import ComponentsOverview from './views/ComponentsOverview.vue';
+import Budget from './views/budgets.vue';
 import Tables from './views/Tables.vue';
-import BlogPosts from './views/BlogPosts.vue';
+import Department from './views/Department.vue';
 import Home from './views/Home.vue';
 import Login from './views/Login.vue';
+
 
 Vue.use(Router);
 
@@ -24,7 +24,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/blog-overview',
+      redirect: '/dashboard',
     },
     {
       path: '/home',
@@ -37,14 +37,14 @@ export default new Router({
       component: Login,
     },
     {
-      path: '/dashbaord',
+      path: '/dashboard',
       name: 'dashboard',
       component: Dashboard,
     },
     {
-      path: '/user-profile-lite',
-      name: 'user-profile-lite',
-      component: UserProfileLite,
+      path: '/department',
+      name: 'department',
+      component: Department,
     },
     {
       path: '/add-new-post',
@@ -57,9 +57,9 @@ export default new Router({
       component: Errors,
     },
     {
-      path: '/components-overview',
-      name: 'components-overview',
-      component: ComponentsOverview,
+      path: '/budget',
+      name: 'budget',
+      component: Budget,
     },
     {
       path: '/tables',
@@ -67,10 +67,6 @@ export default new Router({
       component: Tables,
     },
     {
-      path: '/blog-posts',
-      name: 'blog-posts',
-      component: BlogPosts,
-    }, {
       path: '*',
       redirect: '/errors',
     },

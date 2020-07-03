@@ -1,46 +1,29 @@
 export default function () {
   return [{
-    title: 'Blog Dashboard',
+    title: 'Dashboard',
     to: {
-      name: 'blog-overview',
+      name: 'dashboard',
     },
     htmlBefore: '<i class="material-icons">edit</i>',
     htmlAfter: '',
   }, {
-    title: 'Blog Posts',
+    title: 'Department',
     htmlBefore: '<i class="material-icons">vertical_split</i>',
     to: {
-      name: 'blog-posts',
+      name: 'department',
     },
   }, {
-    title: 'Add New Post',
+    title: 'Budgets',
     htmlBefore: '<i class="material-icons">note_add</i>',
     to: {
-      name: 'add-new-post',
+      name: 'budget',
     },
-  }, {
-    title: 'Forms & Components',
-    htmlBefore: '<i class="material-icons">view_module</i>',
-    to: {
-      name: 'components-overview',
-    },
-  }, {
-    title: 'Tables',
-    htmlBefore: '<i class="material-icons">table_chart</i>',
-    to: {
-      name: 'tables',
-    },
-  }, {
-    title: 'User Profile',
+  },
+  {
+    title: 'Administration',
     htmlBefore: '<i class="material-icons">person</i>',
     to: {
       name: 'user-profile-lite',
-    },
-  }, {
-    title: 'Errors',
-    htmlBefore: '<i class="material-icons">error</i>',
-    to: {
-      name: 'errors',
     },
   }];
 }
