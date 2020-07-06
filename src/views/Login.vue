@@ -9,15 +9,16 @@
       <div class="main">
          <div class="col-md-8 col-sm-12">
             <div class="login-form">
-               <form>
+               <!-- <form> -->
+                   <span v-if="errors">{{errors.detail}}</span>
                   <div class="form-group">
-                     <input type="text" v-model="username" class="form-control" placeholder="User Name">
+                     <input v-bind:class="{'is-invalid': errors.response_code === '101' || errors.response_code === '103'}" type="email" v-model="email" class="form-control" placeholder="Email Address">
                   </div>
                   <div class="form-group">
-                     <input type="password" v-model="password" class="form-control" placeholder="Password">
+                     <input v-bind:class="{'is-invalid': errors.response_code === '102' || errors.response_code === '103'}" type="password" v-model="password" class="form-control" placeholder="Password">
                   </div>
-                  <button type="submit"  class="btn btn-black btn-block">Login</button>
-               </form>
+                  <button type="submit"  class="btn btn-black btn-block" @click="Signin()">Login</button>
+               <!-- </form> -->
             </div>
          </div>
       </div>
@@ -26,12 +27,40 @@
 
 <script>
 // @ is an alias to /src
-
+import axios from 'axios';
+import config from '@/config';
 
 export default {
   name: 'LOGIN',
   components: {
 
+  },
+  data() {
+    return {
+      email: '',
+      password: '',
+      errors: {},
+    };
+  },
+  methods: {
+    Signin() {
+      axios.post(`${config.apiUrl}/user/login/`, {
+        email: this.email,
+        password: this.password,
+      }).then((response) => {
+        const results = response.data;
+        console.log(response);
+        // localStorage.setItem('auth', response.data);
+        config.set_token(results.token.token);
+        config.set_auth(JSON.stringify(results));
+        config.set_user(JSON.stringify(results.user));
+        this.$root.auth = results;
+        this.$router.push('/home');
+      }).catch(({ response }) => {
+        // console.log(response);
+        this.errors = response.data;
+      });
+    },
   },
 };
 </script>

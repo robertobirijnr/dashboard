@@ -2,18 +2,18 @@ import Vue from 'vue';
 import Router from 'vue-router';
 
 import Dashboard from './views/Dashboard.vue';
-import AddNewPost from './views/AddNewPost.vue';
 import Errors from './views/Errors.vue';
 import Budget from './views/budgets.vue';
-import Tables from './views/Tables.vue';
+import BudgetPeriod from './views/BudgetPeriod.vue';
 import Department from './views/Department.vue';
 import Home from './views/Home.vue';
 import Login from './views/Login.vue';
+import AddNewBudget from './views/AddNewBudget.vue';
+import Details from './views/Details.vue';
 
 
 Vue.use(Router);
-
-export default new Router({
+const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   linkActiveClass: 'active',
@@ -24,12 +24,15 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/dashboard',
+      redirect: '/login',
     },
     {
       path: '/home',
       name: 'home',
       component: Home,
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path: '/login',
@@ -40,16 +43,17 @@ export default new Router({
       path: '/dashboard',
       name: 'dashboard',
       component: Dashboard,
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path: '/department',
       name: 'department',
       component: Department,
-    },
-    {
-      path: '/add-new-post',
-      name: 'add-new-post',
-      component: AddNewPost,
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path: '/errors',
@@ -60,11 +64,24 @@ export default new Router({
       path: '/budget',
       name: 'budget',
       component: Budget,
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
-      path: '/tables',
-      name: 'tables',
-      component: Tables,
+      path: '/budget-periods',
+      name: 'budget-periods',
+      component: BudgetPeriod,
+    },
+    {
+      path: '/period/:period_id',
+      name: 'period-details',
+      component: Details,
+    },
+    {
+      path: '/new-budget',
+      name: 'AddNewBudget',
+      component: AddNewBudget,
     },
     {
       path: '*',
@@ -72,3 +89,21 @@ export default new Router({
     },
   ],
 });
+router.beforeEach((to, from, next) => {
+  /* Both '/login' and '/login/' should share the same route name even if their path is different */
+  if (to.name === 'login') {
+    if (localStorage.getItem('auth')) {
+      next('/home');
+    }
+  }
+
+  // Redirect to login if the route requires auth and no token is set
+  if (to.meta.requiresAuth) {
+    if (!localStorage.getItem('auth')) {
+      next('/login');
+    }
+  }
+
+  next();
+});
+export default router;
