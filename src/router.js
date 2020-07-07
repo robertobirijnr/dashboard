@@ -10,6 +10,7 @@ import Home from './views/Home.vue';
 import Login from './views/Login.vue';
 import AddNewBudget from './views/AddNewBudget.vue';
 import Details from './views/Details.vue';
+import UnitBudgetDetails from './views/unitBudget.vue';
 
 
 Vue.use(Router);
@@ -51,6 +52,14 @@ const router = new Router({
       path: '/department',
       name: 'department',
       component: Department,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/unit/:unit_id',
+      name: 'unitBudget-details',
+      component: UnitBudgetDetails,
       meta: {
         requiresAuth: true,
       },

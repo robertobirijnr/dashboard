@@ -13,7 +13,10 @@
       <div class="col">
         <div class="card card-small mb-4">
           <div class="card-header border-bottom">
-            <router-link to="/new-budget" class="btn btn-primary">New Period</router-link>
+            <div v-if="userRole === 'BO'">
+              <router-link to="/new-budget" class="btn btn-primary">New Period</router-link>
+            </div>
+
           </div>
           <div class="card-body p-0 pb-3 text-center">
             <table class="table mb-0">
@@ -58,6 +61,11 @@ export default {
     return {
       object_list: {},
     };
+  },
+  computed: {
+    userRole() {
+      return this.$root.auth.user.user_role;
+    },
   },
   methods: {
     periods() {
