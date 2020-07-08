@@ -33,11 +33,12 @@
       </div>
       <div class="col-sm-6">
         <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">admin</h5>
+          <router-link to="/admin-dashboard" class="card-body card-link">
+            <center>
+              <h5 class="card-title">admin</h5>
             <p class="card-icon"><img src="@/assets/images/admi.png" width="100px" height="100px" alt=""></p>
-
-          </div>
+            </center>
+          </router-link>
        </div>
   </div>
 </div>

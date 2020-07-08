@@ -9,7 +9,8 @@ import '@/assets/scss/date-range.scss';
 
 // Core
 import App from './App.vue';
-import router from './router';
+import router from './router/router';
+import adminrouter from './router/admin-router';
 import axios from 'axios';
 
 // Layouts
@@ -27,6 +28,7 @@ const authData = localStorage.getItem("auth");
 
 new Vue({
   router,
+  adminrouter,
   data: {
     auth: authData ? JSON.parse(authData) : {}
   },

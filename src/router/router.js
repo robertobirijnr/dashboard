@@ -1,16 +1,22 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import Dashboard from './views/Dashboard.vue';
-import Errors from './views/Errors.vue';
-import Budget from './views/budgets.vue';
-import BudgetPeriod from './views/BudgetPeriod.vue';
-import Department from './views/Department.vue';
-import Home from './views/Home.vue';
-import Login from './views/Login.vue';
-import AddNewBudget from './views/AddNewBudget.vue';
-import Details from './views/Details.vue';
-import UnitBudgetDetails from './views/unitBudget.vue';
+import Dashboard from '../views/Dashboard.vue';
+import Errors from '../views/Errors.vue';
+import Budget from '../views/budgets.vue';
+import BudgetPeriod from '../views/BudgetPeriod.vue';
+import Department from '../views/Department.vue';
+import Home from '../views/Home.vue';
+import Login from '../views/Login.vue';
+import AddNewBudget from '../views/AddNewBudget.vue';
+import Details from '../views/Details.vue';
+import UnitBudgetDetails from '../views/unitBudget.vue';
+import Admin from '../views/Admin/Dashboard.vue';
+import Users from '../views/Admin/usersPage.vue';
+import CreateUser from '../views/Admin/createUsers.vue';
+import Departments from '../views/Admin/Departments.vue';
+import Unit from '../views/Admin/Unit.vue';
+import BudgetSettings from '../views/Admin/BudgetSettings.vue';
 
 
 Vue.use(Router);
@@ -78,6 +84,34 @@ const router = new Router({
       },
     },
     {
+      path: '/admin-dashboard',
+      name: 'admin-dashboard',
+      component: Admin,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/users',
+      name: 'users',
+      component: Users,
+    },
+    {
+      path: '/create-user',
+      name: 'create-user',
+      component: CreateUser,
+    },
+    {
+      path: '/departments',
+      name: 'departments',
+      component: Departments,
+    },
+    {
+      path: '/unit',
+      name: 'unit',
+      component: Unit,
+    },
+    {
       path: '/budget-periods',
       name: 'budget-periods',
       component: BudgetPeriod,
@@ -91,6 +125,11 @@ const router = new Router({
       path: '/new-budget',
       name: 'AddNewBudget',
       component: AddNewBudget,
+    },
+    {
+      path: '/budget-settings',
+      name: 'budget-settings',
+      component: BudgetSettings,
     },
     {
       path: '*',
