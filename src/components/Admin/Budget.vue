@@ -1,7 +1,21 @@
 /* eslint-disable comma-dangle */
 <template>
     <div>
-        <div class="row">
+      <div class="main-content-container container-fluid px-4">
+         <!-- Page Header -->
+      <d-row no-gutters class="page-header py-2 pb-4 mb-3 border-bottom">
+        <d-col col sm="4" class="text-center text-sm-left mb-4 mb-sm-0">
+          <span class="text-uppercase page-subtitle">Overview</span>
+          <h3 class="page-title">Set Budget</h3>
+        </d-col>
+      </d-row>
+      <d-col lg="8">
+ <d-card class="card-small  py-2 pb-4">
+   <d-card-header class="border-bottom">
+              <h6 class="m-0"></h6>
+            </d-card-header>
+      <center>
+        <div class="row mb-4">
             <div class="col-md-4">
                 <input type="text" v-model="name" placeholder="Add New Category" class="form-control">
             </div>
@@ -9,6 +23,8 @@
                 <button @click="newCat()" class="btn btn-sm btn-primary">Add New</button>
             </div>
         </div>
+      </center>
+
         <div class="row">
             <div class="col-md-3">
                 <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical"  :key="object.id" v-for="object in object_list">
@@ -43,6 +59,9 @@
                 </div>
             </div>
         </div>
+ </d-card>
+      </d-col>
+    </div>
     </div>
 </template>
 <script>

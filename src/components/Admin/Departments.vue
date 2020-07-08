@@ -1,6 +1,7 @@
 <template>
-    <div>
+    <div  class="main-content-container container-fluid px-4">
         <div class="col">
+          <div class="card card-small mb-4">
             <table class="table">
                 <thead>
                     <tr>
@@ -37,6 +38,7 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
         </div>
 
     </div>
