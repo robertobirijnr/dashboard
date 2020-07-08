@@ -47,7 +47,7 @@ const router = new Router({
       component: Login,
     },
     {
-      path: '/dashboard',
+      path: '/budget',
       name: 'dashboard',
       component: Dashboard,
       meta: {

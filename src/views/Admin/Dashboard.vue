@@ -12,8 +12,6 @@
         <!-- Content -->
 
 
-        <!-- Main Footer -->
-        <main-footer />
       </d-col>
 
     </d-row>
@@ -26,7 +24,6 @@ import getSidebarItems from '@/data/admin-sidebar-nav-items';
 // Main layout components
 import MainNavbar from '@/components/layout/MainNavbar/MainNavbar.vue';
 import MainSidebar from '@/components/layout/MainSidebar/MainSidebar.vue';
-import MainFooter from '@/components/layout/MainFooter/MainFooter.vue';
 
 
 export default {
@@ -34,7 +31,6 @@ export default {
   components: {
     MainNavbar,
     MainSidebar,
-    MainFooter,
 
 
   },
