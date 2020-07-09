@@ -19,7 +19,9 @@
 
           </div>
           <div class="card-body p-0 pb-3 text-center">
-            <table class="table mb-0">
+            <center v-if="loading">Loading...</center>
+            <div class="table-responsive" v-else>
+              <table class="table mb-0">
               <thead class="bg-light">
                 <tr>
                   <th scope="col" class="border-0">#</th>
@@ -45,6 +47,7 @@
                 </tr>
               </tbody>
             </table>
+            </div>           
           </div>
         </div>
       </div>
@@ -60,6 +63,7 @@ export default {
   data() {
     return {
       object_list: {},
+      loading: false,
     };
   },
   computed: {
@@ -69,12 +73,15 @@ export default {
   },
   methods: {
     periods() {
+      this.loading = true;
       axios.get(`${config.apiUrl}/budget/abp`, {
         headers: { Authorization: `JWT ${config.get_token()}` },
       }).then((response) => {
+        this.loading = false;
         console.log(response);
         this.object_list = response.data;
       }).catch(({ response }) => {
+        this.loading = false;
         console.log(response);
       });
     },

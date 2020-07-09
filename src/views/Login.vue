@@ -10,14 +10,15 @@
          <div class="col-md-8 col-sm-12">
             <div class="login-form">
                <!-- <form> -->
-                   <span v-if="errors">{{errors.detail}}</span>
+                   <span class="text-danger small" v-if="errors">{{errors.detail}}</span>
+                   <hr>
                   <div class="form-group">
                      <input v-bind:class="{'is-invalid': errors.response_code === '101' || errors.response_code === '103'}" type="email" v-model="email" class="form-control" placeholder="Email Address">
                   </div>
                   <div class="form-group">
                      <input v-bind:class="{'is-invalid': errors.response_code === '102' || errors.response_code === '103'}" type="password" v-model="password" class="form-control" placeholder="Password">
                   </div>
-                  <button type="submit"  class="btn btn-black btn-block" @click="Signin()">Login</button>
+                  <button type="submit" :disabled="loading" class="btn btn-black btn-block" @click="Signin()"><span v-if="!loading">Login</span> <span v-else>Loading...</span></button>
                <!-- </form> -->
             </div>
          </div>
@@ -35,19 +36,23 @@ export default {
   components: {
 
   },
+
   data() {
     return {
       email: '',
       password: '',
       errors: {},
+      loading: false,
     };
   },
   methods: {
     Signin() {
+      this.loading = true;
       axios.post(`${config.apiUrl}/user/login/`, {
         email: this.email,
         password: this.password,
       }).then((response) => {
+        this.loading = false;
         const results = response.data;
         console.log(response);
         // localStorage.setItem('auth', response.data);
@@ -57,6 +62,7 @@ export default {
         this.$root.auth = results;
         this.$router.push('/home');
       }).catch(({ response }) => {
+        this.loading = false;
         // console.log(response);
         this.errors = response.data;
       });

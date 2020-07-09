@@ -4,13 +4,15 @@
     <div class="page-header row no-gutters py-4">
       <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
         <span class="text-uppercase page-subtitle">Overview</span>
-        <h3 class="page-title">Departmentss</h3>
+        <h3 class="page-title">Departments</h3>
       </div>
     </div>
 
         <div class="col">
           <div class="card card-small mb-4">
-            <table class="table">
+            <center v-if="departmentsloading">Loading Departments...</center>
+            <div class="table-responsive" v-else>
+              <table class="table">
                 <thead>
                     <tr>
                         <th>Code</th>
@@ -21,6 +23,7 @@
                 </thead>
                 <tbody>
                     <tr>
+
                         <td>
                             <input type="text" v-model="code" placeholder="Enter New Code" class="form-control">
                         </td>
@@ -31,7 +34,7 @@
                             <input type="text" v-model="name" placeholder="Enter Department Name" class="form-control">
                         </td>
                         <td>
-                            <button @click="newDepart()" class="btn btn-sm btn-primary">Submit</button>
+                            <button :disabled="loading" @click="newDepart()" class="btn btn-sm btn-primary"><span v-if="loading">Saving...</span><span v-else>Submit</span></button>
                         </td>
                     </tr>
                     <tr :key="object.id" v-for="object in object_list">
@@ -46,6 +49,8 @@
                     </tr>
                 </tbody>
             </table>
+            </div>
+
         </div>
         </div>
 
@@ -63,41 +68,50 @@ export default {
       code: '',
       abbr: '',
       name: '',
+      departmentsloading: false,
+      loading: false,
     };
   },
   methods: {
     departments() {
+      this.departmentsloading = true;
       axios.get(`${config.apiUrl}/api/departments`, {
         headers: {
           Authorization: `JWT ${config.get_token()}`,
         },
       }).then((response) => {
+        this.departmentsloading = false;
         this.object_list = response.data;
       }).catch((response) => {
         console.log(response);
       });
     },
     newDepart() {
-      axios.post(
-        `${config.apiUrl}/api/nd/`, {
-          code: this.code,
-          abbr: this.abbr,
-          name: this.name,
-        },
-        {
-          headers: {
-            Authorization: `JWT ${config.get_token()}`,
+      if (this.code || this.abbr || this.name) {
+        this.loading = true;
+        axios.post(
+          `${config.apiUrl}/api/nd/`, {
+            code: this.code,
+            abbr: this.abbr,
+            name: this.name,
           },
-        },
-      ).then((response) => {
-        console.log(response);
-        this.code = '';
-        this.abbr = '';
-        this.name = '';
-        this.departments();
-      }).catch(({ response }) => {
-        console.log(response);
-      });
+          {
+            headers: {
+              Authorization: `JWT ${config.get_token()}`,
+            },
+          },
+        ).then((response) => {
+          this.loading = false;
+          console.log(response);
+          this.code = '';
+          this.abbr = '';
+          this.name = '';
+          this.departments();
+        }).catch(({ response }) => {
+          this.loading = false;
+          console.log(response);
+        });
+      }
     },
   },
   mounted() {

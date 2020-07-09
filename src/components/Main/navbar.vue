@@ -6,10 +6,10 @@
              <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link" href="#"><h4 class="page-title">Robert Obiri</h4></a>
+                <a class="nav-link" href="#"><h4 class="page-title">{{user.full_name}}</h4></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#"><span class="material-icons">
+                <a class="nav-link" @click="logout()"><span class="material-icons">
                   refresh
                   </span>logout</a>
             </li>
@@ -22,3 +22,24 @@
       </nav>
     </div>
 </template>
+<script>
+
+// import config from '@/config';
+
+export default {
+  computed: {
+    user() {
+      return this.$root.auth.user;
+    },
+  },
+  methods: {
+    logout() {
+      localStorage.removeItem('auth');
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      this.$router.push('/');
+    },
+  },
+
+};
+</script>

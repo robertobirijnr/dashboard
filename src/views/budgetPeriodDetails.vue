@@ -92,7 +92,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <span :key="item.id" v-for="item in unit_budget.items" style="margin-right:5px">
-                            <span class="badge badge-primary" :title="`${item.item.category_name}`" style="height: 20px; font-size:14px">{{item.item.item_name}} ({{item.quantity}}) <span class="fa fa-times small" @click="remove_budget_item(unit_budget.id, item.item.id)" ></span></span>
+                            <span class="badge badge-primary" :title="`${item.item.category_name}`" >{{item.item.item_name}} ({{item.quantity}}) <span class="material-icons small" @click="remove_budget_item(unit_budget.id, item.item.id)" >clear</span></span>
                         </span>
                     </div>
                 </div>
@@ -122,7 +122,7 @@
                             <input type="number" name="quantity" v-model="quantity" id="" class="form-control">
                         </div>
                         <div class="form-group">
-                            <button @click="`${new_budget_item(unit_budget.id)}`" type="submit" class="btn btn-sm btn-block btn-info">Submit</button>
+                            <button :disabled="formLoading" @click="`${new_budget_item(unit_budget.id)}`" type="submit" class="btn btn-sm btn-block btn-info"><span v-if="formLoading">Saving...</span><span v-else>Submit</span></button>
                         </div>
                     </div>
                 </div>
@@ -150,7 +150,7 @@
                     <input type="number" name="quantity" v-model="quantity" id="" class="form-control">
                 </div>
                 <div class="form-group">
-                    <button @click="`${new_budget()}`" type="submit" class="btn btn-sm btn-block btn-info">Submit</button>
+                    <button :disabled="formLoading" @click="`${new_budget()}`" type="submit" class="btn btn-sm btn-block btn-info"><span v-if=formLoading>Saving...</span><span v-else>Submit</span></button>
                 </div>
             </div>
         </div>
@@ -197,6 +197,8 @@ export default {
       item: '',
       category: '',
       errors: {},
+      formLoading: false,
+      loading: false,
     };
   },
   computed: {
@@ -258,42 +260,55 @@ export default {
     },
     new_budget() {
       const id = this.$route.params.period_id;
-      axios.post(`${config.apiUrl}/budget/nub/`, {
-        category: this.category,
-        item: this.item,
-        quantity: this.quantity,
-        budget_period: id,
-      }, {
-        headers: { Authorization: `JWT ${config.get_token()}` },
-      }).then((response) => {
-        console.log(response.data);
-        this.quantity = '';
-        this.category = '';
-        this.item = '';
-        this.this_unit_budget();
-      }).catch(({ response }) => {
-        this.errors = response.data;
-        console.log(response.data);
-      });
-    },
-    new_budget_item(ubid) {
-      console.log(ubid);
-      axios.post(
-        `${config.apiUrl}/budget/nubi/`, {
-          ub_id: ubid,
+      if (id && this.item && this.quantity && this.category) {
+        this.formLoading = true;
+        axios.post(`${config.apiUrl}/budget/nub/`, {
+          category: this.category,
           item: this.item,
           quantity: this.quantity,
-        },
-        {
+          budget_period: id,
+        }, {
           headers: { Authorization: `JWT ${config.get_token()}` },
-        },
-      ).then((response) => {
-        console.log(response.data);
-        this.this_unit_budget();
-      }).catch(({ response }) => {
-        this.errors = response.data;
-        console.log(response.data);
-      });
+        }).then((response) => {
+          this.formLoading = false;
+          console.log(response.data);
+          this.quantity = '';
+          this.category = '';
+          this.item = '';
+          this.this_unit_budget();
+        }).catch(({ response }) => {
+          this.formLoading = false;
+          this.errors = response.data;
+          console.log(response.data);
+        });
+      }
+    },
+    new_budget_item(ubid) {
+      // console.log(ubid);
+      if (ubid && this.item && this.quantity) {
+        this.formLoading = true;
+        axios.post(
+          `${config.apiUrl}/budget/nubi/`, {
+            ub_id: ubid,
+            item: this.item,
+            quantity: this.quantity,
+          },
+          {
+            headers: { Authorization: `JWT ${config.get_token()}` },
+          },
+        ).then((response) => {
+          this.formLoading = false;
+          console.log(response.data);
+          this.quantity = '';
+          this.category = '';
+          this.item = '';
+          this.this_unit_budget();
+        }).catch(({ response }) => {
+          this.formLoading = false;
+          this.errors = response.data;
+          console.log(response.data);
+        });
+      }
     },
     remove_budget_item(ubid, item) {
       axios.post(`${config.apiUrl}/budget/rubi/${ubid}/${item}/`, {}, {

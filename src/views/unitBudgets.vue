@@ -16,7 +16,9 @@
             <!-- <button class="btn btn-success" float-right>New Period</button> -->
           </div>
           <div class="card-body p-0 pb-3 text-center">
-            <table class="table mb-0">
+            <center v-if="loading">Loading...</center>
+            <div class="table-responsive" v-else>
+              <table class="table mb-0">
               <thead class="bg-light">
                 <tr>
                   <th scope="col" class="border-0">Unit</th>
@@ -38,6 +40,8 @@
                 </tr>
               </tbody>
             </table>
+            </div>
+
           </div>
         </div>
       </div>
@@ -53,17 +57,21 @@ export default {
   data() {
     return {
       object_list: {},
+      loading: false,
     };
   },
   methods: {
     budgets() {
+      this.loading = true;
       axios.get(`${config.apiUrl}/budget/aub/`, {
         headers: {
           Authorization: `JWT ${config.get_token()}`,
         },
       }).then((response) => {
+        this.loading = false;
         this.object_list = response.data;
       }).catch((response) => {
+        this.loading = false;
         console.log(response.data);
       });
     },

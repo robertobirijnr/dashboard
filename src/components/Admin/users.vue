@@ -4,7 +4,7 @@
     <div class="page-header row no-gutters py-4">
       <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
         <span class="text-uppercase page-subtitle">Overview</span>
-        <h3 class="page-title">Data Tables</h3>
+        <h3 class="page-title">Users</h3>
       </div>
     </div>
 
@@ -13,30 +13,35 @@
       <div class="col">
         <div class="card card-small mb-4">
           <div class="card-header border-bottom">
-            <router-link to="/create-user" class="btn btn-success">Create User</router-link>
+            <router-link to="/create-user" class="btn btn-primary">Create User</router-link>
           </div>
           <div class="card-body p-0 pb-3 text-center">
-            <table class="table mb-0">
-              <thead class="bg-light">
-                <tr>
-                  <th scope="col" class="border-0">#</th>
-                  <th scope="col" class="border-0">First Name</th>
-                  <th scope="col" class="border-0">Last Name</th>
-                  <th scope="col" class="border-0">Email</th>
-                  <th scope="col" class="border-0">User Role</th>
-                  <th scope="col" class="border-0"></th>
-                </tr>
-              </thead>
-              <tbody :key="object.id" v-for="object in object_list">
-                <tr>
-                  <td>{{object.id}}</td>
-                  <td>{{object.first_name}}</td>
-                  <td>{{object.last_name}}</td>
-                  <td>{{object.email}}</td>
-                  <td>{{object.user_type_display}}</td>
-                </tr>
-              </tbody>
-            </table>
+            <div v-if="loading">
+              Loading...
+            </div>
+            <div class="table-responsive" v-else>
+              <table class="table mb-0">
+                <thead class="bg-light">
+                  <tr>
+                    <th scope="col" class="border-0">#</th>
+                    <th scope="col" class="border-0">First Name</th>
+                    <th scope="col" class="border-0">Last Name</th>
+                    <th scope="col" class="border-0">Email</th>
+                    <th scope="col" class="border-0">User Role</th>
+                    <th scope="col" class="border-0"></th>
+                  </tr>
+                </thead>
+                <tbody :key="object.id" v-for="object in object_list">
+                  <tr>
+                    <td>{{object.id}}</td>
+                    <td>{{object.first_name}}</td>
+                    <td>{{object.last_name}}</td>
+                    <td>{{object.email}}</td>
+                    <td>{{object.user_type_display}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -51,17 +56,21 @@ export default {
   data() {
     return {
       object_list: {},
+      loading: false,
     };
   },
   methods: {
     users() {
+      this.loading = true;
       axios.get(`${config.apiUrl}/user/list/`, {
         headers: {
           Authorization: `JWT ${config.get_token()}`,
         },
       }).then((response) => {
+        this.loading = false;
         this.object_list = response.data;
       }).catch((response) => {
+        this.loading = false;
         console.log(response);
       });
     },

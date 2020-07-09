@@ -1,7 +1,16 @@
 <template>
-    <div>
+    <div class="container container-fluid">
+      <d-row no-gutters class="page-header py-2 pb-4 mb-3 border-bottom">
+        <d-col col sm="4" class="text-center text-sm-left mb-4 mb-sm-0">
+          <span class="text-uppercase page-subtitle">Overview</span>
+          <h3 class="page-title">Units</h3>
+        </d-col>
+      </d-row>
         <div class="col">
-            <table class="table">
+          <div class="card card-small mb-4">
+            <center v-if="unitloading">loading units...</center>
+            <div class="table-responsive" v-else>
+              <table class="table">
                 <thead>
                     <tr>
                         <th>Code</th>
@@ -29,7 +38,7 @@
                             </select>
                         </td>
                         <td>
-                            <button @click="newUnit()" class="btn btn-sm btn-primary">Submit</button>
+                            <button :disabled="loading" @click="newUnit()" class="btn btn-sm btn-primary"> <span v-if="loading">saving...</span><span v-else>Submit</span> </button>
                         </td>
                     </tr>
                     <tr :key="object.id" v-for="object in object_list">
@@ -45,6 +54,10 @@
                     </tr>
                 </tbody>
             </table>
+            </div>
+
+          </div>
+
         </div>
 
     </div>
@@ -62,15 +75,18 @@ export default {
       depart: '',
       departs: {},
       abbr: '',
+      unitloading: false,
     };
   },
   methods: {
     units() {
+      this.unitloading = true;
       axios.get(`${config.apiUrl}/api/units/`, {
         headers: {
           Authorization: `JWT ${config.get_token()}`,
         },
       }).then((response) => {
+        this.unitloading = false;
         this.object_list = response.data;
       }).catch(({ response }) => {
         console.log(response);

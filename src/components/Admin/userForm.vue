@@ -6,18 +6,18 @@
       <d-row no-gutters class="page-header py-2 pb-4 mb-3 border-bottom">
         <d-col col sm="4" class="text-center text-sm-left mb-4 mb-sm-0">
           <span class="text-uppercase page-subtitle">Overview</span>
-          <h3 class="page-title">Components</h3>
+          <h3 class="page-title">New User</h3>
         </d-col>
       </d-row>
 
       <d-row >
-<d-col lg="8">
+        <d-col lg="8">
 
           <d-card class="card-small">
 
             <!-- Form Example -->
             <d-card-header class="border-bottom">
-              <h6 class="m-0">Form Example</h6>
+              <h6 class="m-0">Add User</h6>
             </d-card-header>
 
             <d-list-group flush>
@@ -87,7 +87,7 @@
                         <span class="small text-danger" v-if="msg">{{msg}}</span>
                       </div>
 
-                      <button @click="newUser()" class="btn btn-sm btn-primary" type="submit">Submit</button>
+                      <button @click="newUser()" :disabled="formloading" class="btn btn-sm btn-primary" type="submit"><span v-if="formloading">Loading..</span> <span v-else>Submit</span> </button>
 
                   </d-col>
                 </d-row>
@@ -121,6 +121,7 @@ export default {
       departs: {},
       units: {},
       errors: {},
+      formloading: false,
     };
   },
   methods: {
@@ -134,6 +135,7 @@ export default {
     },
     newUser() {
       if (this.validPassword()) {
+        this.formloading = true;
         axios.post(
           `${config.apiUrl}/user/new/`, {
             first_name: this.first_name,
@@ -150,9 +152,11 @@ export default {
             },
           },
         ).then((response) => {
+          this.formloading = false;
           console.log(response);
           this.$router.push('/users');
         }).catch(({ response }) => {
+          this.formloading = false;
           console.log(response);
           this.errors = response.data;
         });
