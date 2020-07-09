@@ -19,7 +19,7 @@ export default function () {
       },
     },
     {
-      title: 'Units Bugest',
+      title: 'Units Budget',
       htmlBefore: '<i class="material-icons">note_add</i>',
       to: {
         name: 'budget',
