@@ -11,7 +11,7 @@
       </d-row>
 
       <d-row >
-<d-col lg="8">
+     <d-col lg="8">
 
           <d-card class="card-small">
 
@@ -48,7 +48,8 @@
                         <label for="feInputAddress2">Half</label>
                         <d-select id="feInputState" v-model="half" :disabled="period != 'Half Year'">
                             <option>Choose...</option>
-                            <option>...</option>
+                            <option value="First Half">First Half</option>
+                            <option value="Second Half">Second Half</option>
                           </d-select>
                       </div>
                       <div class="form-group">
