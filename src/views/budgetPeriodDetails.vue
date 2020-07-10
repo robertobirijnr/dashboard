@@ -62,7 +62,7 @@
           <div class="card-body">
             <div v-if="object.unit_budgets">
               <div class="list-group-flush" :key="unit.id" v-for="unit in object.unit_budgets">
-                <router-link to="" class="list-group-item bg-white text-black list-group-item-action flex-column align-items-start">
+                <router-link :to="{name: 'unitBudget-details', params: {unit_id: unit.unit_budget_id}}" class="list-group-item bg-white text-black list-group-item-action flex-column align-items-start">
                   <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">{{unit.unit_name}}</h5>
                     <!-- <small class="text-muted">3 days ago</small> -->
