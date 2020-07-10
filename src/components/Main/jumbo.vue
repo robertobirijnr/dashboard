@@ -1,8 +1,8 @@
 <template>
      <div style="background:#002C59!important" class="jumbotron">
     <center>
-       <h1 style="color:#fff">Welcome!</h1>
-    <h2 style="color:#fff">We're an awesome company that creates virtual things for portable devices.</h2>
+       <h2 style="color:#fff">Welcome to Ghana Revenue Authority Portal</h2>
+    <h3 style="color:#fff"><i>Integrity, Fairness And Service</i></h3>
     </center>
    </div>
 </template>
