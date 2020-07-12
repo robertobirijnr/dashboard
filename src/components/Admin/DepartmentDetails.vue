@@ -1,0 +1,210 @@
+<template>
+  <div>
+    <d-container fluid class="main-content-container px-4">
+
+      <!-- Page Header -->
+      <d-row no-gutters class="page-header py-2 pb-4 mb-3 border-bottom">
+        <d-col col sm="4" class="text-center text-sm-left mb-4 mb-sm-0">
+          <span class="text-uppercase page-subtitle">Overview</span>
+          <h3 class="page-title">{{object.name}} Details</h3>
+        </d-col>
+      </d-row>
+
+      <div class="row">
+          <div class="col-md-12">
+              <div class="card">
+                  <div class="card-header">
+                      <div class="row">
+                          <div class="col">
+                             <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#deletDepart">
+                          Delete
+                      </button>
+                          </div>
+                          <div class="col" align="right">
+                              <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#newUnit">
+                          New Unit
+                      </button>
+                          </div>
+                          <div class="modal fade" id="deletDepart" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    ...
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="newUnit" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">New Unit</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <input type="text" v-model="code" placeholder="Enter unit code" class="form-control" />
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" v-model="abbr" placeholder="Enter unit abbreviation" class="form-control" />
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" v-model="name" placeholder="Enter unit name" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" @click="newUnit(object.id)" :disabled="loading" class="btn btn-primary">Submit</button>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+
+                  </div>
+              <div class="card-body">
+                  <div class="row">
+                      <div class="col-md-4" style="border-right: 2px solid gray">
+                          <div class="list-group-flush">
+                              <div class="list-group-item">
+                                  <label for="id_code">Code</label>
+                                  <input type="text" :value="object.depart_id" disabled class="form-control" id="id_code">
+                                  <!-- {{object.depart_id}} -->
+                            </div>
+                              <div class="list-group-item">
+                                  <label for="id_abbr">Abbreviation</label>
+                                  <input type="text" :value="object.abbreviation" class="form-control" id="id_abbr">
+                                  <!-- {{object.abbreviation}} -->
+                                </div>
+                              <div class="list-group-item">
+                                  <label for="id_name">Name</label>
+                                  <input type="text" :value="object.name" class="form-control" id="id_name">
+                                  <!-- {{object.name}} -->
+                                </div>
+                                <div class="list-group-item">
+                                    <button @click="editDepart(object.id)" :disabled='loading' class="btn btn-primary btn-sm">Save</button>
+                                </div>
+                          </div>
+                      </div>
+                      <div class="col-md-8">
+                          <div class="list-group-flush" :key="unit.id" v-for="unit in units">
+                              <div class="list-group-item">
+                                  <dir class="row">
+                                      <div class="col-sm-8">
+                                          <div>{{unit.unit_name}}</div>
+                                          <small>{{unit.abbreviation}} | {{unit.unit_id}}</small>
+                                      </div>
+                                      <div class="col-sm-4" align="center">
+                                          <button class="btn btn-primary btn-sm mr-2">
+                                              <i class="fa fa-pencil"></i>
+                                          </button>
+                                          <button class="btn btn-primary btn-sm">
+                                              <i class="fa fa-times"></i>
+                                          </button>
+                                      </div>
+                                  </dir>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          </div>
+
+      </div>
+
+
+    </d-container>
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+import config from '@/config';
+
+export default {
+  data() {
+    return {
+      object: {},
+      units: {},
+      name: '',
+      abbr: '',
+      code: '',
+      loading: false,
+    };
+  },
+  methods: {
+    details() {
+      const id = this.$route.params.depart_id;
+      axios.get(`${config.apiUrl}/api/du/${id}`, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+      }).then((res) => {
+        const results = res.data;
+        this.object = results.department;
+        this.units = results.units;
+      }).catch((res) => {
+        console.log(res);
+      });
+    },
+    editDepart(id) {
+      const name = document.getElementById('id_name').value;
+      const abbr = document.getElementById('id_abbr').value;
+      this.loading = true;
+      axios.post(`${config.apiUrl}/api/ed/${id}/`, {
+        name,
+        abbr,
+      }, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+      }).then((res) => {
+        this.loading = false;
+        console.log(res);
+        this.details();
+      }).catch((res) => {
+        console.log(res);
+        this.loading = false;
+      });
+    },
+    newUnit(id) {
+      if (this.code && this.name && this.abbr) {
+        this.$loading = true;
+        axios.post(`${config.apiUrl}/api/nu/${id}/`, {
+          code: this.code,
+          unit_name: this.name,
+          abbr: this.abbr,
+        }, {
+          headers: {
+            Authorization: `JWT ${config.get_token()}`,
+          },
+        }).then((res) => {
+          this.loading = false;
+          console.log(res);
+          this.details();
+          $('#newUnit').modal('hide');
+        }).catch((res) => {
+          this.loading = false;
+          console.log(res);
+        });
+      }
+    },
+  },
+  mounted() {
+    this.details();
+  },
+};
+</script>

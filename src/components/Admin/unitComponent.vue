@@ -47,9 +47,9 @@
                         <td>{{object.unit_name}}</td>
                         <td>{{object.department_name}}</td>
                         <td>
-                            <router-link to="" class="btn btn-sm btn-primary">
+                            <!-- <router-link :to="/unit-detail/{{unit_id}}" class="btn btn-sm btn-primary">
                                 Details
-                            </router-link>
+                            </router-link> -->
                         </td>
                     </tr>
                 </tbody>

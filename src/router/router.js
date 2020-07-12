@@ -17,6 +17,9 @@ import CreateUser from '../views/Admin/createUsers.vue';
 import Departments from '../views/Admin/Departments.vue';
 import Unit from '../views/Admin/Unit.vue';
 import BudgetSettings from '../views/Admin/BudgetSettings.vue';
+import UpdateUser from '../views/Admin/userUpdate.vue';
+import DepartmentDetails from '../views/Admin/DepartmentDetail.vue';
+import UnitDetails from '../views/Admin/unitDetailPage.vue';
 
 
 Vue.use(Router);
@@ -95,16 +98,33 @@ const router = new Router({
       path: '/users',
       name: 'users',
       component: Users,
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path: '/create-user',
       name: 'create-user',
       component: CreateUser,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/update-user',
+      name: 'update-user',
+      component: UpdateUser,
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path: '/departments',
       name: 'departments',
       component: Departments,
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path: '/unit',
@@ -115,21 +135,49 @@ const router = new Router({
       path: '/budget-periods',
       name: 'budget-periods',
       component: BudgetPeriod,
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path: '/period/:period_id',
       name: 'period-details',
       component: Details,
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path: '/new-budget',
       name: 'AddNewBudget',
       component: AddNewBudget,
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path: '/budget-settings',
       name: 'budget-settings',
       component: BudgetSettings,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/department-detail/:depart_id',
+      name: 'department-detail',
+      component: DepartmentDetails,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/unit-detail/unit_id',
+      name: 'unit-detail',
+      component: UnitDetails,
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path: '*',

@@ -13,7 +13,7 @@
       <div class="col">
         <div class="card card-small mb-4">
           <div class="card-header border-bottom">
-            <router-link to="/create-user" class="btn btn-primary">Create User</router-link>
+            <router-link to="/create-user" class="btn btn-primary">Create New User</router-link>
           </div>
           <div class="card-body p-0 pb-3 text-center">
             <div v-if="loading">
@@ -38,6 +38,7 @@
                     <td>{{object.last_name}}</td>
                     <td>{{object.email}}</td>
                     <td>{{object.user_type_display}}</td>
+                    <td><button class="btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button></td>
                   </tr>
                 </tbody>
               </table>

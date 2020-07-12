@@ -42,7 +42,7 @@
                         <td>{{object.abbreviation}}</td>
                         <td>{{object.name}}</td>
                         <td>
-                            <router-link to="" class="btn btn-sm btn-primary">
+                            <router-link :to="`/department-detail/${object.depart_id}`" class="btn btn-sm btn-primary">
                                 Details
                             </router-link>
                         </td>
