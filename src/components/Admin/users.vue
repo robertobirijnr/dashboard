@@ -28,6 +28,7 @@
                     <th scope="col" class="border-0">Last Name</th>
                     <th scope="col" class="border-0">Email</th>
                     <th scope="col" class="border-0">User Role</th>
+                    <th scope="col" class="border-0">Status</th>
                     <th scope="col" class="border-0"></th>
                   </tr>
                 </thead>
@@ -38,7 +39,13 @@
                     <td>{{object.last_name}}</td>
                     <td>{{object.email}}</td>
                     <td>{{object.user_type_display}}</td>
-                    <td><button class="btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button></td>
+                    <td>
+                      <span v-if="object.is_active">Active</span>
+                      <span v-else>Disabled</span>
+                    </td>
+                    <td>
+                      <router-link :to="`/update-user/${object.id}`" class="btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></router-link>
+                    </td>
                   </tr>
                 </tbody>
               </table>

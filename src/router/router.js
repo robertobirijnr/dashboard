@@ -111,7 +111,7 @@ const router = new Router({
       },
     },
     {
-      path: '/update-user',
+      path: '/update-user/:userId',
       name: 'update-user',
       component: UpdateUser,
       meta: {

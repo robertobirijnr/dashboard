@@ -10,8 +10,9 @@
 
         <div class="col">
           <div class="card card-small mb-4">
-            <center v-if="departmentsloading">Loading Departments...</center>
-            <div class="table-responsive" v-else>
+            <center class="card-body" v-if="departmentsloading">Loading Departments...</center>
+            <div class="card-body" v-else>
+              <div class="table-responsive" >
               <table class="table">
                 <thead>
                     <tr>
@@ -49,6 +50,8 @@
                     </tr>
                 </tbody>
             </table>
+            </div>
+
             </div>
 
         </div>

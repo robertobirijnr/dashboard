@@ -29,17 +29,17 @@
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Delete {{object.name}}?</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    ...
+                                    Are you sure you want to delete this department? This action is not reversible. All units under this department will be without a department after deletion.
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                    <button type="button" :disabled="loading" @click="delDepart(object.id)" class="btn btn-primary">Delete</button>
                                 </div>
                                 </div>
                             </div>
@@ -71,6 +71,7 @@
                                 </div>
                             </div>
                         </div>
+                        
                       </div>
 
                   </div>
@@ -107,13 +108,32 @@
                                           <small>{{unit.abbreviation}} | {{unit.unit_id}}</small>
                                       </div>
                                       <div class="col-sm-4" align="center">
-                                          <button class="btn btn-primary btn-sm mr-2">
+                                          <!-- <button class="btn btn-primary btn-sm mr-2">
                                               <i class="fa fa-pencil"></i>
-                                          </button>
-                                          <button class="btn btn-primary btn-sm">
+                                          </button> -->
+                                          <button class="btn btn-primary btn-sm" data-toggle="modal" :data-target="`#delUnit${unit.id}`">
                                               <i class="fa fa-times"></i>
                                           </button>
                                       </div>
+                                      <div class="modal fade" :id="`delUnit${unit.id}`" tabindex="-1" role="dialog" :aria-labelledby="`delUnitLabel${unit.id}`" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" :id="`delUnitLabel${unit.id}`">Delete {{unit.unit_name}}?</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Are you sure you want to delete this unit? This action is not reversible.
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <button type="button"  :diabled="loading" @click="delUnit(unit.id)" class="btn btn-primary">Delete</button>
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                   </dir>
                               </div>
                           </div>
@@ -182,7 +202,7 @@ export default {
     },
     newUnit(id) {
       if (this.code && this.name && this.abbr) {
-        this.$loading = true;
+        this.loading = true;
         axios.post(`${config.apiUrl}/api/nu/${id}/`, {
           code: this.code,
           unit_name: this.name,
@@ -192,15 +212,51 @@ export default {
             Authorization: `JWT ${config.get_token()}`,
           },
         }).then((res) => {
+          this.name = '';
+          this.abbr = '';
+          this.code = '';
+          $('#newUnit').modal('hide');
           this.loading = false;
           console.log(res);
           this.details();
-          $('#newUnit').modal('hide');
         }).catch((res) => {
           this.loading = false;
           console.log(res);
         });
       }
+    },
+    delUnit(id) {
+      this.loading = true;
+      axios.post(`${config.apiUrl}/api/dlu/${id}/`, {}, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+      }).then((res) => {
+        this.loading = false;
+        $(`#delUnit${id}`).modal('hide');
+        this.details();
+        console.log(res);
+      }).catch((res) => {
+        this.loading = false;
+        console.log(res);
+      });
+    },
+    delDepart(id) {
+      this.loading = true;
+      axios.post(`${config.apiUrl}/api/dd/${id}/`, {}, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+
+      }).then((res) => {
+        this.loading = false;
+        $('#deletDepart').modal('hide');
+        console.log(res);
+        this.$router.push('/departments');
+      }).catch((res) => {
+        console.log(res);
+        this.loading = false;
+      });
     },
   },
   mounted() {
@@ -208,3 +264,9 @@ export default {
   },
 };
 </script>
+<style scoped>
+.modal{
+   overflow: visible !important;
+}
+.list-group-item, .list-group-item:hover{ z-index: auto; }
+</style>

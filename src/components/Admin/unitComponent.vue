@@ -47,9 +47,26 @@
                         <td>{{object.unit_name}}</td>
                         <td>{{object.department_name}}</td>
                         <td>
-                            <!-- <router-link :to="/unit-detail/{{unit_id}}" class="btn btn-sm btn-primary">
-                                Details
-                            </router-link> -->
+                           <button class="btn btn-sm btn-primary" data-toggle="modal" :data-target="`#delUnit${object.id}`"><i class="fa fa-times"></i></button>
+                           <div class="modal fade" :id="`delUnit${object.id}`" tabindex="-1" role="dialog" :aria-labelledby="`delUnitLabel${object.id}`" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" :id="`delUnitLabel${object.id}`">Delete {{object.unit_name}}?</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Are you sure you want to delete this unit? This action is not reversible.
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <button type="button"  :diabled="loading" @click="delUnit(object.id)" class="btn btn-primary">Delete</button>
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
                         </td>
                     </tr>
                 </tbody>
@@ -117,6 +134,22 @@ export default {
         this.departs = response.data;
       }).catch(({ response }) => {
         console.log(response);
+      });
+    },
+    delUnit(id) {
+      this.loading = true;
+      axios.post(`${config.apiUrl}/api/dlu/${id}/`, {}, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+      }).then((res) => {
+        this.loading = false;
+        $(`#delUnit${id}`).modal('hide');
+        this.units();
+        console.log(res);
+      }).catch((res) => {
+        this.loading = false;
+        console.log(res);
       });
     },
   },

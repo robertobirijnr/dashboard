@@ -30,7 +30,7 @@
                       <div class="col">{{object.name}}</div>
                        <div class="col" align="right">
 
-                          <button type="button" class="btn btn-danger" data-toggle="modal" :data-target="`#category${object.id}`">
+                          <button type="button" class="btn btn-info" data-toggle="modal" :data-target="`#category${object.id}`">
                             <i class="fa fa-close" style="color:medium slate blue"></i>
                           </button>
                          </div>
@@ -94,7 +94,7 @@
                             <div class="col">{{item.item_name}}</div>
                             <div class="col" align="right">
                               <!-- <DeleteItem /> -->
-                              <button class='btn btn-sm btn-warning'  data-toggle="modal" :data-target="`#item${item.id}`">
+                              <button class='btn btn-sm btn-primary'  data-toggle="modal" :data-target="`#item${item.id}`">
                                 <i class="fa fa-close" style="color:purple"></i>
                               </button>
                             </div>

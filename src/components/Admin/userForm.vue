@@ -175,16 +175,18 @@ export default {
     },
     unit_list(value) {
       // console.log(sel.value);
-      axios.get(`${config.apiUrl}/api/du/${value}`, {
-        headers: {
-          Authorization: `JWT ${config.get_token()}`,
-        },
-      }).then((response) => {
-        this.units = response.data;
-        console.log(response.data);
-      }).catch((response) => {
-        console.log(response);
-      });
+      if (value) {
+        axios.get(`${config.apiUrl}/api/dul/${value}`, {
+          headers: {
+            Authorization: `JWT ${config.get_token()}`,
+          },
+        }).then((response) => {
+          this.units = response.data;
+          console.log(response.data);
+        }).catch((response) => {
+          console.log(response);
+        });
+      }
     },
   },
   watch: {
@@ -199,7 +201,7 @@ export default {
   },
   mounted() {
     this.departments();
-    this.unit_list();
+    // this.unit_list();
   },
 };
 </script>
