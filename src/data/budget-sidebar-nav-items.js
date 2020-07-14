@@ -35,10 +35,10 @@ export default function () {
     htmlBefore: '<i class="material-icons">edit</i>',
     htmlAfter: '',
   }, {
-    title: 'Budget Priod',
+    title: 'Budget Periods',
     htmlBefore: '<i class="material-icons">vertical_split</i>',
     to: {
-      name: 'department',
+      name: 'budget-periods',
     },
   },
   ];
