@@ -7,7 +7,7 @@ export default function () {
     return [{
       title: 'Dashboard',
       to: {
-        name: 'admin-dashboard',
+        name: 'budget-dashboard',
       },
       htmlBefore: '<i class="material-icons">edit</i>',
       htmlAfter: '',
@@ -15,14 +15,14 @@ export default function () {
       title: 'Budget Period',
       htmlBefore: '<i class="material-icons">vertical_split</i>',
       to: {
-        name: 'department',
+        name: 'budget-periods',
       },
     },
     {
-      title: 'Units Budget',
+      title: 'Units Budgets',
       htmlBefore: '<i class="material-icons">note_add</i>',
       to: {
-        name: 'budget',
+        name: 'unit-budgets',
       },
     },
     ];

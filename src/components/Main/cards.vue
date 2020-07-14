@@ -15,7 +15,7 @@
                     <div class="card-body">
                         <h4 class="card-title text-white">BUDGET APP</h4>
                         <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                        <span  v-if="user !== 'AD'"><router-link to="/budget" class="btn btn-info">Go!</router-link></span>
+                        <span  v-if="user !== 'AD'"><router-link to="/budget-dashboard" class="btn btn-info">Go!</router-link></span>
                     </div>
                 </div>
             </div>
@@ -25,7 +25,7 @@
                     <div class="card-body">
                          <h4 class="card-title text-white">ADMINISTRATOR</h4>
                         <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                        <span v-if="user === 'AD'"><router-link to="/dashboard" class="btn btn-info">Go!</router-link></span>
+                        <span v-if="user === 'AD'"><router-link to="/admin-dashboard" class="btn btn-info">Go!</router-link></span>
                     </div>
                 </div>
             </div>

@@ -95,7 +95,7 @@
                             <div class="col" align="right">
                               <!-- <DeleteItem /> -->
                               <button class='btn btn-sm btn-primary'  data-toggle="modal" :data-target="`#item${item.id}`">
-                                <i class="fa fa-close" style="color:purple"></i>
+                                <i class="fa fa-close" style="color:white"></i>
                               </button>
                             </div>
                             <div class="modal fade" :id="`item${item.id}`" tabindex="-1" role="dialog" aria-labelledby="itemlabel${item.id}" aria-hidden="true">

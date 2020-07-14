@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import getSidebarItems from '@/data/sidebar-nav-items';
+import getSidebarItems from '@/data/budget-sidebar-nav-items';
 
 // Main layout components
 import MainNavbar from '@/components/layout/MainNavbar/MainNavbar.vue';

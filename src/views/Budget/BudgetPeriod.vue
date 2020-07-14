@@ -14,7 +14,7 @@
         <div class="card card-small mb-4">
           <div class="card-header border-bottom">
             <div v-if="userRole === 'BO'">
-              <router-link to="/new-budget" class="btn btn-primary">New Period</router-link>
+              <router-link to="/new-budget-period" class="btn btn-primary">New Period</router-link>
             </div>
 
           </div>

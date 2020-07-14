@@ -28,26 +28,26 @@ const router = new Router({
       name: 'login',
       component: () => import('../views/Login.vue'),
     },
+    // {
+    //   path: '/department',
+    //   name: 'department',
+    //   component: () => import('../views/Budget/Department.vue'),
+    //   meta: {
+    //     requiresAuth: true,
+    //   },
+    // },
     {
-      path: '/department',
-      name: 'department',
-      component: () => import('../views/Department.vue'),
-      meta: {
-        requiresAuth: true,
-      },
-    },
-    {
-      path: '/dashboard',
-      name: 'main-dashboard',
+      path: '/admin-dashboard',
+      name: 'admin-dashboard',
       component: () => import('../views/Admin/AdminDashboard.vue'),
       meta: {
         requiresAuth: true,
       },
     },
     {
-      path: '/unit/:unit_id',
+      path: '/unit-budget/:unit_id',
       name: 'unitBudget-details',
-      component: () => import('../views/unitBudget.vue'),
+      component: () => import('../views/Budget/unitBudget.vue'),
       meta: {
         requiresAuth: true,
       },
@@ -58,17 +58,17 @@ const router = new Router({
       component: () => import('../views/Errors.vue'),
     },
     {
-      path: '/budget',
-      name: 'budget',
-      component: () => import('../views/budgets.vue'),
+      path: '/unit-budgets',
+      name: 'unit-budgets',
+      component: () => import('../views/Budget/budgets.vue'),
       meta: {
         requiresAuth: true,
       },
     },
     {
-      path: '/admin-dashboard',
-      name: 'admin-dashboard',
-      component: () => import('../views/Admin/Dashboard.vue'),
+      path: '/budget-dashboard',
+      name: 'budget-dashboard',
+      component: () => import('../views/Budget/Dashboard.vue'),
       meta: {
         requiresAuth: true,
       },
@@ -113,7 +113,7 @@ const router = new Router({
     {
       path: '/budget-periods',
       name: 'budget-periods',
-      component: () => import('../views/BudgetPeriod.vue'),
+      component: () => import('../views/Budget/budget_periods.vue'),
       meta: {
         requiresAuth: true,
       },
@@ -121,15 +121,15 @@ const router = new Router({
     {
       path: '/period/:period_id',
       name: 'period-details',
-      component: () => import('../views/Details.vue'),
+      component: () => import('../views/Budget/Details.vue'),
       meta: {
         requiresAuth: true,
       },
     },
     {
-      path: '/new-budget',
-      name: 'AddNewBudget',
-      component: () => import('../views/AddNewBudget.vue'),
+      path: '/new-budget-period',
+      name: 'new-budget-period',
+      component: () => import('../views/Budget/AddNewBudget.vue'),
       meta: {
         requiresAuth: true,
       },

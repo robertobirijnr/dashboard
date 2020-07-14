@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import UsersOverview from '@/components/Admin/Dashboardgraph.vue';
+import UsersOverview from '@/components/Budget/Dashboardgraph.vue';
 
 export default {
   components: {

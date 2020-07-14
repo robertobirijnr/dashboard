@@ -2,7 +2,7 @@
   <d-container fluid>
     <d-row>
       <!-- Main Sidebar -->
-      <main-sidebar :items="sidebarItems" />
+      <main-sidebar :items="sidebarItems" title="Administration" />
 
       <d-col class="main-content offset-lg-2 offset-md-3 p-0" tag="main" lg="10" md="9" sm="12">
 
