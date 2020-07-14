@@ -10,7 +10,7 @@
         <main-navbar />
 
         <!-- Content -->
-
+        <DashboardComponent/>
 
       </d-col>
 
@@ -24,6 +24,7 @@ import getSidebarItems from '@/data/admin-sidebar-nav-items';
 // Main layout components
 import MainNavbar from '@/components/layout/MainNavbar/MainNavbar.vue';
 import MainSidebar from '@/components/layout/MainSidebar/MainSidebar.vue';
+import DashboardComponent from '@/components/Admin/dashboardComponent.vue';
 
 
 export default {
@@ -31,7 +32,7 @@ export default {
   components: {
     MainNavbar,
     MainSidebar,
-
+    DashboardComponent,
 
   },
   data() {

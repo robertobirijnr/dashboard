@@ -25,20 +25,7 @@
           <!-- Content - Body -->
           <p class="m-0 my-1 mb-2 text-muted">{{ discussion.body }}</p>
 
-          <!-- Content - Actions -->
-          <div class="blog-comments__actions">
-            <d-button-group size="small">
-              <d-button class="btn-white" @click="handleClick('approve', discussion.id)">
-                <span class="text-success"><i class="material-icons">check</i></span> Approve
-              </d-button>
-              <d-button class="btn-white" @click="handleClick('reject', discussion.id)">
-                <span class="text-danger"><i class="material-icons">clear</i></span> Reject
-              </d-button>
-              <d-button class="btn-white" @click="handleClick('edit', discussion.id)">
-                <span class="text-light"><i class="material-icons">more_vert</i></span> Edit
-              </d-button>
-            </d-button-group>
-          </div>
+
         </div>
 
       </div>
@@ -49,7 +36,7 @@
 
         <!-- View All Comments -->
         <d-col class="text-center view-report">
-          <d-button type="submit" class="btn-white" @click="handleClick('view-all-comments')">View All Comments</d-button>
+          <d-button type="submit" class="btn-white" @click="handleClick('view-all-comments')">View All Activities</d-button>
         </d-col>
 
       </d-row>
@@ -100,14 +87,14 @@ const defaultDiscussionsData = [{
 }];
 
 export default {
-  name: 'discussions',
+  name: 'User Activity Logs',
   props: {
     /**
        * The component's title.
        */
     title: {
       type: String,
-      default: 'Discussions',
+      default: 'Activities',
     },
     /**
        * The discussions data.

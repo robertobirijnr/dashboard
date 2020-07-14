@@ -1,27 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import Dashboard from '../views/Dashboard.vue';
-import Errors from '../views/Errors.vue';
-import Budget from '../views/budgets.vue';
-import BudgetPeriod from '../views/BudgetPeriod.vue';
-import Department from '../views/Department.vue';
-import Home from '../views/Home.vue';
-import Login from '../views/Login.vue';
-import AddNewBudget from '../views/AddNewBudget.vue';
-import Details from '../views/Details.vue';
-import UnitBudgetDetails from '../views/unitBudget.vue';
-import Admin from '../views/Admin/Dashboard.vue';
-import Users from '../views/Admin/usersPage.vue';
-import CreateUser from '../views/Admin/createUsers.vue';
-import Departments from '../views/Admin/Departments.vue';
-import Unit from '../views/Admin/Unit.vue';
-import BudgetSettings from '../views/Admin/BudgetSettings.vue';
-import UpdateUser from '../views/Admin/userUpdate.vue';
-import DepartmentDetails from '../views/Admin/DepartmentDetail.vue';
-import UnitDetails from '../views/Admin/unitDetailPage.vue';
-
-
 Vue.use(Router);
 const router = new Router({
   mode: 'history',
@@ -39,7 +18,7 @@ const router = new Router({
     {
       path: '/home',
       name: 'home',
-      component: Home,
+      component: () => import('../views/Home.vue'),
       meta: {
         requiresAuth: true,
       },
@@ -47,20 +26,20 @@ const router = new Router({
     {
       path: '/login',
       name: 'login',
-      component: Login,
+      component: () => import('../views/Login.vue'),
     },
-    {
-      path: '/budget',
-      name: 'dashboard',
-      component: Dashboard,
-      meta: {
-        requiresAuth: true,
-      },
-    },
+    // {
+    //   path: '/budget',
+    //   name: 'dashboard',
+    //   component: Dashboard,
+    //   meta: {
+    //     requiresAuth: true,
+    //   },
+    // },
     {
       path: '/department',
       name: 'department',
-      component: Department,
+      component: () => import('../views/Department.vue'),
       meta: {
         requiresAuth: true,
       },
@@ -68,7 +47,7 @@ const router = new Router({
     {
       path: '/unit/:unit_id',
       name: 'unitBudget-details',
-      component: UnitBudgetDetails,
+      component: () => import('../views/unitBudget.vue'),
       meta: {
         requiresAuth: true,
       },
@@ -76,12 +55,12 @@ const router = new Router({
     {
       path: '/errors',
       name: 'errors',
-      component: Errors,
+      component: () => import('../views/Errors.vue'),
     },
     {
       path: '/budget',
       name: 'budget',
-      component: Budget,
+      component: () => import('../views/budgets.vue'),
       meta: {
         requiresAuth: true,
       },
@@ -89,7 +68,7 @@ const router = new Router({
     {
       path: '/admin-dashboard',
       name: 'admin-dashboard',
-      component: Admin,
+      component: () => import('../views/Admin/Dashboard.vue'),
       meta: {
         requiresAuth: true,
       },
@@ -97,7 +76,7 @@ const router = new Router({
     {
       path: '/users',
       name: 'users',
-      component: Users,
+      component: () => import('../views/Admin/usersPage.vue'),
       meta: {
         requiresAuth: true,
       },
@@ -105,7 +84,7 @@ const router = new Router({
     {
       path: '/create-user',
       name: 'create-user',
-      component: CreateUser,
+      component: () => import('../views/Admin/createUsers.vue'),
       meta: {
         requiresAuth: true,
       },
@@ -113,7 +92,7 @@ const router = new Router({
     {
       path: '/update-user/:userId',
       name: 'update-user',
-      component: UpdateUser,
+      component: () => import('../views/Admin/userUpdate.vue'),
       meta: {
         requiresAuth: true,
       },
@@ -121,7 +100,7 @@ const router = new Router({
     {
       path: '/departments',
       name: 'departments',
-      component: Departments,
+      component: () => import('../views/Admin/Departments.vue'),
       meta: {
         requiresAuth: true,
       },
@@ -129,12 +108,12 @@ const router = new Router({
     {
       path: '/unit',
       name: 'unit',
-      component: Unit,
+      component: () => import('../views/Admin/Unit.vue'),
     },
     {
       path: '/budget-periods',
       name: 'budget-periods',
-      component: BudgetPeriod,
+      component: () => import('../views/BudgetPeriod.vue'),
       meta: {
         requiresAuth: true,
       },
@@ -142,7 +121,7 @@ const router = new Router({
     {
       path: '/period/:period_id',
       name: 'period-details',
-      component: Details,
+      component: () => import('../views/Details.vue'),
       meta: {
         requiresAuth: true,
       },
@@ -150,7 +129,7 @@ const router = new Router({
     {
       path: '/new-budget',
       name: 'AddNewBudget',
-      component: AddNewBudget,
+      component: () => import('../views/AddNewBudget.vue'),
       meta: {
         requiresAuth: true,
       },
@@ -158,7 +137,7 @@ const router = new Router({
     {
       path: '/budget-settings',
       name: 'budget-settings',
-      component: BudgetSettings,
+      component: () => import('../views/Admin/BudgetSettings.vue'),
       meta: {
         requiresAuth: true,
       },
@@ -166,7 +145,7 @@ const router = new Router({
     {
       path: '/department-detail/:depart_id',
       name: 'department-detail',
-      component: DepartmentDetails,
+      component: () => import('../views/Admin/DepartmentDetail.vue'),
       meta: {
         requiresAuth: true,
       },
@@ -174,7 +153,7 @@ const router = new Router({
     {
       path: '/unit-detail/unit_id',
       name: 'unit-detail',
-      component: UnitDetails,
+      component: () => import('../views/Admin/unitDetailPage.vue'),
       meta: {
         requiresAuth: true,
       },
@@ -186,14 +165,13 @@ const router = new Router({
   ],
 });
 router.beforeEach((to, from, next) => {
-  /* Both '/login' and '/login/' should share the same route name even if their path is different */
   if (to.name === 'login') {
     if (localStorage.getItem('auth')) {
       next('/home');
     }
   }
 
-  // Redirect to login if the route requires auth and no token is set
+
   if (to.meta.requiresAuth) {
     if (!localStorage.getItem('auth')) {
       next('/login');
