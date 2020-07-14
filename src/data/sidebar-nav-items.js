@@ -7,7 +7,7 @@ export default function () {
     return [{
       title: 'Dashboard',
       to: {
-        name: 'dashboard',
+        name: 'admin-dashboard',
       },
       htmlBefore: '<i class="material-icons">edit</i>',
       htmlAfter: '',

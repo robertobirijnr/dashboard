@@ -28,14 +28,6 @@ const router = new Router({
       name: 'login',
       component: () => import('../views/Login.vue'),
     },
-    // {
-    //   path: '/budget',
-    //   name: 'dashboard',
-    //   component: Dashboard,
-    //   meta: {
-    //     requiresAuth: true,
-    //   },
-    // },
     {
       path: '/department',
       name: 'department',
