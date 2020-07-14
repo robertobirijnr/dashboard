@@ -37,6 +37,14 @@ const router = new Router({
       },
     },
     {
+      path: '/dashboard',
+      name: 'main-dashboard',
+      component: () => import('../views/Admin/AdminDashboard.vue'),
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
       path: '/unit/:unit_id',
       name: 'unitBudget-details',
       component: () => import('../views/unitBudget.vue'),
