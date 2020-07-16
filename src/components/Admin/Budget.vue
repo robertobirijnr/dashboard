@@ -35,8 +35,8 @@
                             <div class="col">{{object.name}}</div>
                             <div class="col" align="right">
 
-                              <button type="button" class="btn btn-info" data-toggle="modal" :data-target="`#category${object.id}`">
-                                <i class="fa fa-close" style="color: blue"></i>
+                              <button type="button" class="btn btn-info btn-sm" data-toggle="modal" :data-target="`#category${object.id}`">
+                                <i class="fa fa-close" style="color: white"></i>
                               </button>
                             </div>
                             <div class="modal fade" :id="`category${object.id}`" tabindex="-1" role="dialog" :aria-labelledby="`catLabel${object.id}`" aria-hidden="true">
@@ -85,18 +85,28 @@
                         <div class="list-group-flush">
                           <div class="list-group-item">
                             <div class="row">
-                              <div class="col-md-8">
-                                <input type="text" v-model="item_name" placeholder="Item Name" class="form-control">
+                              <div class="col-md-10">
+                                <div class="row">
+                                  <div class="col-md-6">
+                                    <select class="form-control" v-model="item_type">
+                                      <option value="">Choose...</option>
+                                      <option value="Good">Good</option>
+                                      <option value="Service">Service</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-6"><input type="text" v-model="item_name" placeholder="Item Name" class="form-control"></div>
+                                </div>
+
                               </div>
-                              <div class="col-md-4">
+                              <div class="col-md-2">
                                 <button @click="newItem(object.id)" :disabled="loading" class="btn btn-sm btn-primary">
-                                  <span v-if="loading">Saving...</span><span v-else>Add Item</span></button>
+                                  <span v-if="loading" class="material-icons small">cached</span><span v-else class="material-icons small">create</span></button>
                               </div>
                             </div>
                           </div>
                           <div class="list-group-item" :key="item.id" v-for="item in object.items">
                             <div class="row">
-                              <div class="col">{{item.item_name}}</div>
+                              <div class="col">{{item.item_type}} | {{item.item_name}}</div>
                               <div class="col" align="right">
                                 <!-- <DeleteItem /> -->
                                 <button class='btn btn-sm btn-primary'  data-toggle="modal" :data-target="`#item${item.id}`">
@@ -135,7 +145,23 @@
                 </div>
               </div>
               <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                Yessss
+                <div class="list-group-flush">
+                  <div class="list-group-item">
+                    <div class="row">
+                      <div class="col-md-10">
+                        <input type="text" v-model="asset_name" class="form-control" placeholder="Asset Name">
+                      </div>
+                      <div class="col-md-2">
+                        <button class="btn btn-sm btn-primary" :disabled="loading" @click="newAsset()">
+                          <i class="material-icons">create</i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="list-group-item" :key="asset.id" v-for="asset in assets">
+                    {{asset.asset_name}}
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -164,7 +190,10 @@
       return {
         object_list: {},
         item_name: '',
+        assets: {},
         name: '',
+        item_type: '',
+        asset_name: '',
         loading: false,
         listLoading: false,
         // showModal: true,
@@ -187,10 +216,25 @@
           console.log(response);
         });
       },
+      assets_list(){
+        this.listLoading = true;
+        axios.get(`${config.apiUrl}/api/assets/`, {
+          headers: {
+            Authorization: `JWT ${config.get_token()}`
+          }
+        }).then((res) => {
+          this.listLoading = false;
+          this.assets = res.data;
+        }).catch((res) => {
+          this.listLoading = false;
+          console.log(res);
+        })
+      },
       newItem(catId) {
         this.loading = true;
         axios.post(`${config.apiUrl}/api/ni/${catId}/`, {
           item_name: this.item_name,
+          type: this.item_type,
         }, {
           headers: {
             Authorization: `JWT ${config.get_token()}`,
@@ -226,6 +270,25 @@
           });
         }
       },
+      newAsset(){
+        if(this.asset_name){
+          this.loading = true;
+          axios.post(`${config.apiUrl}/api/na/`, {
+            name: this.asset_name
+          }, {
+            headers: {
+              Authorization: `JWT ${config.get_token()}`
+            }
+          }).then((res) => {
+            this.loading = false;
+            this.asset_name = '';
+            this.assets_list();
+            console.log(res);
+          }).catch((res) => {
+            console.log(res);
+          })
+        }
+      },
       delItem(itemId) {
         axios.post(`${config.apiUrl}/api/di/${itemId}/`, {}, {
           headers: {
@@ -256,6 +319,7 @@
     },
     mounted() {
       this.categories();
+      this.assets_list();
     },
 
   };

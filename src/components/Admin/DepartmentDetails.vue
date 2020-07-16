@@ -80,9 +80,13 @@
                       <div class="col-md-4" style="border-right: 2px solid gray">
                           <div class="list-group-flush">
                             <div class="list-group-item">
-                              <label for="id_code">Division</label>
-                              <input type="text" :value="object.division" disabled class="form-control" id="id_code">
+                              <label for="id_div">Division</label>
+                              <!--<input type="text" :value="object.division"  class="form-control" id="">-->
                               <!-- {{object.depart_id}} -->
+                              <select class="form-control" id="id_div" :disabled="object.division">
+                                <option value="">Choose...</option>
+                                <option :key="div.id" v-for="div in divisions" :value="`${div.id}`" :selected="object.division">{{div.name}}</option>
+                              </select>
                             </div>
                             <div class="list-group-item">
                               <label for="id_code">Code</label>
@@ -168,6 +172,7 @@ export default {
       abbr: '',
       code: '',
       division: '',
+      divisions: {},
       loading: false,
     };
   },
@@ -190,10 +195,13 @@ export default {
     editDepart(id) {
       const name = document.getElementById('id_name').value;
       const abbr = document.getElementById('id_abbr').value;
+      var div = document.getElementById('id_div').value;
+
       this.loading = true;
       axios.post(`${config.apiUrl}/api/ed/${id}/`, {
         name,
         abbr,
+        div,
       }, {
         headers: {
           Authorization: `JWT ${config.get_token()}`,
@@ -265,9 +273,22 @@ export default {
         this.loading = false;
       });
     },
+    division_list() {
+      axios.get(`${config.apiUrl}/api/divisions/`, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+      }).then((response) => {
+        this.divisions = response.data;
+      }).catch((response) => {
+        console.log(response);
+      });
+    },
+
   },
   mounted() {
     this.details();
+    this.division_list();
   },
 };
 </script>
