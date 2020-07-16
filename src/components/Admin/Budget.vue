@@ -1,8 +1,8 @@
 /* eslint-disable comma-dangle */
 <template>
-    <div>
-      <div class="main-content-container container-fluid px-4">
-         <!-- Page Header -->
+  <div>
+    <div class="main-content-container container-fluid px-4">
+      <!-- Page Header -->
       <d-row no-gutters class="page-header py-2 pb-4 mb-3 border-bottom">
         <d-col col sm="4" class="text-center text-sm-left mb-4 mb-sm-0">
           <span class="text-uppercase page-subtitle">Overview</span>
@@ -10,248 +10,259 @@
         </d-col>
       </d-row>
       <d-col lg="12">
- <d-card class="card-small  py-2 pb-4">
-   <d-card-header class="border-bottom">
-              <h6 class="m-0"></h6>
-            </d-card-header>
-      <div class="card-body">
-        <center v-if="listLoading">Loading categories...</center>
-                    <div class="row" v-else>
-            <div class="col-md-5">
-                <ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <li class=nav-item><a class="nav-link active" id="v-pills-profile-tab"
-                 data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="True">New Category</a></li>
+        <d-card class="card-small  py-2 pb-4">
+          <d-card-header class="border-bottom">
+            <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+              <li class="nav-item"><a href="#home" id="home-tab" data-toggle="tab" class="nav-link active" aria-selected="true">Goods and Services</a></li>
+              <li class="nav-item"><a href="#contact" id="contact-tab" data-toggle="tab" class="nav-link" aria-selected="true">Assets</a></li>
+            </ul>
+          </d-card-header>
+          <div class="card-body">
+            <div class="tab-content" id="myTabContent">
+              <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <center v-if="listLoading">Loading categories...</center>
+                <div class="row" v-else>
+                  <div class="col-md-5">
+                    <ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                      <li class=nav-item><a class="nav-link active" id="v-pills-profile-tab"
+                                            data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="True">New Category</a></li>
 
-                <li class="nav-item" :key="object.id" v-for="object in object_list">
-                  <a class="nav-link" :id="`v-pills-home${object.id}-tab`" data-toggle="pill"
-                   :href="`#v-pills-home${object.id}`" role="tab"
-                    :aria-controls="`v-pills-home${object.id}`" aria-selected="true">
-                    <div class="row">
-                      <div class="col">{{object.name}}</div>
-                       <div class="col" align="right">
-
-                          <button type="button" class="btn btn-info" data-toggle="modal" :data-target="`#category${object.id}`">
-                            <i class="fa fa-close" style="color:medium slate blue"></i>
-                          </button>
-                         </div>
-                         <div class="modal fade" :id="`category${object.id}`" tabindex="-1" role="dialog" :aria-labelledby="`catLabel${object.id}`" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5 class="modal-title" :id="`catLabel${object.id}`">Delete {{object.name}}?</h5>
-                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                  </button>
-                                </div>
-                                <div class="modal-body text-dark">
-
-                                  <p>Are you sure you want to delete this category? All items under this category will not be asociated with any category after deletion.</p>
-                                </div>
-                                <div class="modal-footer">
-                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                  <button type="button" @click="delCat(object.id)" class="btn btn-primary">Delete</button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                    </div>
-
-
-                     </a>
-                </li>
-
-                </ul>
-            </div>
-            <div class="col-md-7">
-                <div class="tab-content" id="v-pills-tabContent" >
-                    <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-                      <div class="row mb-4">
-                        <div class="col-md-8">
-                            <input type="text" v-model="name" placeholder="Add New Category" class="form-control">
-                        </div>
-                        <div class="col-md-4">
-                            <button @click="newCat()" :disabled="loading" class="btn btn-sm btn-primary">
-                              <span v-if="loading">Saving...</span><span v-else>Add New Category</span></button>
-                        </div>
-                    </div>
-                    </div>
-                <div class="tab-pane fade" :key="object.id" v-for="object in object_list"
-                :id="`v-pills-home${object.id}`" role="tabpanel" :aria-labelledby="`v-pills-home${object.id}-tab`">
-                    <div class="list-group-flush">
-                        <div class="list-group-item">
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <input type="text" v-model="item_name" placeholder="Item Name" class="form-control">
-                                </div>
-                                <div class="col-md-4">
-                                    <button @click="newItem(object.id)" :disabled="loading" class="btn btn-sm btn-primary">
-                                      <span v-if="loading">Saving...</span><span v-else>Add Item</span></button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="list-group-item" :key="item.id" v-for="item in object.items">
+                      <li class="nav-item" :key="object.id" v-for="object in object_list">
+                        <a class="nav-link" :id="`v-pills-home${object.id}-tab`" data-toggle="pill"
+                           :href="`#v-pills-home${object.id}`" role="tab"
+                           :aria-controls="`v-pills-home${object.id}`" aria-selected="true">
                           <div class="row">
-                            <div class="col">{{item.item_name}}</div>
+                            <div class="col">{{object.name}}</div>
                             <div class="col" align="right">
-                              <!-- <DeleteItem /> -->
-                              <button class='btn btn-sm btn-primary'  data-toggle="modal" :data-target="`#item${item.id}`">
-                                <i class="fa fa-close" style="color:white"></i>
+
+                              <button type="button" class="btn btn-info" data-toggle="modal" :data-target="`#category${object.id}`">
+                                <i class="fa fa-close" style="color: blue"></i>
                               </button>
                             </div>
-                            <div class="modal fade" :id="`item${item.id}`" tabindex="-1" role="dialog" aria-labelledby="itemlabel${item.id}" aria-hidden="true">
+                            <div class="modal fade" :id="`category${object.id}`" tabindex="-1" role="dialog" :aria-labelledby="`catLabel${object.id}`" aria-hidden="true">
                               <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                   <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Delete {{item.item_name}}?</h5>
+                                    <h5 class="modal-title" :id="`catLabel${object.id}`">Delete {{object.name}}?</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                       <span aria-hidden="true">&times;</span>
                                     </button>
                                   </div>
-                                  <div class="modal-body">
-                                    Are You sure you want to delete this item? This action is irreversible.
+                                  <div class="modal-body text-dark">
+
+                                    <p>Are you sure you want to delete this category? All items under this category will not be asociated with any category after deletion.</p>
                                   </div>
                                   <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="button" id='id_delete_item' @click="delItem(item.id)" class="btn btn-primary" >Delete</button>
+                                    <button type="button" @click="delCat(object.id)" class="btn btn-primary">Delete</button>
                                   </div>
                                 </div>
                               </div>
                             </div>
                           </div>
 
+
+                        </a>
+                      </li>
+
+                    </ul>
+                  </div>
+                  <div class="col-md-7">
+                    <div class="tab-content" id="v-pills-tabContent" >
+                      <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                        <div class="row mb-4">
+                          <div class="col-md-8">
+                            <input type="text" v-model="name" placeholder="Add New Category" class="form-control">
                           </div>
+                          <div class="col-md-4">
+                            <button @click="newCat()" :disabled="loading" class="btn btn-sm btn-primary">
+                              <span v-if="loading">Saving...</span><span v-else>Add New Category</span></button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="tab-pane fade" :key="object.id" v-for="object in object_list"
+                           :id="`v-pills-home${object.id}`" role="tabpanel" :aria-labelledby="`v-pills-home${object.id}-tab`">
+                        <div class="list-group-flush">
+                          <div class="list-group-item">
+                            <div class="row">
+                              <div class="col-md-8">
+                                <input type="text" v-model="item_name" placeholder="Item Name" class="form-control">
+                              </div>
+                              <div class="col-md-4">
+                                <button @click="newItem(object.id)" :disabled="loading" class="btn btn-sm btn-primary">
+                                  <span v-if="loading">Saving...</span><span v-else>Add Item</span></button>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="list-group-item" :key="item.id" v-for="item in object.items">
+                            <div class="row">
+                              <div class="col">{{item.item_name}}</div>
+                              <div class="col" align="right">
+                                <!-- <DeleteItem /> -->
+                                <button class='btn btn-sm btn-primary'  data-toggle="modal" :data-target="`#item${item.id}`">
+                                  <i class="fa fa-close" style="color:white"></i>
+                                </button>
+                              </div>
+                              <div class="modal fade" :id="`item${item.id}`" tabindex="-1" role="dialog" aria-labelledby="itemlabel${item.id}" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title" id="exampleModalLabel">Delete {{item.item_name}}?</h5>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                      </button>
+                                    </div>
+                                    <div class="modal-body">
+                                      Are You sure you want to delete this item? This action is irreversible.
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                      <button type="button" id='id_delete_item' @click="delItem(item.id)" class="btn btn-primary" >Delete</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+
+                      </div>
+
+
                     </div>
-
+                  </div>
                 </div>
-
-
-                </div>
+              </div>
+              <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                Yessss
+              </div>
             </div>
-        </div>
-      </div>
+
+          </div>
 
 
- </d-card>
+        </d-card>
       </d-col>
     </div>
-    </div>
+  </div>
 </template>
 <script>
 
-import axios from 'axios';
-import config from '@/config';
-import DeleteCategory from '@/components/common/deleteCategory.vue';
-import DeleteItem from '@/components/common/deleteItem.vue';
+  import axios from 'axios';
+  import config from '@/config';
+  import DeleteCategory from '@/components/common/deleteCategory.vue';
+  import DeleteItem from '@/components/common/deleteItem.vue';
 
-export default {
-  name: 'budget',
-  components: {
-    DeleteCategory,
-    DeleteItem,
-  },
-  data() {
-    return {
-      object_list: {},
-      item_name: '',
-      name: '',
-      loading: false,
-      listLoading: false,
-      // showModal: true,
+  export default {
+    name: 'budget',
+    components: {
+      DeleteCategory,
+      DeleteItem,
+    },
+    data() {
+      return {
+        object_list: {},
+        item_name: '',
+        name: '',
+        loading: false,
+        listLoading: false,
+        // showModal: true,
 
-    };
-  },
-  methods: {
-    categories() {
-      this.listLoading = true;
-      axios.get(`${config.apiUrl}/api/categories/`, {
-        headers: {
-          Authorization: `JWT ${config.get_token()}`,
-        },
-      }).then((response) => {
-        this.listLoading = false;
-        this.object_list = response.data;
-        console.log(response.data);
-      }).catch(({ response }) => {
-        this.listLoading = false;
-        console.log(response);
-      });
+      };
     },
-    newItem(catId) {
-      this.loading = true;
-      axios.post(`${config.apiUrl}/api/ni/${catId}/`, {
-        item_name: this.item_name,
-      }, {
-        headers: {
-          Authorization: `JWT ${config.get_token()}`,
-        },
-      }).then((res) => {
-        this.loading = false;
-        console.log(res);
-        this.categories();
-        this.item_name = '';
-      }).catch(({ res }) => {
-        this.loading = false;
-        console.log(res);
-      });
-    },
-    newCat() {
-      if (this.name) {
+    methods: {
+      categories() {
+        this.listLoading = true;
+        axios.get(`${config.apiUrl}/api/categories/`, {
+          headers: {
+            Authorization: `JWT ${config.get_token()}`,
+          },
+        }).then((response) => {
+          this.listLoading = false;
+          this.object_list = response.data;
+          console.log(response.data);
+        }).catch(({ response }) => {
+          this.listLoading = false;
+          console.log(response);
+        });
+      },
+      newItem(catId) {
         this.loading = true;
-
-        axios.post(`${config.apiUrl}/api/nc/`, {
-          name: this.name,
+        axios.post(`${config.apiUrl}/api/ni/${catId}/`, {
+          item_name: this.item_name,
         }, {
           headers: {
             Authorization: `JWT ${config.get_token()}`,
           },
         }).then((res) => {
           this.loading = false;
-          this.categories();
           console.log(res);
-          this.name = '';
+          this.categories();
+          this.item_name = '';
         }).catch(({ res }) => {
           this.loading = false;
           console.log(res);
         });
-      }
-    },
-    delItem(itemId) {
-      axios.post(`${config.apiUrl}/api/di/${itemId}/`, {}, {
-        headers: {
-          Authorization: `JWT ${config.get_token()}`,
-        },
-      }).then((res) => {
-        // this.showModal = false;
-        console.log(res);
-        $(`#item${itemId}`).modal('hide');
-        this.categories();
-      }).catch((res) => {
-        console.log(res);
-      });
-    },
-    delCat(catId) {
-      axios.post(`${config.apiUrl}/api/dc/${catId}/`, {}, {
-        headers: {
-          Authorization: `JWT ${config.get_token()}`,
-        },
-      }).then((res) => {
-        console.log(res);
-        $(`#category${catId}`).modal('hide');
-        this.categories();
-      }).catch((res) => {
-        console.log(res);
-      });
-    },
-  },
-  mounted() {
-    this.categories();
-  },
+      },
+      newCat() {
+        if (this.name) {
+          this.loading = true;
 
-};
+          axios.post(`${config.apiUrl}/api/nc/`, {
+            name: this.name,
+          }, {
+            headers: {
+              Authorization: `JWT ${config.get_token()}`,
+            },
+          }).then((res) => {
+            this.loading = false;
+            this.categories();
+            console.log(res);
+            this.name = '';
+          }).catch(({ res }) => {
+            this.loading = false;
+            console.log(res);
+          });
+        }
+      },
+      delItem(itemId) {
+        axios.post(`${config.apiUrl}/api/di/${itemId}/`, {}, {
+          headers: {
+            Authorization: `JWT ${config.get_token()}`,
+          },
+        }).then((res) => {
+          // this.showModal = false;
+          console.log(res);
+          $(`#item${itemId}`).modal('hide');
+          this.categories();
+        }).catch((res) => {
+          console.log(res);
+        });
+      },
+      delCat(catId) {
+        axios.post(`${config.apiUrl}/api/dc/${catId}/`, {}, {
+          headers: {
+            Authorization: `JWT ${config.get_token()}`,
+          },
+        }).then((res) => {
+          console.log(res);
+          $(`#category${catId}`).modal('hide');
+          this.categories();
+        }).catch((res) => {
+          console.log(res);
+        });
+      },
+    },
+    mounted() {
+      this.categories();
+    },
+
+  };
 </script>
 <style scoped>
-.modal{
-   overflow: visible !important;
-}
-.list-group-item, .list-group-item:hover{ z-index: auto; }
+  .modal{
+    overflow: visible !important;
+  }
+  .list-group-item, .list-group-item:hover{ z-index: auto; }
 </style>

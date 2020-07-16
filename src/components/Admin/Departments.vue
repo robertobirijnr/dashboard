@@ -16,6 +16,7 @@
               <table class="table">
                 <thead>
                     <tr>
+                        <th>Division</th>
                         <th>Code</th>
                         <th>Abbreviation</th>
                         <th>name</th>
@@ -24,7 +25,12 @@
                 </thead>
                 <tbody>
                     <tr>
-
+                        <td>
+                          <select v-model="div" class="form-control">
+                            <option value="">Choose...</option>
+                            <option :key="div.id" v-for="div in divisions" :value="`${div.id}`">{{div.name}}</option>
+                          </select>
+                        </td>
                         <td>
                             <input type="text" v-model="code" placeholder="Enter New Code" class="form-control">
                         </td>
@@ -39,6 +45,7 @@
                         </td>
                     </tr>
                     <tr :key="object.id" v-for="object in object_list">
+                        <td>{{object.division}}</td>
                         <td>{{object.depart_id}}</td>
                         <td>{{object.abbreviation}}</td>
                         <td>{{object.name}}</td>
@@ -71,11 +78,24 @@ export default {
       code: '',
       abbr: '',
       name: '',
+      div: '',
+      divisions: {},
       departmentsloading: false,
       loading: false,
     };
   },
   methods: {
+    division_list() {
+      axios.get(`${config.apiUrl}/api/divisions/`, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+      }).then((response) => {
+        this.divisions = response.data;
+      }).catch((response) => {
+        console.log(response);
+      });
+    },
     departments() {
       this.departmentsloading = true;
       axios.get(`${config.apiUrl}/api/departments`, {
@@ -93,7 +113,7 @@ export default {
       if (this.code || this.abbr || this.name) {
         this.loading = true;
         axios.post(
-          `${config.apiUrl}/api/nd/`, {
+          `${config.apiUrl}/api/nd/${this.div}`, {
             code: this.code,
             abbr: this.abbr,
             name: this.name,
@@ -119,6 +139,7 @@ export default {
   },
   mounted() {
     this.departments();
+    this.division_list();
   },
 };
 </script>

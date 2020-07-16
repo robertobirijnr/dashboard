@@ -106,6 +106,14 @@ const router = new Router({
       },
     },
     {
+      path: '/divisions',
+      name: 'divisions',
+      component: () => import('../views/Admin/Divisions.vue'),
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
       path: '/unit',
       name: 'unit',
       component: () => import('../views/Admin/Unit.vue'),

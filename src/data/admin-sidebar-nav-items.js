@@ -20,6 +20,12 @@ export default function () {
     },
   },
   {
+    title: 'Divisions Setup',
+    htmlBefore: '<i class="material-icons">table_chart</i>',
+    to: {
+      name: 'divisions',
+    },
+  },{
     title: 'Departments',
     htmlBefore: '<i class="material-icons">table_chart</i>',
     to: {

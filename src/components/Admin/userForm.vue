@@ -44,7 +44,7 @@
                           <span class="small text-danger" v-if="errors">{{errors.detail}}</span>
                         </d-col>
                         <d-col md="6">
-                          <label for="fePassword">User Role</label>
+                          <label for="id_role">User Role</label>
                           <select name="role" v-model="role" id="id_role" class="form-control">
                             <option value="">Choose...</option>
                             <option value="AD">Administrator</option>
@@ -59,12 +59,20 @@
                         </d-col>
                       </d-form-row>
 
+                      <div class="form-group">
+                        <label for="id_division">Division</label>
+                        <select class="form-control" v-model="division" id="id_division">
+                          <option value="">Choose...</option>
+                          <option :key="div.id" v-for="div in divisions" :value="`${div.id}`">{{div.name}}</option>
+                        </select>
+                      </div>
+
                       <d-form-row>
                         <d-col md="6" class="form-group">
                           <label for="id_depart">Department</label>
                           <select name="depart" v-model="depart" id="id_depart" class="form-control">
                             <option value="">Choose...</option>
-                            <option :key="dep.id" v-for="dep in departs" :value="`${dep.id}`">{{dep.name}}</option>
+                            <option :key="dep.id" v-for="dep in departs.departments" :value="`${dep.id}`">{{dep.name}}</option>
                           </select>
                         </d-col>
                         <d-col md="6">
@@ -114,11 +122,13 @@ export default {
       email: '',
       role: '',
       depart: '',
+      division: '',
       unit: '',
       pass1: '',
       pass2: '',
       msg: '',
       departs: {},
+      divisions: {},
       units: {},
       errors: {},
       formloading: false,
@@ -145,6 +155,7 @@ export default {
             depart_id: this.depart,
             unit_id: this.unit,
             password: this.pass2,
+            div_id: this.division,
           },
           {
             headers: {
@@ -162,16 +173,27 @@ export default {
         });
       }
     },
-    departments() {
-      axios.get(`${config.apiUrl}/api/departments/`, {
+    division_list() {
+      axios.get(`${config.apiUrl}/api/divisions/`, {
         headers: {
           Authorization: `JWT ${config.get_token()}`,
         },
       }).then((response) => {
-        this.departs = response.data;
+        this.divisions = response.data;
       }).catch((response) => {
         console.log(response);
       });
+    },
+    departments(value) {
+      axios.get(`${config.apiUrl}/api/dvdl/${value}/`, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`
+        }
+      }).then((res) => {
+        this.departs = res.data;
+      }).catch((res) => {
+        console.log(res);
+      })
     },
     unit_list(value) {
       // console.log(sel.value);
@@ -194,13 +216,17 @@ export default {
       this.pass2 = value;
       this.validPassword();
     },
+    division(value){
+      this.division = value;
+      if(this.division){ this.departments(this.division);}
+    },
     depart(value) {
       this.depart = value;
       if (this.depart) { this.unit_list(this.depart); }
     },
   },
   mounted() {
-    this.departments();
+    this.division_list();
     // this.unit_list();
   },
 };

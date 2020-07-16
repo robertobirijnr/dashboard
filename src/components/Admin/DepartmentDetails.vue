@@ -48,7 +48,7 @@
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLongTitle">New Unit</h5>
+                                    <h5 class="modal-title" id="exampleModalLongTitle1">New Unit</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                     </button>
@@ -71,7 +71,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                       </div>
 
                   </div>
@@ -79,10 +79,15 @@
                   <div class="row">
                       <div class="col-md-4" style="border-right: 2px solid gray">
                           <div class="list-group-flush">
-                              <div class="list-group-item">
-                                  <label for="id_code">Code</label>
-                                  <input type="text" :value="object.depart_id" disabled class="form-control" id="id_code">
-                                  <!-- {{object.depart_id}} -->
+                            <div class="list-group-item">
+                              <label for="id_code">Division</label>
+                              <input type="text" :value="object.division" disabled class="form-control" id="id_code">
+                              <!-- {{object.depart_id}} -->
+                            </div>
+                            <div class="list-group-item">
+                              <label for="id_code">Code</label>
+                              <input type="text" :value="object.depart_id" disabled class="form-control" id="id_code">
+                              <!-- {{object.depart_id}} -->
                             </div>
                               <div class="list-group-item">
                                   <label for="id_abbr">Abbreviation</label>
@@ -102,7 +107,7 @@
                       <div class="col-md-8">
                           <div class="list-group-flush" :key="unit.id" v-for="unit in units">
                               <div class="list-group-item">
-                                  <dir class="row">
+                                  <div class="row">
                                       <div class="col-sm-8">
                                           <div>{{unit.unit_name}}</div>
                                           <small>{{unit.abbreviation}} | {{unit.unit_id}}</small>
@@ -134,7 +139,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                  </dir>
+                                  </div>
                               </div>
                           </div>
                       </div>
@@ -162,6 +167,7 @@ export default {
       name: '',
       abbr: '',
       code: '',
+      division: '',
       loading: false,
     };
   },
@@ -176,6 +182,7 @@ export default {
         const results = res.data;
         this.object = results.department;
         this.units = results.units;
+        this.division = results.division;
       }).catch((res) => {
         console.log(res);
       });

@@ -26,7 +26,7 @@
                 <d-row>
                   <d-col>
                       <d-form-row>
-                        <d-col md="12">
+                        <d-col md="12 mb-2">
                           <label for="fePassword">User Role</label>
                           <select name="role" v-model="role" id="id_role"   class="form-control">
                             <option value="">Choose...</option>
@@ -42,12 +42,20 @@
                         </d-col>
                       </d-form-row>
 
+                      <div class="form-group">
+                        <label for="id_division">Division</label>
+                        <select name="" v-model="division" id="id_division" class="form-control">
+                          <option value="">Choose...</option>
+                          <option :key="div.id" v-for="div in divisions" :value="`${div.id}`">{{div.name}}</option>
+                        </select>
+                      </div>
+
                       <d-form-row>
                         <d-col md="12" class="form-group">
                           <label for="id_depart">Department</label>
                           <select name="depart" v-model="depart" id="id_depart" :disabled="loading" class="form-control">
                             <option value="">Choose...</option>
-                            <option :key="dep.id" v-for="dep in departs" :value="`${dep.id}`">{{dep.name}}</option>
+                            <option :key="dep.id" v-for="dep in departs.departments" :value="`${dep.id}`">{{dep.name}}</option>
                           </select>
                         </d-col>
 
@@ -63,7 +71,7 @@
                         </d-col>
                       </d-form-row>
                       <div class="pt-3">
-                          <button  :disabled="formloading" @click="update(object.id)" class="btn btn-sm btn-primary float-right" type="submit"><span v-if="formloading">Loading..</span> <span v-else>Update</span> </button>
+                          <button  :disabled="formloading" @click="update(object.id)" class="btn btn-sm btn-primary float-left" type="submit"><span v-if="formloading">Loading..</span> <span v-else>Update</span> </button>
                       </div>
 
                   </d-col>
@@ -90,6 +98,8 @@ export default {
       depart: '',
       unit: '',
       departs: {},
+      divisions: {},
+      division: '',
       units: {},
       loading: false,
       formloading: false,
@@ -111,16 +121,27 @@ export default {
         console.log(res);
       });
     },
-    departments() {
-      axios.get(`${config.apiUrl}/api/departments/`, {
+    division_list() {
+      axios.get(`${config.apiUrl}/api/divisions/`, {
         headers: {
           Authorization: `JWT ${config.get_token()}`,
         },
       }).then((response) => {
-        this.departs = response.data;
+        this.divisions = response.data;
       }).catch((response) => {
         console.log(response);
       });
+    },
+    departments(value) {
+      axios.get(`${config.apiUrl}/api/dvdl/${value}/`, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`
+        }
+      }).then((res) => {
+        this.departs = res.data;
+      }).catch((res) => {
+        console.log(res);
+      })
     },
     unit_list(value) {
       // console.log(sel.value);
@@ -142,6 +163,7 @@ export default {
       axios.post(`${config.apiUrl}/user/edit/${id}/`, {
         role: this.role,
         unit: this.unit,
+        div: this.division,
         depart: this.depart,
       }, {
         headers: {
@@ -174,6 +196,7 @@ export default {
   },
   mounted() {
     this.details();
+    this.division_list();
     this.departments();
     // this.unit_list(),
   },
@@ -183,7 +206,12 @@ export default {
         this.role = this.object.user_type;
         this.depart = this.object.department;
         this.unit = this.object.unit;
+        this.division = this.object.division;
       }
+    },
+    division(value){
+      this.division = value;
+      if(this.division){ this.departments(this.division);}
     },
     depart(value) {
       this.depart = value;
