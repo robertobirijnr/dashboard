@@ -25,7 +25,7 @@ export default function () {
     to: {
       name: 'divisions',
     },
-  },{
+  }, {
     title: 'Departments',
     htmlBefore: '<i class="material-icons">table_chart</i>',
     to: {

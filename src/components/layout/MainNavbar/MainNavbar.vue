@@ -1,5 +1,5 @@
 <template>
-  <div :class="['main-navbar', 'bg-white', stickyTop ? 'sticky-top' : '']">
+  <div :class="['main-navbar', stickyTop ? 'sticky-top' : '']">
     <d-navbar type="light" class="align-items-stretch flex-md-nowrap p-0">
       <navbar-search />
       <navbar-nav />
