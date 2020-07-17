@@ -44,6 +44,11 @@
                       Details
                     </router-link>
                   </td>
+                  <td>
+                    <router-link :to="{name: 'budget_summary', params: {period_id: object.budget_period_id}}" class="btn btn-sm btn-primary">
+                      Budget Summary
+                    </router-link>
+                  </td>
                 </tr>
               </tbody>
             </table>

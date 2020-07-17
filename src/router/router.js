@@ -159,6 +159,14 @@ const router = new Router({
       },
     },
     {
+      path: '/budget_summary/:period_id',
+      name: 'budget_summary',
+      component: () => import('../views/Budget/budget_summary.vue'),
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
       path: '/department-detail/:depart_id',
       name: 'department-detail',
       component: () => import('../views/Admin/DepartmentDetail.vue'),
