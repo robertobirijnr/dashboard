@@ -25,12 +25,19 @@ export default function () {
         name: 'unit-budgets',
       },
     },
+      {
+      title: 'Salary Scale',
+      htmlBefore: '<i class="material-icons">local_atm</i>',
+      to: {
+        name: 'salary-scale',
+      },
+    },
     ];
   }
   return [{
     title: 'Dashboard',
     to: {
-      name: 'dashboard',
+      name: 'budget-dashboard',
     },
     htmlBefore: '<i class="material-icons">edit</i>',
     htmlAfter: '',

@@ -26,7 +26,7 @@
                   <d-col>
                     <!-- <d-form> -->
                       <div class="form-group">
-                        <label for="feInputAddress">Period</label>
+                        <label for="feInputState">Period</label>
                         <d-select id="feInputState" v-model="period">
                             <option>Choose...</option>
                             <option value="Monthly" :selected="period === 'Monthly'">Monthly</option>
@@ -37,26 +37,27 @@
                       </div>
                       <div class="form-group">
                         <label for="feInputAddress2">Quarter</label>
-                         <d-select id="feInputState" v-model="quarter" :disabled="period != 'Quarterly'">
+                         <d-select id="feInputAddress2" v-model="quarter" :disabled="period != 'Quarterly'">
                             <option>Choose...</option>
                             <option value="First Quarter">First Quarter</option>
                             <option value="Second Quarter">Second Quarter</option>
                             <option value="Third Quarter">Third Quarter</option>
+                           <option value="Fourth Quarter">Fourth Quarter</option>
                           </d-select>
                       </div>
                       <div class="form-group">
-                        <label for="feInputAddress2">Half</label>
-                        <d-select id="feInputState" v-model="half" :disabled="period != 'Half Year'">
+                        <label for="feInputAddress3">Half</label>
+                        <d-select id="feInputAddress3" v-model="half" :disabled="period != 'Half Year'">
                             <option>Choose...</option>
                             <option value="First Half">First Half</option>
                             <option value="Second Half">Second Half</option>
                           </d-select>
                       </div>
                       <div class="form-group">
-                        <label for="feInputAddress2">Start Date</label>
+                        <label for="feInputAddress4">Start Date</label>
                         <d-input type="date" v-model="start_date" data-date-format="mm/dd/yyyy"/>
                       </div>
-                      <d-button type="submit" @click="new_period()" class="float-right" >Submit</d-button>
+                      <button type="submit" @click="new_period()" :disabled="loading" class="btn btn-primary btn-small btn-block" >Submit</button>
                     <!-- </d-form> -->
                   </d-col>
                 </d-row>
@@ -82,10 +83,12 @@ export default {
       quarter: '',
       half: '',
       start_date: '',
+      loading: false,
     };
   },
   methods: {
     new_period() {
+      this.loading = true;
       axios.post(
         `${config.apiUrl}/budget/nbp/`, {
           period: this.period,
@@ -99,9 +102,11 @@ export default {
           },
         },
       ).then((response) => {
+        this.loading = false;
         console.log(response);
-        this.$router.push('/department');
+        this.$router.push('/budget-periods');
       }).catch((response) => {
+        this.laoding = false;
         console.log(response);
       });
     },

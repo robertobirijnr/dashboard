@@ -4,7 +4,7 @@
     <div class="page-header row no-gutters py-4">
       <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
         <span class="text-uppercase page-subtitle">Overview</span>
-        <h3 class="page-title">Budget Details</h3>
+        <h3 class="page-title">{{object.period}} Budget Details</h3>
       </div>
     </div>
 
@@ -12,54 +12,52 @@
     <div class="row">
       <div class="col-md-4">
         <div class="card">
-          <div class="card-">
-            <div class="card-body">
+          <div class="card-body">
               <div class="list-group-flush">
                 <div class="list-group-item">
-                    <div class="row">
-                        <div class="col">Period</div>
-                        <div class="col" align="right">{{object.period}}</div>
-                    </div>
+                  <div class="row">
+                    <div class="col">Period</div>
+                    <div class="col" align="right">{{object.period}}</div>
+                  </div>
                 </div>
                 <div class="list-group-item">
-                    <div class="row">
-                        <div class="col">Start Date</div>
-                        <div class="col" align="right">{{object.start_date}}</div>
-                    </div>
+                  <div class="row">
+                    <div class="col">Start Date</div>
+                    <div class="col" align="right">{{object.start_date}}</div>
+                  </div>
                 </div>
                 <div class="list-group-item" v-if="object.period === 'Quarterly'">
-                    <div class="row">
-                        <div class="col">Quarter</div>
-                        <div class="col" align="right">{{object.quarter}}</div>
-                    </div>
+                  <div class="row">
+                    <div class="col">Quarter</div>
+                    <div class="col" align="right">{{object.quarter}}</div>
+                  </div>
                 </div>
                 <div class="list-group-item" v-else-if="object.period === 'Half Year'">
-                    <div class="row">
-                        <div class="col">Half Year</div>
-                        <div class="col" align="right">{{object.half}}</div>
-                    </div>
+                  <div class="row">
+                    <div class="col">Half Year</div>
+                    <div class="col" align="right">{{object.half}}</div>
+                  </div>
                 </div>
                 <div class="list-group-item">
-                    <div class="row">
-                        <div class="col">End Date</div>
-                        <div class="col" align="right">{{object.end_date}}</div>
-                    </div>
+                  <div class="row">
+                    <div class="col">End Date</div>
+                    <div class="col" align="right">{{object.end_date}}</div>
+                  </div>
                 </div>
                 <div class="list-group-item">
-                    <div class="row">
-                        <div class="col">Status</div>
-                        <div class="col" align="right">{{object.status}}</div>
-                    </div>
+                  <div class="row">
+                    <div class="col">Status</div>
+                    <div class="col" align="right">{{object.status}}</div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
         </div>
       </div>
       <div class="col-md-8">
-        <div class="card" v-if="userRole === 'BO'">
-          <div class="card-header">Unit Budgets</div>
-          <div class="card-body">
+        <div class="card h-100" v-if="userRole === 'BO'">
+          <div class="card-header">Units Budgets</div>
+          <div class="card-body ">
             <div v-if="object.unit_budgets">
               <div class="list-group-flush" :key="unit.id" v-for="unit in object.unit_budgets">
                 <router-link :to="{name: 'unitBudget-details', params: {unit_id: unit.unit_budget_id}}" class="list-group-item bg-white text-black list-group-item-action flex-column align-items-start">
@@ -77,10 +75,10 @@
             </div>
           </div>
         </div>
-        <div class="card" v-if="userRole === 'UU' && !unit_budget.detail && unit_budget.status != 'Confirmed'">
+        <div class="card h-100" v-if="userRole === 'UU' && !unit_budget.detail && unit_budget.status !== 'Confirmed'">
             <div class="card-header">
                 <div class="row">
-                    <div class="col-md-6">My Unit Budget </div>
+                    <div class="col-md-6">{{unit_budget.unit_name}} Unit Budget </div>
                     <div class="col-md-6" align="right">
                         <button @click="confirm_budget(unit_budget.id)" class="btn btn-icon btn-xs btn-success" title="Confirm your selections">
                             <span>Confirm</span>
@@ -89,93 +87,308 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="row">
+              <ul class="nav nav-tabs" id="myTabs" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link active" id="home1-tab" data-toggle="tab" href="#home1" role="tab" aria-controls="home1" aria-selected="true">Goods and Services</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="profile1-tab" data-toggle="tab" href="#profile1" role="tab" aria-controls="profile1" aria-selected="false">Employee Compensations</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="contact1-tab" data-toggle="tab" href="#contact1" role="tab" aria-controls="contact1" aria-selected="false">Assets</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="about1-tab" data-toggle="tab" href="#about1" role="tab" aria-controls="about1" aria-selected="false">Sub Totals</a>
+                </li>
+              </ul>
+              <div class="tab-content" id="myTabsContent">
+                <div class="tab-pane fade show active mt-2" id="home1" role="tabpanel" aria-labelledby="home1-tab">
+                  <div class="row">
                     <div class="col-md-12">
                         <span :key="item.id" v-for="item in unit_budget.items" style="margin-right:5px">
                             <span class="badge badge-primary" :title="`${item.item.category_name}`" >{{item.item.item_name}} ({{item.quantity}}) <span class="material-icons small" @click="remove_budget_item(unit_budget.id, item.item.id)" >clear</span></span>
                         </span>
                     </div>
-                </div>
-                <hr>
-                <div class="mb-2">Add More?</div>
-                <div class="row">
+                  </div>
+                  <hr>
+                  <div class="mb-2">Add More?</div>
+                  <div class="row">
                     <div class="col-md-12">
-                        <div class="errors text-danger small" v-if="errors">
-                            {{errors.detail}}
-                        </div>
-                        <div class="form-group">
-                            <label for="">Category</label>
-                            <select name="category" v-model="category" id="id_category" class="form-control" @change="category_items_list()">
-                                <option value="">Select Category</option>
-                                <option v-for="category in categories" :key="category.id" :value="`${category.id}`" >{{category.name}}</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="">Items</label>
-                            <select name="item" v-model="item" id="id_item" class="form-control">
-                                <option value="">Select Item</option>
-                                <option v-for="item in items" :key="item.id" :value="`${item.id}`">{{item.item_name}}</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="">Quantity</label>
-                            <input type="number" name="quantity" v-model="quantity" id="" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <button :disabled="formLoading" @click="`${new_budget_item(unit_budget.id)}`" type="submit" class="btn btn-sm btn-block btn-info"><span v-if="formLoading">Saving...</span><span v-else>Submit</span></button>
-                        </div>
+                      <div class="errors text-danger small" v-if="errors">
+                        {{errors.detail}}
+                      </div>
+                      <div class="form-group">
+                        <label for="">Category</label>
+                        <select name="category" v-model="category" id="id_category" class="form-control">
+                          <option value="">Select Category</option>
+                          <option v-for="category in categories" :key="category.id" :value="`${category.id}`" >{{category.name}}</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="">Items</label>
+                        <select name="item" v-model="item" id="id_item" class="form-control">
+                          <option value="">Select Item</option>
+                          <option v-for="item in items" :key="item.id" :value="`${item.id}`">{{item.item_name}}</option>
+                        </select>
+                      </div>
+                      <div class="form-group" :hidden="item_obj.item_type === 'Service'">
+                        <label for="">Quantity</label>
+                        <input type="number" name="quantity" v-model="quantity" id="" class="form-control">
+                      </div>
+                      <div class="form-group">
+                        <button :disabled="formLoading" @click="`${new_budget_item(unit_budget.id)}`" type="submit" class="btn btn-sm btn-block btn-info"><span v-if="formLoading">Saving...</span><span v-else>Submit</span></button>
+                      </div>
                     </div>
+                  </div>
                 </div>
-            </div>
-        </div>
-        <div class="card" v-else-if="userRole === 'UU' && unit_budget.detail">
-            <div class="card-header">New Unit Budget</div>
-            <div class="card-body">
-                <div class="form-group">
-                    <label for="">Category</label>
-                    <select name="category" v-model="category" id="id_category" class="form-control" @change="category_items_list()">
-                        <option value="">Select Category</option>
-                        <option v-for="category in categories" :key="category.id" :value="`${category.id}`" >{{category.name}}</option>
+                <div class="tab-pane fade mt-2" id="profile1" role="tabpanel" aria-labelledby="profile1-tab">
+                  <div class="row">
+                    <div class="col-md-12">
+                        <span :key="salary.id" v-for="salary in unit_budget.employees_compensations" style="margin-right:5px">
+                            <span class="badge badge-primary" :title="`GHS ${salary.period_basic}`" >{{salary.employee_name}} (GHS {{salary.monthly_basic}}) <span class="material-icons small">clear</span></span>
+                        </span>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="mb-2">Add More?</div>
+                  <div class="form-group">
+                    <label for="id_snb1">Staff Number</label>
+                    <input type="text" id="id_snb1" v-model="number" class="form-control" placeholder="Staff Number">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="id_sn1">Staff Name</label>
+                    <input type="text" id="id_sn1" class="form-control" v-model="name" placeholder="Staff Name">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="id_rank1">Rank</label>
+                    <select id="id_rank1" v-model="rank1" class="c_rank form-control">
+                      <option value="">Choose...</option>
+                      <option value="CG">CG</option>
+                      <option value="COMM">COMM</option>
+                      <option value="DC">DC</option>
+                      <option value="AC">AC</option>
+                      <option value="CRO">CRO</option>
+                      <option value="PRO">PRO</option>
+                      <option value="SRO">SRO</option>
+                      <option value="RO">RO</option>
+                      <option value="ARO I">ARO I</option>
+                      <option value="ARO II">ARO II</option>
+                      <option value="RA I">RA I</option>
+                      <option value="RA II">RA II</option>
+                      <option value="RA III">RA III</option>
+                      <option value="JRA I">JRA I</option>
+                      <option value="JRA II">JRA II</option>
+                      <option value="JRA III">JRA III</option>
+                      <option value="JRA IV">JRA IV</option>
+                      <option value="JRA V">JRA V</option>
+                      <option value="JRA VI">JRA VI</option>
                     </select>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-group">
+                        <label for="id_notch1">Notch</label>
+                        <select id="id_notch1" v-model="notch1" class="c_notch form-control">
+                          <option value="">Choose...</option>
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4</option>
+                          <option value="5">5</option>
+                          <option value="6">6</option>
+                          <option value="7">7</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="form-group">
+                        <label for="id_status1">Staff Status</label>
+                        <select v-model="status" id="id_status1" class="custom-select">
+                          <option value="">Choose...</option>
+                          <option value="At Post">At Post</option>
+                          <option value="On Leave">On Leave</option>
+                          <option value="On Paid Leave">On Paid Leave</option>
+                          <option value="Retired">Retired</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-group">
+                        <label for="id_basic1">Basic Salary</label>
+                        <input type="text" disabled class="form-control c_basic" id="id_basic1">
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="form-group">
+                        <label for="id_period1">{{object.period}} Salary</label>
+                        <input type="text" disabled class="form-control c_period" id="id_period1">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <button :disabled="formLoading" @click="new_budget_com(unit_budget.id)" class="btn btn-sm btn-primary btn-block">Submit</button>
+                  </div>
                 </div>
-                <div class="form-group">
-                    <label for="">Items</label>
-                    <select name="item" v-model="item" id="id_item" class="form-control">
-                        <option value="">Select Item</option>
-                        <option v-for="item in items" :key="item.id" :value="`${item.id}`">{{item.item_name}}</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="">Quantity</label>
-                    <input type="number" name="quantity" v-model="quantity" id="" class="form-control">
-                </div>
-                <div class="form-group">
-                    <button :disabled="formLoading" @click="`${new_budget()}`" type="submit" class="btn btn-sm btn-block btn-info"><span v-if=formLoading>Saving...</span><span v-else>Submit</span></button>
-                </div>
-            </div>
+                <div class="tab-pane fade" id="contact1" role="tabpanel" aria-labelledby="contact1-tab">...</div>
+              </div>
+
+          </div>
         </div>
-        <div class="card" v-else-if="userRole === 'UU' && unit_budget.status === 'Confirmed'">
-            <div class="card-header">{{unit_budget.unit_name}} Budget Details</div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-stripe">
-                        <thead>
-                            <tr class="small" align="center">
-                                <th>Item</th>
-                                <th>Category</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </thead>
-                        <tbody :key="item.id" v-for="item in unit_budget.items">
-                            <tr class="small" align="center">
-                                <td>{{item.item.item_name}}</td>
-                                <td>{{item.item.category_name}}</td>
-                                <td>{{item.quantity}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+        <div class="card h-100" v-else-if="userRole === 'UU' && unit_budget.detail">
+          <div class="card-header">New Unit Budget </div>
+          <div class="card-body">
+
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+              <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Goods And Services</a>
+              <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Employee Compensation</a>
+              <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Asset</a>
             </div>
+
+            <div class="tab-content" id="nav-tabContent">
+              <div class="tab-pane fade show active pt-2  border-bottom-0" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                <span v-if="msg">{{msg}}</span>
+                <div class="form-group">
+                  <label for="">Category</label>
+                  <select name="category" v-model="category" id="id_cat" class="form-control">
+                    <option value="">Select Category</option>
+                    <option v-for="category in categories" :key="category.id" :value="`${category.id}`" >{{category.name}}</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="">Items</label>
+                  <select name="item" v-model="item" id="item1" class="form-control">
+                    <option value="">Select Item</option>
+                    <option v-for="item in items" :key="item.id" :value="`${item.id}`">{{item.item_name}}</option>
+                  </select>
+                </div>
+                <div class="form-group" id="id_fg_qnty" :hidden="item_obj.item_type === 'Service'">
+                  <label for="">Quantity</label>
+                  <input type="number" name="quantity" :disabled="item_obj.item_type === 'Service'" v-model="quantity" class="form-control">
+                </div>
+                <div class="form-group">
+                  <button :disabled="formLoading" @click="new_budget('gs')" type="submit" class="btn btn-sm btn-block btn-info"><span v-if=formLoading>Saving...</span><span v-else>Submit</span></button>
+                </div>
+              </div>
+              <div class="tab-pane fade pt-2" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                <span v-if="msg2" class="small text-warning">{{msg2}} <hr></span>
+                <div class="form-group">
+                  <label for="id_snb">Staff Number</label>
+                  <input type="text" id="id_snb" v-model="number" class="form-control" placeholder="Staff Number">
+                </div>
+
+                <div class="form-group">
+                  <label for="id_sn">Staff Name</label>
+                  <input type="text" id="id_sn" class="form-control" v-model="name" placeholder="Staff Name">
+                </div>
+
+                <div class="form-group">
+                  <label for="id_rank">Rank</label>
+                  <select id="id_rank" v-model="rank" class="c_rank form-control">
+                    <option value="">Choose...</option>
+                    <option value="CG">CG</option>
+                    <option value="COMM">COMM</option>
+                    <option value="DC">DC</option>
+                    <option value="AC">AC</option>
+                    <option value="CRO">CRO</option>
+                    <option value="PRO">PRO</option>
+                    <option value="SRO">SRO</option>
+                    <option value="RO">RO</option>
+                    <option value="ARO I">ARO I</option>
+                    <option value="ARO II">ARO II</option>
+                    <option value="RA I">RA I</option>
+                    <option value="RA II">RA II</option>
+                    <option value="RA III">RA III</option>
+                    <option value="JRA I">JRA I</option>
+                    <option value="JRA II">JRA II</option>
+                    <option value="JRA III">JRA III</option>
+                    <option value="JRA IV">JRA IV</option>
+                    <option value="JRA V">JRA V</option>
+                    <option value="JRA VI">JRA VI</option>
+                  </select>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="id_notch">Notch</label>
+                      <select id="id_notch" v-model="notch" class="c_notch form-control">
+                        <option value="">Choose...</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="id_status">Staff Status</label>
+                      <select v-model="status" id="id_status" class="custom-select">
+                        <option value="">Choose...</option>
+                        <option value="At Post">At Post</option>
+                        <option value="On Leave">On Leave</option>
+                        <option value="On Paid Leave">On Paid Leave</option>
+                        <option value="Retired">Retired</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="id_basic">Basic Salary</label>
+                      <input type="text" disabled class="form-control c_basic" id="id_basic">
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="id_period">{{object.period}} Salary</label>
+                      <input type="text" disabled class="form-control c_period" id="id_period">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <button :disabled="formLoading" @click="new_budget('ec')" class="btn btn-sm btn-primary btn-block">Submit</button>
+                </div>
+
+              </div>
+              <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
+            </div>
+
+          </div>
+        </div>
+        <div class="card h-100" v-else-if="userRole === 'UU' && unit_budget.status === 'Confirmed'">
+          <div class="card-header">{{unit_budget.unit_name}} Budget Details</div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-stripe">
+                <thead>
+                <tr class="small" align="center">
+                  <th>Item</th>
+                  <th>Category</th>
+                  <th>Quantity</th>
+                </tr>
+                </thead>
+                <tbody :key="item.id" v-for="item in unit_budget.items">
+                <tr class="small" align="center">
+                  <td>{{item.item.item_name}}</td>
+                  <td>{{item.item.category_name}}</td>
+                  <td>{{item.quantity}}</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -183,154 +396,312 @@
 </template>
 <script>
 
-import axios from 'axios';
-import config from '@/config';
+  import axios from 'axios';
+  import config from '@/config';
 
-export default {
-  data() {
-    return {
-      object: {},
-      categories: {},
-      items: {},
-      unit_budget: {},
-      quantity: '',
-      item: '',
-      category: '',
-      errors: {},
-      formLoading: false,
-      loading: false,
-    };
-  },
-  computed: {
-    userRole() {
-      return this.$root.auth.user.user_role;
+  export default {
+    data() {
+      return {
+        object: {},
+        categories: {},
+        items: {},
+
+        unit_budget: {},
+        quantity: '',
+        item: '',
+        item_obj: {},
+        category: '',
+        errors: {},
+        formLoading: false,
+        loading: false,
+        msg: '',
+        msg2: '',
+        name: '',
+        number: '',
+        rank: '',
+        notch: '',
+        rank1: '',
+        notch1: '',
+        scale: {},
+        year_salary: 0.0,
+        basic: 0.0,
+        status: '',
+      };
     },
-  },
-  mounted() {
-    this.details();
-    this.category_list();
-    this.this_unit_budget();
-  },
-  methods: {
-    details() {
-      const id = this.$route.params.period_id;
-      axios.get(`${config.apiUrl}/budget/obp/${id}`, {
-        headers: {
-          Authorization: `JWT ${config.get_token()}`,
-        },
-      }).then((response) => {
-        this.object = response.data;
-        console.log(response);
-      }).catch((response) => {
-        console.log(response);
-      });
+    computed: {
+      userRole() {
+        return this.$root.auth.user.user_role;
+      },
     },
-    category_list() {
-      axios.get(`${config.apiUrl}/api/categories/`, {
-        headers: { Authorization: `JWT ${config.get_token()}` },
-      }).then((response) => {
-        this.categories = response.data;
-        console.log(response);
-      });
+    mounted() {
+      this.details();
+      this.category_list();
+      this.current_unit_budget();
     },
-    category_items_list() {
-      const sel = document.getElementById('id_category');
-      console.log(sel.value);
-      if (sel.value) {
-        axios.get(`${config.apiUrl}/api/ci/${sel.value}`, {
-          headers: { Authorization: `JWT ${config.get_token()}` },
-        }).then((response) => {
-          const results = response.data;
-          this.items = results.items;
-          console.log(this.items);
-        });
-      }
-    },
-    this_unit_budget() {
-      const id = this.$route.params.period_id;
-      axios.get(`${config.apiUrl}/budget/cpub/${id}`, {
-        headers: { Authorization: `JWT ${config.get_token()}` },
-      }).then((response) => {
-        // var results = response.data
-        this.unit_budget = response.data;
-        console.log(response);
-      }).catch(({ response }) => {
-        this.unit_budget = response.data;
-      });
-    },
-    new_budget() {
-      const id = this.$route.params.period_id;
-      if (id && this.item && this.quantity && this.category) {
-        this.formLoading = true;
-        axios.post(`${config.apiUrl}/budget/nub/`, {
-          category: this.category,
-          item: this.item,
-          quantity: this.quantity,
-          budget_period: id,
-        }, {
-          headers: { Authorization: `JWT ${config.get_token()}` },
-        }).then((response) => {
-          this.formLoading = false;
-          console.log(response.data);
-          this.quantity = '';
-          this.category = '';
-          this.item = '';
-          this.this_unit_budget();
-        }).catch(({ response }) => {
-          this.formLoading = false;
-          this.errors = response.data;
-          console.log(response.data);
-        });
-      }
-    },
-    new_budget_item(ubid) {
-      // console.log(ubid);
-      if (ubid && this.item && this.quantity) {
-        this.formLoading = true;
-        axios.post(
-          `${config.apiUrl}/budget/nubi/`, {
-            ub_id: ubid,
-            item: this.item,
-            quantity: this.quantity,
+    methods: {
+      details() {
+        const id = this.$route.params.period_id;
+        axios.get(`${config.apiUrl}/budget/obp/${id}`, {
+          headers: {
+            Authorization: `JWT ${config.get_token()}`,
           },
-          {
+        }).then((response) => {
+          this.object = response.data;
+          console.log(response);
+        }).catch((response) => {
+          console.log(response);
+        });
+      },
+      category_list() {
+        axios.get(`${config.apiUrl}/api/categories/`, {
+          headers: { Authorization: `JWT ${config.get_token()}` },
+        }).then((response) => {
+          this.categories = response.data;
+          console.log(response);
+        });
+      },
+      category_items_list(value) {
+        // const sel = document.getElementById('id_category');
+        // console.log(sel.value);
+        if (value) {
+          axios.get(`${config.apiUrl}/api/ci/${value}`, {
             headers: { Authorization: `JWT ${config.get_token()}` },
-          },
-        ).then((response) => {
-          this.formLoading = false;
+          }).then((response) => {
+            const results = response.data;
+            this.items = results.items;
+            console.log(this.items);
+          });
+        }
+      },
+      item_details(id){
+        if(id){
+          axios.get(`${config.apiUrl}/api/id/${id}/`, {
+            headers: { Authorization: `JWT ${config.get_token()}` },
+          }).then((response) => {
+            // const results = response.data;
+            this.item_obj = response.data;
+            console.log(response.data);
+            // console.log(this.items);
+          }).catch((res) => {
+            console.log(res);
+          });
+        }
+
+      },
+      current_unit_budget() {
+        const id = this.$route.params.period_id;
+        axios.get(`${config.apiUrl}/budget/cpub/${id}`, {
+          headers: { Authorization: `JWT ${config.get_token()}` },
+        }).then((response) => {
+          // var results = response.data
+          this.unit_budget = response.data;
           console.log(response.data);
-          this.quantity = '';
-          this.category = '';
-          this.item = '';
-          this.this_unit_budget();
+        }).catch(({response}) => {
+          this.unit_budget = response.data;
+          console.log(response);
+        });
+      },
+      new_budget(type) {
+        const id = this.$route.params.period_id;
+        if (type === 'gs'){
+          if (id && this.item && this.category) {
+            this.formLoading = true;
+            axios.post(`${config.apiUrl}/budget/nub/${type}/`, {
+              category: this.category,
+              item: this.item,
+              quantity: this.quantity,
+              budget_period: id,
+            }, {
+              headers: { Authorization: `JWT ${config.get_token()}` },
+            }).then((response) => {
+              this.formLoading = false;
+              console.log(response.data);
+              this.quantity = '';
+              this.category = '';
+              this.item = '';
+              this.current_unit_budget();
+            }).catch(({ response }) => {
+              this.formLoading = false;
+              this.errors = response.data;
+              console.log(response.data);
+            });
+          }else{
+            this.msg = "All fields are required"
+          }
+        }
+        else if (type === 'ec'){
+          if(id && this.name && this.number && this.rank && this.notch && this.status){
+            this.formLoading = true;
+            axios.post(`${config.apiUrl}/budget/nub/${type}/`, {
+              budget_period: id,
+              name: this.name,
+              number: this.number,
+              rank: this.rank,
+              notch: this.notch,
+              status: this.status,
+            }, {
+              headers: {
+                Authorization: `JWT ${config.get_token()}`
+              }
+            }).then((res) => {
+              this.formLoading = false;
+              this.name = '';
+              this.number = '';
+              this.rank = '';
+              this.notch = '';
+              this.status = '';
+              this.current_unit_budget();
+            }).catch(({response}) => {
+              this.current_unit_budget();
+              this.errors = response.data;
+              this.formLoading = false;
+              console.log(response);
+            })
+          }else{
+            this.msg2 = "All fields are required";
+          }
+        }
+
+      },
+      new_budget_item(ubid) {
+        // console.log(ubid);
+        if (ubid && this.item) {
+          this.formLoading = true;
+          axios.post(
+            `${config.apiUrl}/budget/nubi/`, {
+              ub_id: ubid,
+              item: this.item,
+              quantity: this.quantity,
+            },
+            {
+              headers: { Authorization: `JWT ${config.get_token()}` },
+            },
+          ).then((response) => {
+            this.formLoading = false;
+            console.log(response.data);
+            this.quantity = '';
+            this.category = '';
+            this.item = '';
+            this.current_unit_budget();
+          }).catch(({ response }) => {
+            this.formLoading = false;
+            this.errors = response.data;
+            console.log(response.data);
+          });
+        }
+      },
+      new_budget_com(ubid){
+        if(ubid && this.name && this.number && this.rank1 && this.notch1 && this.status){
+          this.formLoading = true;
+          axios.post(`${config.apiUrl}/budget/nubc/`, {
+            ub_id: ubid,
+            name: this.name,
+            number: this.number,
+            rank: this.rank1,
+            notch: this.notch1,
+            status: this.status
+          }, {
+            headers: {
+              Authorization: `JWT ${config.get_token()}`
+            }
+          }).then((res) => {
+            this.formLoading = false;
+            console.log(res.data);
+            this.name = '';
+            this.number = '';
+            this.rank1 = '';
+            this.notch1 = '';
+            this.status = '';
+            this.current_unit_budget();
+          }).catch(({response}) => {
+            this.errors = response.data;
+            this.formLoading = false;
+            console.log(response.data);
+            this.current_unit_budget();
+          });
+        }
+      },
+      remove_budget_item(ubid, item) {
+        axios.post(`${config.apiUrl}/budget/rubi/${ubid}/${item}/`, {}, {
+          headers: { Authorization: `JWT ${config.get_token()}` },
+        }).then((response) => {
+          console.log(response);
+          this.current_unit_budget();
         }).catch(({ response }) => {
-          this.formLoading = false;
-          this.errors = response.data;
           console.log(response.data);
         });
+      },
+      confirm_budget(ubid) {
+        axios.post(`${config.apiUrl}/budget/cub/${ubid}/`, {}, {
+          headers: { Authorization: `JWT ${config.get_token()}` },
+        }).then((response) => {
+          console.log(response);
+          this.current_unit_budget();
+        }).catch(({ response }) => {
+          console.log(response.data);
+        });
+      },
+      find_scale(rank, notch){
+        axios.get(`${config.apiUrl}/budget/fs/${rank}/${notch}/`, {
+          headers: {
+            Authorization: `JWT ${config.get_token()}`
+          }
+        }).then((res) => {
+          console.log(res);
+          this.scale = res.data;
+          this.basic = this.scale.monthly_basic;
+          this.year_salary = this.scale.monthly_basic * 12;
+          if(this.notch){
+            document.getElementById('id_basic').value = this.scale.monthly_basic ? `GHS ${this.basic}` : 'GHS 0';
+            document.getElementById('id_period').value = `GHS ${this.year_salary}`;
+          }else if(this.notch1){
+            document.getElementById('id_basic1').value = this.scale.monthly_basic ? `GHS ${this.basic}` : 'GHS 0';
+            document.getElementById('id_period1').value = `GHS ${this.year_salary}`;
+          }
+
+        })
       }
     },
-    remove_budget_item(ubid, item) {
-      axios.post(`${config.apiUrl}/budget/rubi/${ubid}/${item}/`, {}, {
-        headers: { Authorization: `JWT ${config.get_token()}` },
-      }).then((response) => {
-        console.log(response);
-        this.this_unit_budget();
-      }).catch(({ response }) => {
-        console.log(response.data);
-      });
-    },
-    confirm_budget(ubid) {
-      axios.post(`${config.apiUrl}/budget/cub/${ubid}/`, {}, {
-        headers: { Authorization: `JWT ${config.get_token()}` },
-      }).then((response) => {
-        console.log(response);
-        this.this_unit_budget();
-      }).catch(({ response }) => {
-        console.log(response.data);
-      });
-    },
-  },
+    watch: {
+      category(){
+        // var sel = document.getElementById('id_cat').value ? document.getElementById('id_cat').value : document.getElementById('id_category').value;
+        // var sel1 = document.getElementById('id_category').value;
+        if(this.category){
+          this.category_items_list(this.category);
+        }
+        // else if(sel1){
+        //   this.category_items_list(sel1);
+        // }
+      },
+      item(){
+        // var sel = document.getElementById('item1').value;
+        if(this.item){
+          this.item_details(this.item);
+          // if(this.item_obj.item_type === 'Good'){
+          //   document.getElementById('id_fg_qnty').hidden = false;
+          // }else{
+          //   document.getElementById('id_fg_qnty').hidden = true;
+          // }
+        }
 
-};
+      },
+      notch(){
+
+        const rank = document.getElementById('id_rank').value;
+        const notc = document.getElementById('id_notch').value;
+        if(rank && notc){
+          this.find_scale(rank, notc);
+        }
+      },
+      notch1(){
+
+        const rank = document.getElementById('id_rank1').value;
+        const notc = document.getElementById('id_notch1').value;
+        if(rank && notc){
+          this.find_scale(rank, notc);
+        }
+      }
+    }
+
+  };
 </script>

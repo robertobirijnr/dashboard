@@ -138,7 +138,7 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    <button type="button"  :diabled="loading" @click="delUnit(unit.id)" class="btn btn-primary">Delete</button>
+                                                    <button type="button"  :disabled="loading" @click="delUnit(unit.id)" class="btn btn-primary">Delete</button>
                                                 </div>
                                                 </div>
                                             </div>

@@ -114,6 +114,14 @@ const router = new Router({
       },
     },
     {
+      path: '/salary-scale',
+      name: 'salary-scale',
+      component: () => import('../views/Budget/salary_scale.vue'),
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
       path: '/unit',
       name: 'unit',
       component: () => import('../views/Admin/Unit.vue'),

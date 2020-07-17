@@ -11,7 +11,7 @@
     <!-- Default Light Table -->
     <div class="row">
       <div class="col">
-        <div class="card card-small mb-4">
+        <div class="card card-small mb-4 h-100">
           <div class="card-header border-bottom">
             <div v-if="userRole === 'BO'">
               <router-link to="/new-budget-period" class="btn btn-primary">New Period</router-link>
@@ -47,7 +47,7 @@
                 </tr>
               </tbody>
             </table>
-            </div>           
+            </div>
           </div>
         </div>
       </div>
