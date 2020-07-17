@@ -175,154 +175,154 @@
 </template>
 <script>
 
-  import axios from 'axios';
-  import config from '@/config';
-  import DeleteCategory from '@/components/common/deleteCategory.vue';
-  import DeleteItem from '@/components/common/deleteItem.vue';
+import axios from 'axios';
+import config from '@/config';
+import DeleteCategory from '@/components/common/deleteCategory.vue';
+import DeleteItem from '@/components/common/deleteItem.vue';
 
-  export default {
-    name: 'budget',
-    components: {
-      DeleteCategory,
-      DeleteItem,
-    },
-    data() {
-      return {
-        object_list: {},
-        item_name: '',
-        assets: {},
-        name: '',
-        item_type: '',
-        asset_name: '',
-        loading: false,
-        listLoading: false,
-        // showModal: true,
+export default {
+  name: 'budget',
+  components: {
+    DeleteCategory,
+    DeleteItem,
+  },
+  data() {
+    return {
+      object_list: {},
+      item_name: '',
+      assets: {},
+      name: '',
+      item_type: '',
+      asset_name: '',
+      loading: false,
+      listLoading: false,
+      // showModal: true,
 
-      };
+    };
+  },
+  methods: {
+    categories() {
+      this.listLoading = true;
+      axios.get(`${config.apiUrl}/api/categories/`, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+      }).then((response) => {
+        this.listLoading = false;
+        this.object_list = response.data;
+        console.log(response.data);
+      }).catch(({ response }) => {
+        this.listLoading = false;
+        console.log(response);
+      });
     },
-    methods: {
-      categories() {
-        this.listLoading = true;
-        axios.get(`${config.apiUrl}/api/categories/`, {
-          headers: {
-            Authorization: `JWT ${config.get_token()}`,
-          },
-        }).then((response) => {
-          this.listLoading = false;
-          this.object_list = response.data;
-          console.log(response.data);
-        }).catch(({ response }) => {
-          this.listLoading = false;
-          console.log(response);
-        });
-      },
-      assets_list(){
-        this.listLoading = true;
-        axios.get(`${config.apiUrl}/api/assets/`, {
-          headers: {
-            Authorization: `JWT ${config.get_token()}`
-          }
-        }).then((res) => {
-          this.listLoading = false;
-          this.assets = res.data;
-        }).catch((res) => {
-          this.listLoading = false;
-          console.log(res);
-        })
-      },
-      newItem(catId) {
+    assets_list() {
+      this.listLoading = true;
+      axios.get(`${config.apiUrl}/api/assets/`, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+      }).then((res) => {
+        this.listLoading = false;
+        this.assets = res.data;
+      }).catch((res) => {
+        this.listLoading = false;
+        console.log(res);
+      });
+    },
+    newItem(catId) {
+      this.loading = true;
+      axios.post(`${config.apiUrl}/api/ni/${catId}/`, {
+        item_name: this.item_name,
+        type: this.item_type,
+      }, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+      }).then((res) => {
+        this.loading = false;
+        console.log(res);
+        this.categories();
+        this.item_name = '';
+      }).catch(({ res }) => {
+        this.loading = false;
+        console.log(res);
+      });
+    },
+    newCat() {
+      if (this.name) {
         this.loading = true;
-        axios.post(`${config.apiUrl}/api/ni/${catId}/`, {
-          item_name: this.item_name,
-          type: this.item_type,
+
+        axios.post(`${config.apiUrl}/api/nc/`, {
+          name: this.name,
         }, {
           headers: {
             Authorization: `JWT ${config.get_token()}`,
           },
         }).then((res) => {
           this.loading = false;
-          console.log(res);
           this.categories();
-          this.item_name = '';
+          console.log(res);
+          this.name = '';
         }).catch(({ res }) => {
           this.loading = false;
           console.log(res);
         });
-      },
-      newCat() {
-        if (this.name) {
-          this.loading = true;
-
-          axios.post(`${config.apiUrl}/api/nc/`, {
-            name: this.name,
-          }, {
-            headers: {
-              Authorization: `JWT ${config.get_token()}`,
-            },
-          }).then((res) => {
-            this.loading = false;
-            this.categories();
-            console.log(res);
-            this.name = '';
-          }).catch(({ res }) => {
-            this.loading = false;
-            console.log(res);
-          });
-        }
-      },
-      newAsset(){
-        if(this.asset_name){
-          this.loading = true;
-          axios.post(`${config.apiUrl}/api/na/`, {
-            name: this.asset_name
-          }, {
-            headers: {
-              Authorization: `JWT ${config.get_token()}`
-            }
-          }).then((res) => {
-            this.loading = false;
-            this.asset_name = '';
-            this.assets_list();
-            console.log(res);
-          }).catch((res) => {
-            console.log(res);
-          })
-        }
-      },
-      delItem(itemId) {
-        axios.post(`${config.apiUrl}/api/di/${itemId}/`, {}, {
+      }
+    },
+    newAsset() {
+      if (this.asset_name) {
+        this.loading = true;
+        axios.post(`${config.apiUrl}/api/na/`, {
+          name: this.asset_name,
+        }, {
           headers: {
             Authorization: `JWT ${config.get_token()}`,
           },
         }).then((res) => {
-          // this.showModal = false;
+          this.loading = false;
+          this.asset_name = '';
+          this.assets_list();
           console.log(res);
-          $(`#item${itemId}`).modal('hide');
-          this.categories();
         }).catch((res) => {
           console.log(res);
         });
-      },
-      delCat(catId) {
-        axios.post(`${config.apiUrl}/api/dc/${catId}/`, {}, {
-          headers: {
-            Authorization: `JWT ${config.get_token()}`,
-          },
-        }).then((res) => {
-          console.log(res);
-          $(`#category${catId}`).modal('hide');
-          this.categories();
-        }).catch((res) => {
-          console.log(res);
-        });
-      },
+      }
     },
-    mounted() {
-      this.categories();
-      this.assets_list();
+    delItem(itemId) {
+      axios.post(`${config.apiUrl}/api/di/${itemId}/`, {}, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+      }).then((res) => {
+        // this.showModal = false;
+        console.log(res);
+        $(`#item${itemId}`).modal('hide');
+        this.categories();
+      }).catch((res) => {
+        console.log(res);
+      });
     },
+    delCat(catId) {
+      axios.post(`${config.apiUrl}/api/dc/${catId}/`, {}, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+      }).then((res) => {
+        console.log(res);
+        $(`#category${catId}`).modal('hide');
+        this.categories();
+      }).catch((res) => {
+        console.log(res);
+      });
+    },
+  },
+  mounted() {
+    this.categories();
+    this.assets_list();
+  },
 
-  };
+};
 </script>
 <style scoped>
   .modal{
