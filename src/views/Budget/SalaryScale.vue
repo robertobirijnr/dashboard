@@ -70,6 +70,15 @@
                       </select>
                     </div>
                     <div class="form-group">
+                      <label for="id_level">Scale Level</label>
+                      <select id="id_level" v-model="level" class="custom-select">
+                        <option value="">Choose...</option>
+                        <option value="Mgt">Management Staff</option>
+                        <option value="Snr">Senior Staff</option>
+                        <option value="Jnr">Junior Staff</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
                       <label for="id_basic">Monthly Basic (GHS)</label>
                       <input type="number" id="id_basic" v-model="basic" class="form-control">
                     </div>
@@ -88,6 +97,7 @@
                 <thead>
                 <tr>
                   <th>Grade</th>
+                  <th>Level</th>
                   <th>Notch</th>
                   <th>Monthly Basic</th>
                 </tr>
@@ -95,8 +105,9 @@
                 <tbody>
                   <tr :key="object.id" v-for="object in object_list">
                     <td>{{object.grade}}</td>
+                    <td>{{object.level_display}}</td>
                     <td>{{object.notch}}</td>
-                    <td>{{object.monthly_basic}}</td>
+                    <td>GHS {{Number(object.monthly_basic).toLocaleString()}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -112,6 +123,11 @@
   import axios from 'axios';
   import config from '@/config';
 
+
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
   export default {
     data(){
       return{
@@ -120,6 +136,7 @@
         grade: '',
         notch: '',
         basic: '',
+        level: '',
         msg: {},
       };
     },
@@ -148,6 +165,7 @@
           grade: this.grade,
           notch: this.notch,
           basic: this.basic,
+          level: this.level,
         }, {
           headers: {Authorization: `JWT ${config.get_token()}`}
         }).then((res) => {
@@ -157,6 +175,7 @@
           this.grade = '';
           this.notch = '';
           this.basic = '';
+          this.level = '';
           this.msg = null;
           $('#exampleModalCenter').modal('hide');
         }).catch(({response}) => {

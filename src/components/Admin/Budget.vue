@@ -22,7 +22,7 @@
               <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                 <center v-if="listLoading">Loading categories...</center>
                 <div class="row" v-else>
-                  <div class="col-md-5">
+                  <div class="col-md-4">
                     <ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                       <li class=nav-item><a class="nav-link active" id="v-pills-profile-tab"
                                             data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="True">New Category</a></li>
@@ -67,7 +67,7 @@
 
                     </ul>
                   </div>
-                  <div class="col-md-7">
+                  <div class="col-md-8">
                     <div class="tab-content" id="v-pills-tabContent" >
                       <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
                         <div class="row mb-4">
@@ -85,20 +85,24 @@
                         <div class="list-group-flush">
                           <div class="list-group-item">
                             <div class="row">
-                              <div class="col-md-10">
+                              <div class="col-md-11">
                                 <div class="row">
-                                  <div class="col-md-6">
+                                  <div class="col-md-3">
+                                    <input type="text" v-model="code" placeholder="Code" class="form-control">
+                                  </div>
+                                  <div class="col-md-4">
                                     <select class="form-control" v-model="item_type">
                                       <option value="">Choose...</option>
                                       <option value="Good">Good</option>
                                       <option value="Service">Service</option>
+                                      <option value="Imprest">Imprest</option>
                                     </select>
                                   </div>
-                                  <div class="col-md-6"><input type="text" v-model="item_name" placeholder="Item Name" class="form-control"></div>
+                                  <div class="col-md-4"><input type="text" v-model="item_name" placeholder="Item Name" class="form-control"></div>
                                 </div>
 
                               </div>
-                              <div class="col-md-2">
+                              <div class="col-md-1">
                                 <button @click="newItem(object.id)" :disabled="loading" class="btn btn-sm btn-primary">
                                   <span v-if="loading" class="material-icons small">cached</span><span v-else class="material-icons small">create</span></button>
                               </div>
@@ -106,7 +110,7 @@
                           </div>
                           <div class="list-group-item" :key="item.id" v-for="item in object.items">
                             <div class="row">
-                              <div class="col">{{item.item_type}} | {{item.item_name}}</div>
+                              <div class="col">{{item.item_id}} | {{item.item_type}} | {{item.item_name}}</div>
                               <div class="col" align="right">
                                 <!-- <DeleteItem /> -->
                                 <button class='btn btn-sm btn-primary'  data-toggle="modal" :data-target="`#item${item.id}`">
@@ -148,7 +152,10 @@
                 <div class="list-group-flush">
                   <div class="list-group-item">
                     <div class="row">
-                      <div class="col-md-10">
+                      <div class="col-md-5">
+                        <input type="text" v-model="code" class="form-control" placeholder="Code">
+                      </div>
+                      <div class="col-md-5">
                         <input type="text" v-model="asset_name" class="form-control" placeholder="Asset Name">
                       </div>
                       <div class="col-md-2">
@@ -159,7 +166,7 @@
                     </div>
                   </div>
                   <div class="list-group-item" :key="asset.id" v-for="asset in assets">
-                    {{asset.asset_name}}
+                    {{asset.asset_id}} | {{asset.asset_name}}
                   </div>
                 </div>
               </div>
@@ -194,6 +201,7 @@ export default {
       name: '',
       item_type: '',
       asset_name: '',
+      code: '',
       loading: false,
       listLoading: false,
       // showModal: true,
@@ -235,6 +243,7 @@ export default {
       axios.post(`${config.apiUrl}/api/ni/${catId}/`, {
         item_name: this.item_name,
         type: this.item_type,
+        code: this.code,
       }, {
         headers: {
           Authorization: `JWT ${config.get_token()}`,
@@ -244,6 +253,8 @@ export default {
         console.log(res);
         this.categories();
         this.item_name = '';
+        this.code = '';
+        this.item_type = '';
       }).catch(({ res }) => {
         this.loading = false;
         console.log(res);
@@ -275,6 +286,7 @@ export default {
         this.loading = true;
         axios.post(`${config.apiUrl}/api/na/`, {
           name: this.asset_name,
+          code: this.code,
         }, {
           headers: {
             Authorization: `JWT ${config.get_token()}`,
@@ -282,6 +294,7 @@ export default {
         }).then((res) => {
           this.loading = false;
           this.asset_name = '';
+          this.code = '';
           this.assets_list();
           console.log(res);
         }).catch((res) => {
