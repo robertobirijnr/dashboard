@@ -3,7 +3,7 @@
    <div class="sidenav">
          <div class="login-main-text">
             <img src="@/assets/images/gra.png"/><br>
-            <h2>Welcome To Our Portal, Signin to Perform your Task Now </h2>
+            <h2>Welcome To Our Portal, Sign-in to Perform your Task Now </h2>
          </div>
       </div>
       <div class="main">
