@@ -29,7 +29,7 @@ import Department from '@/components/Admin/Departments.vue';
 
 
 export default {
-  name: 'analytics',
+  name: 'Departments',
   components: {
     MainNavbar,
     MainSidebar,

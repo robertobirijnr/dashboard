@@ -54,7 +54,7 @@ export default {
       }).then((response) => {
         this.loading = false;
         const results = response.data;
-        console.log(response);
+        // console.log(response);
         // localStorage.setItem('auth', response.data);
         config.set_token(results.token.token);
         config.set_auth(JSON.stringify(results));

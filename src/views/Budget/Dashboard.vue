@@ -28,7 +28,7 @@ import DashboardComponent from '@/components/Budget/dashboardComponent.vue';
 
 
 export default {
-  name: 'analytics',
+  name: 'dashboard',
   components: {
     MainNavbar,
     MainSidebar,

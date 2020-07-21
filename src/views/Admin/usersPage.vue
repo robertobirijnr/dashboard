@@ -31,7 +31,7 @@ import User from '@/components/Admin/users.vue';
 
 
 export default {
-  name: 'analytics',
+  name: 'User Page',
   components: {
     MainNavbar,
     MainSidebar,

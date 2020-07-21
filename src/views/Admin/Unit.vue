@@ -29,7 +29,7 @@ import Unit from '@/components/Admin/unitComponent.vue';
 
 
 export default {
-  name: 'analytics',
+  name: 'Units',
   components: {
     MainNavbar,
     MainSidebar,

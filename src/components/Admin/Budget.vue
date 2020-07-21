@@ -218,7 +218,7 @@ export default {
       }).then((response) => {
         this.listLoading = false;
         this.object_list = response.data;
-        console.log(response.data);
+        // console.log(response.data);
       }).catch(({ response }) => {
         this.listLoading = false;
         console.log(response);

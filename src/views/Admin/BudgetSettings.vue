@@ -29,7 +29,7 @@ import Budget from '@/components/Admin/Budget.vue';
 
 
 export default {
-  name: 'analytics',
+  name: 'Budget Settings',
   components: {
     MainNavbar,
     MainSidebar,

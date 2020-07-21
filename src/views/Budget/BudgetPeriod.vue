@@ -81,7 +81,7 @@ export default {
         headers: { Authorization: `JWT ${config.get_token()}` },
       }).then((response) => {
         this.loading = false;
-        console.log(response);
+        // console.log(response);
         this.object_list = response.data;
       }).catch(({ response }) => {
         this.loading = false;
@@ -90,7 +90,7 @@ export default {
     },
   },
   mounted() {
-    console.log(config.get_token());
+    // console.log(config.get_token());
     this.periods();
   },
 };

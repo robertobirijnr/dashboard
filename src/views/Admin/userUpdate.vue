@@ -29,7 +29,7 @@ import userUpdateForm from '@/components/Admin/userUpdateForm.vue';
 
 
 export default {
-  name: 'analytics',
+  name: 'User Update',
   components: {
     MainNavbar,
     MainSidebar,

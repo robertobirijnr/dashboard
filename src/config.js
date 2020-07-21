@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 export default {
   apiUrl: 'https://moon-procure.herokuapp.com/api',
+=======
+export default{
+  apiUrl: 'http://localhost:8000/api',
+>>>>>>> 8c24d96b815e81906f9928fea9e7d018e9897b5a
 
   set_token(token) {
     localStorage.setItem('token', token);
@@ -21,6 +26,6 @@ export default {
     return localStorage.getItem('auth');
   },
   get_user() {
-    return localStorage.getItem('use');
+    return localStorage.getItem('user');
   },
 };

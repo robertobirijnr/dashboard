@@ -31,7 +31,7 @@ import BudgetPeriodDetails from '@/views/Budget/budgetPeriodDetails.vue';
 
 
 export default {
-  name: 'analytics',
+  name: 'budget_period_details',
   components: {
     MainNavbar,
     MainSidebar,

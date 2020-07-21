@@ -3,7 +3,7 @@
     <d-row>
       <!-- Main Sidebar -->
       <main-sidebar :items="sidebarItems" title="Budget System" />
-      
+
       <d-col class="main-content offset-lg-2 offset-md-3 p-0" tag="main" lg="10" md="9" sm="12">
 
         <!-- Main Navbar -->
@@ -30,7 +30,7 @@ import MainFooter from '@/components/layout/MainFooter/MainFooter.vue';
 import unitBudgets from '@/views/Budget/unitBudgets.vue';
 
 export default {
-  name: 'analytics',
+  name: 'unit_budget',
   components: {
     MainNavbar,
     MainSidebar,
