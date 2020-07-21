@@ -126,34 +126,34 @@
 </template>
 
 <script>
-  import axios from 'axios';
-  import config from '@/config';
+import axios from 'axios';
+import config from '@/config';
 
-  export default {
-    data(){
-      return {
-        object: {},
-        budgets: {},
-        ubc: '',
-      };
+export default {
+  data() {
+    return {
+      object: {},
+      budgets: {},
+      ubc: '',
+    };
+  },
+  methods: {
+    details() {
+      const id = this.$route.params.period_id;
+      axios.get(`${config.apiUrl}/budget/bs/${id}/`, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+      }).then((res) => {
+        const results = res.data;
+        this.object = results.object;
+        this.budgets = results.unit_budgets;
+        this.ubc = results.ubc + 1;
+      });
     },
-    methods: {
-      details(){
-        const id = this.$route.params.period_id;
-        axios.get(`${config.apiUrl}/budget/bs/${id}/`, {
-          headers: {
-            Authorization: `JWT ${config.get_token()}`
-          }
-        }).then((res) => {
-          const results = res.data;
-          this.object = results.object;
-          this.budgets = results.unit_budgets;
-          this.ubc = results.ubc + 1;
-        })
-      }
-    },
-    mounted(){
-      this.details();
-    }
-  }
+  },
+  mounted() {
+    this.details();
+  },
+};
 </script>

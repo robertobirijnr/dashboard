@@ -1,4 +1,4 @@
-export default{
+export default {
   apiUrl: 'https://moon-procure.herokuapp.com/api',
 
   set_token(token) {
