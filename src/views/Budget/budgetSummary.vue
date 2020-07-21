@@ -34,30 +34,32 @@
                   <tr>
                     <th>Item</th>
                     <th :key="ub.id" v-for="ub in budgets">{{ub.unit_name}}</th>
-                    <!--<th>Unit B</th>-->
+                    <th>Totals</th>
                     <!--<th>Unit C</th>-->
                     <!--<th>Unit D</th>-->
                   </tr>
                   </thead>
                   <tbody>
                   <tr>
-                    <th>Compensation Summary</th>
+                    <th :colspan="ubc">Compensation Summary</th>
                   </tr>
                   <tr>
                     <td>Consolidated Basic</td>
                     <td :key="ub.id" v-for="ub in budgets">GHS {{ub.consolidated_basic_salary}}</td>
-
+                    <td>erwr</td>
                   </tr>
                   <tr>
                     <td>Allowances</td>
                     <td :key="ub.id" v-for="ub in budgets">GHS {{ub.allowances}}</td>
+                    <td>fsfs</td>
                   </tr>
                   <tr>
                     <th>Sub Total</th>
                     <td :key="ub.id" v-for="ub in budgets">GHS {{ub.employees_compensation_total}}</td>
+                    <td>ffdf</td>
                   </tr>
                   <tr>
-                    <th>Goods & Services</th>
+                    <th :colspan="ubc">Goods & Services</th>
                   </tr>
                   <!--<tr>-->
                     <!--<td>Travel and Transport</td>-->
@@ -76,9 +78,10 @@
                   <tr>
                     <th>Sub Total</th>
                     <td :key="ub.id" v-for="ub in budgets">GHS {{ub.goods_services_total}}</td>
+                    <td>werw</td>
                   </tr>
                   <tr>
-                    <th>Assets</th>
+                    <th :colspan="ubc">Assets</th>
                   </tr>
                   <!--<tr>-->
                     <!--<td>Land</td>-->
@@ -97,10 +100,12 @@
                   <tr>
                     <th>Sub Total</th>
                     <td :key="ub.id" v-for="ub in budgets">GHS {{ub.asset_total}}</td>
+                    <td>ewrw</td>
                   </tr>
                   <tr>
                     <th>Budget Total</th>
                     <td :key="ub.id" v-for="ub in budgets">GHS {{ub.consolidated_basic_salary}}</td>
+                    <td>qeqqw</td>
                   </tr>
                   </tbody>
 
@@ -148,7 +153,7 @@
           const results = res.data;
           this.object = results.object;
           this.budgets = results.unit_budgets;
-          this.ubc = results.ubc + 1;
+          this.ubc = results.ubc + 2;
         })
       }
     },

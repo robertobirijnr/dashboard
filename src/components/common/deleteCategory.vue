@@ -2,7 +2,7 @@
     <div>
 
 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">
-  <i class="fa fa-close" style="color:medium slate blue"></i>
+  <i class="fa fa-close" style="color:blue"></i>
 </button>
 
 

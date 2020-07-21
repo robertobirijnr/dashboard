@@ -9,9 +9,9 @@
                 <a class="nav-link" href="#"><h4 class="page-title">{{user.full_name}}</h4></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" @click="logout()"><span class="material-icons">
+                <span class="nav-link" @click="logout()"><span class="material-icons">
                   refresh
-                  </span>logout</a>
+                  </span>logout</span>
             </li>
         </ul>
     </div>

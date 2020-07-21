@@ -30,7 +30,7 @@ import MainFooter from '@/components/layout/MainFooter/MainFooter.vue';
 import NewBudgetPeriod from '@/views/Budget/newBudgetPeriod.vue';
 
 export default {
-  name: 'analytics',
+  name: 'add_new_budget',
   components: {
     MainNavbar,
     MainSidebar,

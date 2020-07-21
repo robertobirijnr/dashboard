@@ -21,7 +21,7 @@
 </template>
 
 <script>
-  import getSidebarItems from '@/data/budget-sidebar-nav-items';
+import getSidebarItems from '@/data/budget-sidebar-nav-items';
 
 // Main layout components
 import MainNavbar from '@/components/layout/MainNavbar/MainNavbar.vue';
@@ -30,7 +30,7 @@ import MainFooter from '@/components/layout/MainFooter/MainFooter.vue';
 import BudgetSummary from '@/views/Budget/budgetSummary.vue';
 
 export default {
-  name: 'salary_scale',
+  name: 'budget_summary',
   components: {
     MainNavbar,
     MainSidebar,

@@ -28,7 +28,7 @@ import DetailPage from '@/components/Admin/DepartmentDetails.vue';
 
 
 export default {
-  name: 'analytics',
+  name: 'Department Details',
   components: {
     MainNavbar,
     MainSidebar,

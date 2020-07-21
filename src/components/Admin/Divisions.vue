@@ -58,7 +58,7 @@
                         </div>
                       </div>
                       <div class="tab-pane fade" :key="depart.id" v-for="depart in object.departments" :id="`nav-contact${depart.id}`" role="tabpanel" :aria-labelledby="`nav-contact${depart.id}-tab`">
-                        <button class="btn btn-primary" data-toggle="modal" :data-target="`#newUnit${depart.id}`">New Unit</button>
+                        <button class="btn btn-primary" @click="show_modal(depart.id)" data-toggle="modal" :data-target="`#newUnit${depart.id}`">New Unit</button>
                         <div class="modal fade" :id="`newUnit${depart.id}`" tabindex="-1" role="dialog" :aria-labelledby="`newUnitLabel${depart.id}`" aria-hidden="true">
                           <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
@@ -215,6 +215,10 @@
         else{
           this.msg = 'All fields are required';
         }
+      },
+      show_modal(id){
+        $(`#newUnit${id}`).modal('show');
+        this.msg = '';
       },
       newUnit(id){
         if(this.code && this.name && this.abbr){

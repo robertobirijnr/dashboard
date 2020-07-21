@@ -10,7 +10,7 @@
         <main-navbar />
 
         <!-- Content -->
-        <BudgetPeriod/>
+        <budget-period />
 
         <!-- Main Footer -->
 
@@ -30,7 +30,7 @@ import MainFooter from '@/components/layout/MainFooter/MainFooter.vue';
 import BudgetPeriod from '@/views/Budget/BudgetPeriod.vue';
 
 export default {
-  name: 'analytics',
+  name: 'budget_period',
   components: {
     MainNavbar,
     MainSidebar,

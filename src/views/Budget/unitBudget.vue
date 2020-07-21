@@ -30,7 +30,7 @@ import MainFooter from '@/components/layout/MainFooter/MainFooter.vue';
 import unitBudgetDetails from '@/views/Budget/unitBudgetDetails.vue';
 
 export default {
-  name: 'analytics',
+  name: 'unit_budget_details',
   components: {
     MainNavbar,
     MainSidebar,

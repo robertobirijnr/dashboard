@@ -30,7 +30,7 @@ import MainFooter from '@/components/layout/MainFooter/MainFooter.vue';
 import createUser from '@/components/Admin/userForm.vue';
 
 export default {
-  name: 'analytics',
+  name: 'Create User',
   components: {
     MainNavbar,
     MainSidebar,

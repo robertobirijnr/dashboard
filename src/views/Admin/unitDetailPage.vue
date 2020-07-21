@@ -28,7 +28,7 @@ import UnitDetail from '@/components/Admin/UnitsDetailComponent.vue';
 
 
 export default {
-  name: 'analytics',
+  name: 'unit details page',
   components: {
     MainNavbar,
     MainSidebar,
