@@ -24,7 +24,7 @@ export default function () {
     },
     {
       title: 'Divisions Setup',
-      htmlBefore: '<i class="material-icons">table_chart</i>',
+      htmlBefore: '<i class="material-icons">format_align_justify</i>',
       to: {
         name: 'divisions',
       },
@@ -38,14 +38,14 @@ export default function () {
     },
     {
       title: 'Units',
-      htmlBefore: '<i class="material-icons">vertical_split</i>',
+      htmlBefore: '<i class="material-icons">ballot</i>',
       to: {
         name: 'unit',
       },
     },
     {
       title: 'Requisitions',
-      htmlBefore: '<i class="material-icons">local_atm</i>',
+      htmlBefore: '<i class="material-icons">emoji_people</i>',
       to: {
         name: 'requisitions',
       },

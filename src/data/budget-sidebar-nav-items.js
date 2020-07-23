@@ -18,34 +18,34 @@ export default function () {
         name: 'budget-periods',
       },
     },
-      {
-        title: 'Units Budgets',
-        htmlBefore: '<i class="material-icons">note_add</i>',
-        to: {
-          name: 'unit-budgets',
-        },
+    {
+      title: 'Units Budgets',
+      htmlBefore: '<i class="material-icons">note_add</i>',
+      to: {
+        name: 'unit-budgets',
       },
-      {
-        title: 'Salary Scale',
-        htmlBefore: '<i class="material-icons">local_atm</i>',
-        to: {
-          name: 'salary-scale',
-        },
+    },
+    {
+      title: 'Salary Scale',
+      htmlBefore: '<i class="material-icons">local_atm</i>',
+      to: {
+        name: 'salary-scale',
       },
-      {
-        title: 'Implementations',
-        htmlBefore: '<i class="material-icons">local_atm</i>',
-        to: {
-          name: 'salary-scale',
-        },
+    },
+    {
+      title: 'Implementations',
+      htmlBefore: '<i class="material-icons">fact_check</i>',
+      to: {
+        name: 'implementations',
       },
-      {
-        title: 'Requisitions',
-        htmlBefore: '<i class="material-icons">local_atm</i>',
-        to: {
-          name: 'requisitions',
-        },
+    },
+    {
+      title: 'Requisitions',
+      htmlBefore: '<i class="material-icons">emoji_people</i>',
+      to: {
+        name: 'requisitions',
       },
+    },
     ];
   }
   return [{
@@ -62,16 +62,16 @@ export default function () {
       name: 'budget-periods',
     },
   },
-    {
+  {
     title: 'Implementations',
-    htmlBefore: '<i class="material-icons">vertical_split</i>',
+    htmlBefore: '<i class="material-icons">fact_check</i>',
     to: {
-      name: 'budget-periods',
+      name: 'implementations',
     },
   },
-    {
+  {
     title: 'Requisitions',
-    htmlBefore: '<i class="material-icons">vertical_split</i>',
+    htmlBefore: '<i class="material-icons">emoji_people</i>',
     to: {
       name: 'requisitions',
     },
