@@ -159,9 +159,41 @@ const router = new Router({
       },
     },
     {
+      path: '/activity-logs',
+      name: 'activity-logs',
+      component: () => import('../views/Admin/Logs.vue'),
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/requisitions',
+      name: 'requisitions',
+      component: () => import('../views/Budget/item_requests.vue'),
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
       path: '/budget_summary/:period_id',
       name: 'budget_summary',
       component: () => import('../views/Budget/budget_summary.vue'),
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/department-budget-summary/:period_id/:depart_id',
+      name: 'department-budget-summary',
+      component: () => import('../views/Budget/department_summary.vue'),
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/division-budget-summary/:period_id/:div_id',
+      name: 'division-budget-summary',
+      component: () => import('../views/Budget/division_summary.vue'),
       meta: {
         requiresAuth: true,
       },

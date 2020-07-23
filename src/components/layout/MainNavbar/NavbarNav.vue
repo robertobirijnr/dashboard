@@ -1,8 +1,8 @@
 <template>
-  <d-navbar-nav class="border-left flex-row">
+  <d-navbar-nav class="border-left flex-row bg-white">
 
     <li class="nav-item dropdown">
-      <span class="nav-link dropdown-toggle text-nowrap px-3" v-d-toggle.user-actions>
+      <span class="nav-link dropdown-toggle dropleft text-nowrap px-3" v-d-toggle.user-actions>
       <span class="d-none d-md-inline-block h6 pt-2">{{user.full_name}}</span>
       </span>
       <d-collapse id="user-actions" class="dropdown-menu dropdown-menu-small">
@@ -13,7 +13,7 @@
         <d-dropdown-item><i class="material-icons">&#xE8B8;</i> Edit Profile</d-dropdown-item>
         <d-dropdown-divider />
         <d-dropdown-item class="text-danger" >
-          <span href="" @click="logout()" ><i class="material-icons text-danger">&#xE879;</i> Logout</span>
+          <span @click="logout()" ><i class="material-icons text-danger">&#xE879;</i> Logout</span>
         </d-dropdown-item>
       </d-collapse>
     </li>

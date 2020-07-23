@@ -26,6 +26,13 @@
                   <d-col>
                     <!-- <d-form> -->
                       <d-form-row>
+                        <d-col md="12" class="form-group">
+                          <label for="id_staff_id">Staff ID</label>
+                          <d-input v-model="staff_id" id="id_staff_id" type="text" placeholder="Staff ID" />
+                        </d-col>
+                      </d-form-row>
+
+                      <d-form-row>
                         <d-col md="6" class="form-group">
                           <label for="id_first_name">First Name</label>
                           <d-input v-model="first_name" id="id_first_name" type="text" placeholder="First Name" />
@@ -126,6 +133,7 @@ export default {
       unit: '',
       pass1: '',
       pass2: '',
+      staff_id: '',
       msg: '',
       departs: {},
       divisions: {},
@@ -152,6 +160,7 @@ export default {
             last_name: this.last_name,
             email: this.email,
             user_type: this.role,
+            staff_id: this.staff_id,
             depart_id: this.depart,
             unit_id: this.unit,
             password: this.pass2,

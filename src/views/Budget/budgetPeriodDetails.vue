@@ -18,12 +18,6 @@
                 <div class="list-group">
                   <div class="list-group-item">
                     <div class="row">
-                      <div class="col">Period</div>
-                      <div class="col" align="right">{{object.period}}</div>
-                    </div>
-                  </div>
-                  <div class="list-group-item">
-                    <div class="row">
                       <div class="col">Start Date</div>
                       <div class="col" align="right">{{object.start_date}}</div>
                     </div>
@@ -202,9 +196,17 @@
       </div>
       <div class="col-md-8">
         <div class="card" v-if="userRole === 'BO'">
-          <div class="card-header">Units Budgets</div>
+          <div class="card-header">
+            <div class="row">
+              <div class="col">Units Budgets</div>
+              <div class="col" align="right">
+                <button @click="open_period(object.id)" :disabled="loading" class="btn btn-sm btn-success" v-if="object.status === 'Close'">Open</button>
+                <button class="btn btn-sm btn-warning" :disabled="loading" @click="close_period(object.id)" v-else>Close</button>
+              </div>
+            </div>
+          </div>
           <div class="card-body ">
-            <div v-if="object.unit_budgets">
+            <div v-if="object.unit_budgets.length">
               <div class="list-group-flush" :key="unit.id" v-for="unit in object.unit_budgets">
                 <router-link :to="{name: 'unitBudget-details', params: {unit_id: unit.unit_budget_id}}" class="list-group-item bg-white text-black list-group-item-action flex-column align-items-start">
                   <div class="d-flex w-100 justify-content-between">
@@ -217,7 +219,7 @@
               </div>
             </div>
             <div v-else>
-              Nothing to show here!
+              No unit budgets yet!
             </div>
           </div>
         </div>
@@ -252,7 +254,7 @@
                 <div class="row">
                   <div class="col-md-12">
                         <span :key="item.id" v-for="item in unit_budget.items" style="margin-right:5px">
-                            <span class="badge badge-primary" :title="`${item.item.category_name}`" >{{item.item.item_name}} ({{item.quantity}}) <span class="material-icons small" style="cursor: pointer" @click="remove_budget_item(unit_budget.id, item.item.id)" >clear</span></span>
+                            <span class="badge badge-primary" :title="`${item.item.category_name}`" >{{item.item.item_name}} <span v-if="item.item.item_type === 'Service'">(GHS {{formatPrice(item.total_amount)}})</span><span v-else>({{item.quantity}})</span> <span class="material-icons small" style="cursor: pointer" @click="remove_budget_item(unit_budget.id, item.item.id)" >clear</span></span>
                         </span>
                   </div>
                 </div>
@@ -264,22 +266,26 @@
                       {{errors.detail}}
                     </div>
                     <div class="form-group">
-                      <label for="">Category</label>
+                      <label>Category</label>
                       <select name="category" v-model="category" id="id_category" class="form-control">
                         <option value="">Select Category</option>
                         <option v-for="category in categories" :key="category.id" :value="`${category.id}`" >{{category.name}}</option>
                       </select>
                     </div>
                     <div class="form-group">
-                      <label for="">Items</label>
+                      <label>Items</label>
                       <select name="item" v-model="item" id="id_item" class="form-control">
                         <option value="">Select Item</option>
                         <option v-for="item in items" :key="item.id" :value="`${item.id}`">{{item.item_name}}</option>
                       </select>
                     </div>
                     <div class="form-group" :hidden="item_obj.item_type === 'Service'">
-                      <label for="">Quantity</label>
-                      <input type="number" name="quantity" v-model="quantity" id="" class="form-control">
+                      <label>Quantity</label>
+                      <input type="number" name="quantity" v-model="quantity" class="form-control">
+                    </div>
+                    <div class="form-group" :hidden="item_obj.item_type === 'Good'">
+                      <label>Amount</label>
+                      <input type="number" name="amount" :disabled="item_obj.item_type === 'Good' || item === ''" v-model="amount" class="form-control">
                     </div>
                     <div class="form-group">
                       <button :disabled="formLoading" @click="`${new_budget_item(unit_budget.id)}`" type="submit" class="btn btn-sm btn-block btn-info"><span v-if="formLoading">Saving...</span><span v-else>Submit</span></button>
@@ -291,7 +297,7 @@
                 <div class="row">
                   <div class="col-md-12">
                         <span :key="salary.id" v-for="salary in unit_budget.employees_compensations" style="margin-right:5px">
-                            <span class="badge badge-primary" :title="`GHS ${formatPrice(salary.period_basic)}`" >{{salary.first_name}} {{salary.last_name}} (GHS {{formatPrice(salary.monthly_basic)}}) <span class="material-icons small" style="cursor: pointer">clear</span></span>
+                            <span class="badge badge-primary" :title="`GHS ${formatPrice(salary.period_basic)}`" >{{salary.first_name}} {{salary.last_name}} (GHS {{formatPrice(salary.monthly_basic)}}) <span @click="remove_budget_com(unit_budget.id, salary.id)" class="material-icons small" style="cursor: pointer">clear</span></span>
                         </span>
                   </div>
                 </div>
@@ -307,19 +313,19 @@
                       <input type="text" id="id_snb1" v-model="number" class="form-control" placeholder="Staff Number">
                     </div>
                   </div>
-                  <div class="col">
-                    <div class="form-group">
-                      <label for="id_p1">Postion</label>
-                      <select v-model="position" id="id_p1" class="custom-select">
-                        <option value="">Choose...</option>
-                        <option value="Office Manager">Office Manager</option>
-                        <option value="Accounts Officer">Accounts Officer</option>
-                        <option value="Tax Audit">Tax Audit</option>
-                        <option value="Secretary">Secretary</option>
-                      </select>
-                      <!--<input type="text" id="id_p1" v-model="number" class="form-control" placeholder="Pos">-->
-                    </div>
-                  </div>
+                  <!--<div class="col">-->
+                    <!--<div class="form-group">-->
+                      <!--<label for="id_p1">Postion</label>-->
+                      <!--<select v-model="position" id="id_p1" class="custom-select">-->
+                        <!--<option value="">Choose...</option>-->
+                        <!--<option value="Office Manager">Office Manager</option>-->
+                        <!--<option value="Accounts Officer">Accounts Officer</option>-->
+                        <!--<option value="Tax Audit">Tax Audit</option>-->
+                        <!--<option value="Secretary">Secretary</option>-->
+                      <!--</select>-->
+                      <!--&lt;!&ndash;<input type="text" id="id_p1" v-model="number" class="form-control" placeholder="Pos">&ndash;&gt;-->
+                    <!--</div>-->
+                  <!--</div>-->
                 </div>
 
                 <div class="row">
@@ -404,6 +410,7 @@
                         <option value="On Leave">On Leave</option>
                         <option value="On Paid Leave">On Paid Leave</option>
                         <option value="About to Retire">About to Retire</option>
+                        <option value="Interdiction">Interdiction</option>
                       </select>
                     </div>
                   </div>
@@ -425,14 +432,14 @@
                 </div>
 
                 <div class="form-group">
-                  <button :disabled="formLoading" @click="new_budget_com(unit_budget.id)" class="btn btn-sm btn-primary btn-block">Submit</button>
+                  <button :disabled="formLoading" id="submit1" @click="new_budget_com(unit_budget.id)" class="btn btn-sm btn-primary btn-block">Submit</button>
                 </div>
               </div>
               <div class="tab-pane fade mt-2" id="contact1" role="tabpanel" aria-labelledby="contact1-tab">
                 <div class="row">
                   <div class="col-md-12">
                         <span :key="asset.id" v-for="asset in unit_budget.assets" style="margin-right:5px">
-                            <span class="badge badge-primary">{{asset.asset.asset_name}} <span class="material-icons small" style="cursor: pointer">clear</span></span>
+                            <span class="badge badge-primary">{{asset.asset.asset_name}} <span @click="remove_budget_asset(unit_budget.id, asset.id)" class="material-icons small" style="cursor: pointer">clear</span></span>
                         </span>
                   </div>
                 </div>
@@ -456,7 +463,7 @@
                 <div class="row">
                   <div class="col-md-12">
                         <span :key="item.id" v-for="item in unit_budget.imprests" style="margin-right:5px">
-                            <span class="badge badge-primary">{{item.imprest.item_name}} <span class="material-icons small" style="cursor: pointer">clear</span></span>
+                            <span class="badge badge-primary">{{item.imprest.item_name}} <span @click="remove_budget_imprest(unit_budget.id, item.id)" class="material-icons small" style="cursor: pointer">clear</span></span>
                         </span>
                   </div>
                 </div>
@@ -495,22 +502,26 @@
               <div class="tab-pane fade show active pt-2  border-bottom-0" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                 <span v-if="msg">{{msg}}</span>
                 <div class="form-group">
-                  <label for="">Category</label>
+                  <label >Category</label>
                   <select name="category" v-model="category" id="id_cat" class="form-control">
                     <option value="">Select Category</option>
                     <option v-for="category in categories" :key="category.id" :value="`${category.id}`" >{{category.name}}</option>
                   </select>
                 </div>
                 <div class="form-group">
-                  <label for="">Items</label>
+                  <label >Items</label>
                   <select name="item" v-model="item" id="item1" class="form-control">
                     <option value="">Select Item</option>
                     <option v-for="item in items" :key="item.id" :value="`${item.id}`">{{item.item_name}}</option>
                   </select>
                 </div>
-                <div class="form-group" id="id_fg_qnty" :hidden="item_obj.item_type === 'Service'">
-                  <label for="">Quantity</label>
+                <div class="form-group" :hidden="item_obj.item_type === 'Service'">
+                  <label>Quantity</label>
                   <input type="number" name="quantity" :disabled="item_obj.item_type === 'Service'" v-model="quantity" class="form-control">
+                </div>
+                <div class="form-group" :hidden="item_obj.item_type === 'Good'">
+                  <label>Amount</label>
+                  <input type="number" name="amount" :disabled="item_obj.item_type === 'Good' || item === ''" v-model="amount" class="form-control">
                 </div>
                 <div class="form-group">
                   <button :disabled="formLoading" @click="new_budget('gs')" type="submit" class="btn btn-sm btn-block btn-info"><span v-if=formLoading>Saving...</span><span v-else>Submit</span></button>
@@ -525,19 +536,19 @@
                       <input type="text" id="id_snb" v-model="number" class="form-control" placeholder="Staff Number">
                     </div>
                   </div>
-                  <div class="col">
-                    <div class="form-group">
-                      <label for="id_p">Position</label>
-                      <select v-model="position" id="id_p" class="form-control">
-                        <option value="">Choose...</option>
-                        <option value="Office Manager">Office Manager</option>
-                        <option value="Accounts Officer">Accounts Officer</option>
-                        <option value="Tax Audit">Tax Audit</option>
-                        <option value="Secretary">Secretary</option>
-                      </select>
-                      <!--<input type="text" id="id_p" v-model="position" class="form-control" placeholder="Position">-->
-                    </div>
-                  </div>
+                  <!--<div class="col">-->
+                    <!--<div class="form-group">-->
+                      <!--<label for="id_p">Position</label>-->
+                      <!--<select v-model="position" id="id_p" class="form-control">-->
+                        <!--<option value="">Choose...</option>-->
+                        <!--<option value="Office Manager">Office Manager</option>-->
+                        <!--<option value="Accounts Officer">Accounts Officer</option>-->
+                        <!--<option value="Tax Audit">Tax Audit</option>-->
+                        <!--<option value="Secretary">Secretary</option>-->
+                      <!--</select>-->
+                      <!--&lt;!&ndash;<input type="text" id="id_p" v-model="position" class="form-control" placeholder="Position">&ndash;&gt;-->
+                    <!--</div>-->
+                  <!--</div>-->
                 </div>
 
                 <div class="row">
@@ -622,7 +633,8 @@
                         <option value="At Post">At Post</option>
                         <option value="On Leave">On Leave</option>
                         <option value="On Paid Leave">On Paid Leave</option>
-                        <option value="About to Retire">Retired</option>
+                        <option value="About to Retire">About to Retire</option>
+                        <option value="Interdiction">Interdiction</option>
                       </select>
                     </div>
                   </div>
@@ -702,14 +714,18 @@
                     <tr class="small" align="center">
                       <th>Item</th>
                       <th>Category</th>
+                      <th>Type</th>
                       <th>Quantity</th>
+                      <th>Amount (GHS)</th>
                     </tr>
                     </thead>
                     <tbody :key="item.id" v-for="item in unit_budget.items">
                     <tr class="small" align="center">
                       <td>{{item.item.item_name}}</td>
                       <td>{{item.item.category_name}}</td>
+                      <td>{{item.item.item_type}}</td>
                       <td>{{item.quantity}}</td>
+                      <td>{{formatPrice(item.total_amount)}}</td>
                     </tr>
                     </tbody>
                   </table>
@@ -768,6 +784,7 @@
         items: {},
         unit_budget: {},
         quantity: '',
+        amount: '',
         item: '',
         asset: '',
         assets: {},
@@ -811,6 +828,36 @@
       formatPrice(value) {
         let val = (value/1).toFixed(2).replace(',', '.');
         return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+      },
+      open_period(id){
+        this.loading = true;
+        axios.get(`${config.apiUrl}/budget/opbp/${id}/`, {
+          headers: {
+            Authorization: `JWT ${config.get_token()}`
+          }
+        }).then((res) => {
+          this.details();
+          this.loading = false;
+          console.log(res);
+        }).catch((response) => {
+          this.loading = false;
+          console.log(response);
+        });
+      },
+      close_period(id){
+        this.loading = true;
+        axios.get(`${config.apiUrl}/budget/cbp/${id}/`, {
+          headers: {
+            Authorization: `JWT ${config.get_token()}`
+          }
+        }).then((res) => {
+          this.details();
+          this.loading = false;
+          console.log(res);
+        }).catch((response) => {
+          this.loading = false;
+          console.log(response);
+        });
       },
       details() {
         const id = this.$route.params.period_id;
@@ -901,6 +948,7 @@
               category: this.category,
               item: this.item,
               quantity: this.quantity,
+              amount: this.amount,
               budget_period: id,
             }, {
               headers: { Authorization: `JWT ${config.get_token()}` },
@@ -910,6 +958,7 @@
               this.quantity = '';
               this.category = '';
               this.item = '';
+              this.amount = '';
               this.current_unit_budget();
             }).catch(({ response }) => {
               this.formLoading = false;
@@ -921,7 +970,7 @@
           }
         }
         else if (type === 'ec'){
-          if(id && this.fname && this.lname && this.position && this.number && this.rank && this.notch && this.status){
+          if(id && this.fname && this.lname && this.number && this.rank && this.notch && this.status){
             this.formLoading = true;
             axios.post(`${config.apiUrl}/budget/nub/${type}/`, {
               budget_period: id,
@@ -932,7 +981,7 @@
               notch: this.notch,
               emt: this.em_type,
               status: this.status,
-              position: this.position,
+              // position: this.position,
             }, {
               headers: {
                 Authorization: `JWT ${config.get_token()}`
@@ -1030,7 +1079,7 @@
         }
       },
       new_budget_com(ubid){
-        if(ubid && this.fname && this.lname && this.position && this.number && this.rank1 && this.notch1 && this.status){
+        if(ubid && this.fname && this.lname && this.number && this.rank1 && this.notch1 && this.status){
           this.formLoading = true;
           axios.post(`${config.apiUrl}/budget/nubc/`, {
             ub_id: ubid,
@@ -1040,7 +1089,8 @@
             rank: this.rank1,
             notch: this.notch1,
             emt: this.em_type,
-            position: this.position,
+            amount: this.amount,
+            // position: this.position,
             status: this.status
           }, {
             headers: {
@@ -1051,6 +1101,7 @@
             console.log(res.data);
             this.fname = '';
             this.lname = '';
+            this.amount = '';
             this.number = '';
             this.rank1 = '';
             this.notch1 = '';
@@ -1124,6 +1175,36 @@
           console.log(response.data);
         });
       },
+      remove_budget_com(ubid, com){
+        axios.post(`${config.apiUrl}/budget/rubc/${ubid}/${com}/`, {}, {
+          headers: { Authorization: `JWT ${config.get_token()}` },
+        }).then((res) => {
+          console.log(res);
+          this.current_unit_budget();
+        }).catch(({res}) => {
+          console.log(res.data);
+        })
+      },
+      remove_budget_asset(ubid, asset){
+        axios.post(`${config.apiUrl}/budget/ruba/${ubid}/${asset}/`, {}, {
+          headers: { Authorization: `JWT ${config.get_token()}` },
+        }).then((res) => {
+          this.current_unit_budget();
+          console.log(res);
+        }).catch(({res}) => {
+          console.log(res.data);
+        })
+      },
+      remove_budget_imprest(ubid, imp){
+        axios.post(`${config.apiUrl}/budget/rubim/${ubid}/${imp}/`, {}, {
+          headers: { Authorization: `JWT ${config.get_token()}` },
+        }).then((res) => {
+          this.current_unit_budget();
+          console.log(res);
+        }).catch(({res}) => {
+          console.log(res.data);
+        })
+      },
       confirm_budget(ubid) {
         this.loading = true;
         axios.post(`${config.apiUrl}/budget/cfub/${ubid}/`, {}, {
@@ -1196,6 +1277,8 @@
 
         if(rank && notc){
           this.find_scale(rank, notc);
+        }else{
+          document.getElementById('id_submit1').disabled = true;
         }
       }
     }

@@ -14,7 +14,29 @@
         <div class="card card-small mb-4 h-100">
           <div class="card-header border-bottom">
             <div v-if="userRole === 'BO'">
-              <router-link to="/new-budget-period" class="btn btn-primary">New Period</router-link>
+              <button type="button" data-toggle="modal" data-target="#newPeriod" class="btn btn-primary">New Period</button>
+              <div class="modal fade" id="newPeriod" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLongTitle1">New Period</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="form-group">
+                        <input type="date" v-model="start_date" placeholder="Enter unit code" class="form-control" />
+                      </div>
+
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button type="button" :disabled="loading" @click="new_period()" class="btn btn-primary">Submit</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
           </div>
@@ -25,7 +47,7 @@
               <thead class="bg-light">
                 <tr>
                   <th scope="col" class="border-0">#</th>
-                  <th scope="col" class="border-0">Period</th>
+                  <!--<th scope="col" class="border-0">Period</th>-->
                   <th scope="col" class="border-0">Start Date</th>
                   <th scope="col" class="border-0">End Date</th>
                   <th scope="col" class="border-0">Status</th>
@@ -35,7 +57,7 @@
               <tbody :key="object.id" v-for="object in object_list">
                 <tr>
                   <td>{{object.budget_period_id}}</td>
-                  <td>{{object.period}}</td>
+                  <!--<td>{{object.period}}</td>-->
                   <td>{{object.start_date}}</td>
                   <td>{{object.end_date}}</td>
                   <td>{{object.status}}</td>
@@ -67,6 +89,7 @@ export default {
     return {
       object_list: {},
       loading: false,
+      start_date: '',
     };
   },
   computed: {
@@ -75,6 +98,28 @@ export default {
     },
   },
   methods: {
+    new_period(){
+      if(this.start_date){
+        this.loading = true;
+        axios.post(`${config.apiUrl}/budget/nbp/`, {
+          start_date: this.start_date,
+        }, {
+          headers: {
+            Authorization: `JWT ${config.get_token()}`
+          }
+        }).then((response) => {
+          this.loading = false;
+          console.log(response);
+          $('#newPeriod').modal('hide');
+          this.periods();
+          // this.$router.push('/budget-periods');
+        }).catch((response) => {
+          this.laoding = false;
+          console.log(response);
+        });
+      }
+
+    },
     periods() {
       this.loading = true;
       axios.get(`${config.apiUrl}/budget/abp`, {

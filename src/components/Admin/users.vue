@@ -34,7 +34,7 @@
                 </thead>
                 <tbody :key="object.id" v-for="object in object_list">
                   <tr>
-                    <td>{{object.id}}</td>
+                    <td>{{object.staff_id}}</td>
                     <td>{{object.first_name}}</td>
                     <td>{{object.last_name}}</td>
                     <td>{{object.email}}</td>

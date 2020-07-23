@@ -1,0 +1,218 @@
+<template>
+  <div class="main-content-container container-fluid px-4">
+    <div class="page-header row no-gutters py-4">
+      <div class="col-12 col-sm-12 text-center text-sm-left mb-0">
+        <span class="text-uppercase page-subtitle">Overview</span>
+        <h3 class="page-title">{{object.name}} Budget Summary</h3>
+      </div>
+    </div>
+    <div>
+      <div class="row">
+        <div class="col-md-12 col-lg-12">
+          <div class="card h-100">
+            <div class="card-header">
+              <div class="row">
+                <div class="col"><button class="btn-sm btn btn-primary">EXCEL</button></div>
+                <!--<div class="col" align="right">-->
+                <!--<div class="btn-group mr-2">-->
+                <!--<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+                <!--Departments Summary-->
+                <!--</button>-->
+                <!--<div class="dropdown-menu" :key="depart.id" v-for="depart in departments">-->
+                <!--<a class="dropdown-item" href="#">{{depart.name}}</a>-->
+                <!--&lt;!&ndash;<a class="dropdown-item" href="#">Another action</a>&ndash;&gt;-->
+                <!--&lt;!&ndash;<a class="dropdown-item" href="#">Something else here</a>&ndash;&gt;-->
+                <!--&lt;!&ndash;<div class="dropdown-divider"></div>&ndash;&gt;-->
+                <!--&lt;!&ndash;<a class="dropdown-item" href="#">Separated link</a>&ndash;&gt;-->
+                <!--</div>-->
+                <!--</div>-->
+                <!--<div class="btn-group">-->
+                <!--<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+                <!--Divisions Summary-->
+                <!--</button>-->
+                <!--<div class="dropdown-menu" :key="div.id" v-for="div in divisions">-->
+                <!--<a class="dropdown-item" href="#">{{div.name}}</a>-->
+                <!--&lt;!&ndash;<a class="dropdown-item" href="#">Another action</a>&ndash;&gt;-->
+                <!--&lt;!&ndash;<a class="dropdown-item" href="#">Something else here</a>&ndash;&gt;-->
+                <!--&lt;!&ndash;<div class="dropdown-divider"></div>&ndash;&gt;-->
+                <!--&lt;!&ndash;<a class="dropdown-item" href="#">Separated link</a>&ndash;&gt;-->
+                <!--</div>-->
+                <!--</div>-->
+                <!--</div>-->
+              </div>
+
+              <!--<ul class="nav nav-tabs" id="myTab" role="tablist">-->
+              <!--<li class="nav-item">-->
+              <!--<a class="nav-link active" id="division-tab" data-toggle="tab" href="#division" role="tab" aria-controls="division" aria-selected="true">Division Budget Summary</a>-->
+              <!--</li>-->
+              <!--<li class="nav-item">-->
+              <!--<a class="nav-link" id="department-tab" data-toggle="tab" href="#department" role="tab" aria-controls="department" aria-selected="false">Department budget Summary</a>-->
+              <!--</li>-->
+              <!--<li class="nav-item">-->
+              <!--<a class="nav-link" id="unit-tab" data-toggle="tab" href="#unit" role="tab" aria-controls="unit" aria-selected="false">Unit Budget Summary</a>-->
+              <!--</li>-->
+              <!--</ul>-->
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-sm table-bordered">
+                  <thead>
+                  <tr align="center">
+                    <th :colspan="ubc">{{period.start_date}} - {{period.end_date}} Budget Summary</th>
+                  </tr>
+                  <tr>
+                    <th>Item</th>
+                    <th :key="ub.id" v-for="ub in unit_budgets">{{ub.unit_name}}</th>
+                    <th>Totals</th>
+                    <!--<th>Unit C</th>-->
+                    <!--<th>Unit D</th>-->
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                    <th :colspan="ubc">Compensation Summary</th>
+                  </tr>
+                  <tr>
+                    <td>Consolidated Basic</td>
+                    <td :key="ub.id" v-for="ub in unit_budgets">GHS {{formatPrice(ub.consolidated_basic_salary)}}</td>
+                    <td>GHS {{formatPrice(cb)}}</td>
+                  </tr>
+                  <tr>
+                    <td>Allowances</td>
+                    <td :key="ub.id" v-for="ub in unit_budgets">GHS {{formatPrice(ub.allowances)}}</td>
+                    <td>GHS {{formatPrice(allawa)}}</td>
+                  </tr>
+                  <tr>
+                    <th>Sub Total</th>
+                    <td :key="ub.id" v-for="ub in unit_budgets">GHS {{formatPrice(ub.employees_compensation_total)}}</td>
+                    <td>GHS {{formatPrice(cs)}}</td>
+                  </tr>
+                  <tr>
+                    <th :colspan="ubc">Goods & Services</th>
+                  </tr>
+                  <!--<tr>-->
+                  <!--<td>Travel and Transport</td>-->
+                  <!--<td></td>-->
+                  <!--<td></td>-->
+                  <!--<td></td>-->
+                  <!--<td></td>-->
+                  <!--</tr>-->
+                  <!--<tr>-->
+                  <!--<td>General Cleaning</td>-->
+                  <!--<td></td>-->
+                  <!--<td></td>-->
+                  <!--<td></td>-->
+                  <!--<td></td>-->
+                  <!--</tr>-->
+                  <tr>
+                    <th>Sub Total</th>
+                    <td :key="ub.id" v-for="ub in unit_budgets">GHS {{formatPrice(ub.goods_services_total)}}</td>
+                    <td>GHS {{formatPrice(gss)}}</td>
+                  </tr>
+                  <tr>
+                    <th :colspan="ubc">Assets</th>
+                  </tr>
+                  <!--<tr>-->
+                  <!--<td>Land</td>-->
+                  <!--<td></td>-->
+                  <!--<td></td>-->
+                  <!--<td></td>-->
+                  <!--<td></td>-->
+                  <!--</tr>-->
+                  <!--<tr>-->
+                  <!--<td>Office Building</td>-->
+                  <!--<td></td>-->
+                  <!--<td></td>-->
+                  <!--<td></td>-->
+                  <!--<td></td>-->
+                  <!--</tr>-->
+                  <tr>
+                    <th>Sub Total</th>
+                    <td :key="ub.id" v-for="ub in unit_budgets">GHS {{formatPrice(ub.asset_total)}}</td>
+                    <td>GHS {{formatPrice(as)}}</td>
+                  </tr>
+                  <tr>
+                    <th>Budget Total</th>
+                    <td :key="ub.id" v-for="ub in unit_budgets">GHS {{formatPrice(ub.total_budget)}}</td>
+                    <td>GHS {{formatPrice(bt)}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--<div class="tab-content" id="myTabContent">-->
+              <!--<div class="tab-pane fade show active" id="division" role="tabpanel" aria-labelledby="division-tab">-->
+              <!--Division Budget Summary-->
+              <!--</div>-->
+              <!--<div class="tab-pane fade" id="department" role="tabpanel" aria-labelledby="department-tab">-->
+              <!--Department budget Summary-->
+              <!--</div>-->
+              <!--<div class="tab-pane fade" id="unit" role="tabpanel" aria-labelledby="unit-tab">-->
+              <!--Department budget Summary-->
+              <!--</div>-->
+              <!--</div>-->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  import axios from 'axios';
+  import config from '@/config';
+
+  export default {
+    name: "DivisionSummary",
+    data(){
+      return{
+        object: {},
+        unit_budgets: {},
+        period: {},
+        cb: '',
+        allawa: '',
+        cs: '',
+        gss: '',
+        as: '',
+        bt: '',
+        ubc: '',
+      };
+    },
+    methods: {
+      formatPrice(value) {
+        let val = (value/1).toFixed(2).replace(',', '.');
+        return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+      },
+      details(){
+        const period_id = this.$route.params.period_id;
+        const div_id = this.$route.params.div_id;
+        axios.get(`${config.apiUrl}/budget/dvbs/${period_id}/${div_id}/`, {
+          headers: {
+            Authorization: `JWT ${config.get_token()}`
+          }
+        }).then((res) => {
+          const results = res.data;
+          this.object = results.object;
+          this.period = results.budget_period;
+          this.unit_budgets = results.unit_budgets;
+          this.cb = results.cb;
+          this.allawa = results.allawa;
+          this.cs = results.cs;
+          this.gss = results.gss;
+          this.as = results.as;
+          this.bt = results.bt;
+          this.ubc = results.ubc + 2;
+        }).catch((res) => {
+          console.log(res);
+        })
+      }
+    },
+    mounted() {
+      this.details();
+    },
+  }
+</script>
+
+<style scoped>
+
+</style>

@@ -32,6 +32,20 @@ export default function () {
           name: 'salary-scale',
         },
       },
+      {
+        title: 'Implementations',
+        htmlBefore: '<i class="material-icons">local_atm</i>',
+        to: {
+          name: 'salary-scale',
+        },
+      },
+      {
+        title: 'Requisitions',
+        htmlBefore: '<i class="material-icons">local_atm</i>',
+        to: {
+          name: 'requisitions',
+        },
+      },
     ];
   }
   return [{
@@ -46,6 +60,20 @@ export default function () {
     htmlBefore: '<i class="material-icons">vertical_split</i>',
     to: {
       name: 'budget-periods',
+    },
+  },
+    {
+    title: 'Implementations',
+    htmlBefore: '<i class="material-icons">vertical_split</i>',
+    to: {
+      name: 'budget-periods',
+    },
+  },
+    {
+    title: 'Requisitions',
+    htmlBefore: '<i class="material-icons">vertical_split</i>',
+    to: {
+      name: 'requisitions',
     },
   },
   ];

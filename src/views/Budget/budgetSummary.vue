@@ -11,7 +11,36 @@
         <div class="col-md-12 col-lg-12">
           <div class="card h-100">
             <div class="card-header">
-              <button class="btn-sm btn btn-primary">EXCEL</button>
+              <div class="row">
+                <div class="col"><button class="btn-sm btn btn-primary">EXCEL</button></div>
+                <div class="col" align="right">
+                  <div class="btn-group mr-2">
+                    <button type="button" :disabled="!departments.length" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Departments Summary
+                    </button>
+                    <div class="dropdown-menu" :key="depart.id" v-for="depart in departments">
+                      <router-link class="dropdown-item" :to="`/department-budget-summary/${object.budget_period_id}/${depart.id}`">{{depart.name}}</router-link>
+                      <!--<a class="dropdown-item" href="#">Another action</a>-->
+                      <!--<a class="dropdown-item" href="#">Something else here</a>-->
+                      <!--<div class="dropdown-divider"></div>-->
+                      <!--<a class="dropdown-item" href="#">Separated link</a>-->
+                    </div>
+                  </div>
+                  <div class="btn-group">
+                    <button type="button" :disabled="!divisions.length" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Divisions Summary
+                    </button>
+                    <div class="dropdown-menu" :key="div.id" v-for="div in divisions">
+                      <router-link class="dropdown-item" :to="`/division-budget-summary/${object.budget_period_id}/${div.id}`">{{div.name}}</router-link>
+                      <!--<a class="dropdown-item" href="#">Another action</a>-->
+                      <!--<a class="dropdown-item" href="#">Something else here</a>-->
+                      <!--<div class="dropdown-divider"></div>-->
+                      <!--<a class="dropdown-item" href="#">Separated link</a>-->
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <!--<ul class="nav nav-tabs" id="myTab" role="tablist">-->
               <!--<li class="nav-item">-->
               <!--<a class="nav-link active" id="division-tab" data-toggle="tab" href="#division" role="tab" aria-controls="division" aria-selected="true">Division Budget Summary</a>-->
@@ -45,18 +74,18 @@
                     </tr>
                     <tr>
                       <td>Consolidated Basic</td>
-                      <td :key="ub.id" v-for="ub in budgets">GHS {{ub.consolidated_basic_salary}}</td>
-                      <td>erwr</td>
+                      <td :key="ub.id" v-for="ub in budgets">GHS {{formatPrice(ub.consolidated_basic_salary)}}</td>
+                      <td>GHS {{formatPrice(cb)}}</td>
                     </tr>
                     <tr>
                       <td>Allowances</td>
-                      <td :key="ub.id" v-for="ub in budgets">GHS {{ub.allowances}}</td>
-                      <td>fsfs</td>
+                      <td :key="ub.id" v-for="ub in budgets">GHS {{formatPrice(ub.allowances)}}</td>
+                      <td>GHS {{formatPrice(allawa)}}</td>
                     </tr>
                     <tr>
                       <th>Sub Total</th>
-                      <td :key="ub.id" v-for="ub in budgets">GHS {{ub.employees_compensation_total}}</td>
-                      <td>ffdf</td>
+                      <td :key="ub.id" v-for="ub in budgets">GHS {{formatPrice(ub.employees_compensation_total)}}</td>
+                      <td>GHS {{formatPrice(cs)}}</td>
                     </tr>
                     <tr>
                       <th :colspan="ubc">Goods & Services</th>
@@ -77,8 +106,8 @@
                     <!--</tr>-->
                     <tr>
                       <th>Sub Total</th>
-                      <td :key="ub.id" v-for="ub in budgets">GHS {{ub.goods_services_total}}</td>
-                      <td>werw</td>
+                      <td :key="ub.id" v-for="ub in budgets">GHS {{formatPrice(ub.goods_services_total)}}</td>
+                      <td>GHS {{formatPrice(gss)}}</td>
                     </tr>
                     <tr>
                       <th :colspan="ubc">Assets</th>
@@ -99,13 +128,13 @@
                     <!--</tr>-->
                     <tr>
                       <th>Sub Total</th>
-                      <td :key="ub.id" v-for="ub in budgets">GHS {{ub.asset_total}}</td>
-                      <td>ewrw</td>
+                      <td :key="ub.id" v-for="ub in budgets">GHS {{formatPrice(ub.asset_total)}}</td>
+                      <td>GHS {{formatPrice(as)}}</td>
                     </tr>
                     <tr>
                       <th>Budget Total</th>
-                      <td :key="ub.id" v-for="ub in budgets">GHS {{ub.consolidated_basic_salary}}</td>
-                      <td>qeqqw</td>
+                      <td :key="ub.id" v-for="ub in budgets">GHS {{formatPrice(ub.total_budget)}}</td>
+                      <td>GHS {{formatPrice(bt)}}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -139,9 +168,22 @@ export default {
       object: {},
       budgets: {},
       ubc: '',
+      departments: {},
+      divisions: {},
+      cb: '',
+      allawa: '',
+      cs: '',
+      gss: '',
+      as: '',
+      bt: '',
+
     };
   },
   methods: {
+    formatPrice(value) {
+        let val = (value/1).toFixed(2).replace(',', '.');
+        return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+      },
     details() {
       const id = this.$route.params.period_id;
       axios
@@ -154,7 +196,15 @@ export default {
           const results = res.data;
           this.object = results.object;
           this.budgets = results.unit_budgets;
-          this.ubc = results.ubc + 1;
+          this.departments = results.departments;
+          this.divisions = results.divisions;
+          this.ubc = results.ubc + 2;
+          this.cb = results.cb;
+          this.allawa = results.allawa;
+          this.cs = results.cs;
+          this.gss = results.gss;
+          this.as = results.as;
+          this.bt = results.bt;
         });
     },
   },

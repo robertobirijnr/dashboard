@@ -14,7 +14,9 @@
           <d-card-header class="border-bottom">
             <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
               <li class="nav-item"><a href="#home" id="home-tab" data-toggle="tab" class="nav-link active" aria-selected="true">Goods and Services</a></li>
+              <!--<li class="nav-item"><a href="#imprest" id="imprest-tab" data-toggle="tab" class="nav-link" aria-selected="true">Imprest Items</a></li>-->
               <li class="nav-item"><a href="#contact" id="contact-tab" data-toggle="tab" class="nav-link" aria-selected="true">Assets</a></li>
+              <li class="nav-item"><a href="#compen" id="compen-tab" data-toggle="tab" class="nav-link" aria-selected="true">Compensations</a></li>
             </ul>
           </d-card-header>
           <div class="card-body">
@@ -71,8 +73,11 @@
                     <div class="tab-content" id="v-pills-tabContent" >
                       <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
                         <div class="row mb-4">
-                          <div class="col-md-8">
-                            <input type="text" v-model="name" placeholder="Add New Category" class="form-control">
+                          <div class="col-md-4">
+                            <input type="text" v-model="code" placeholder="Code" class="form-control">
+                          </div>
+                          <div class="col-md-4">
+                            <input type="text" v-model="name" placeholder="Name" class="form-control">
                           </div>
                           <div class="col-md-4">
                             <button @click="newCat()" :disabled="loading" class="btn btn-sm btn-primary">
@@ -95,7 +100,7 @@
                                       <option value="">Choose...</option>
                                       <option value="Good">Good</option>
                                       <option value="Service">Service</option>
-                                      <option value="Imprest">Imprest</option>
+                                      <!--<option value="Imprest">Imprest</option>-->
                                     </select>
                                   </div>
                                   <div class="col-md-4"><input type="text" v-model="item_name" placeholder="Item Name" class="form-control"></div>
@@ -148,6 +153,34 @@
                   </div>
                 </div>
               </div>
+              <!--<div class="tab-pane fade" id="imprest" role="tabpanel" aria-labelledby="imprest-tab">-->
+                <!--sdsds-->
+              <!--</div>-->
+              <div class="tab-pane fade" id="compen" role="tabpanel" aria-labelledby="compen-tab">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                    <tr>
+                      <th>Budget Period</th>
+                      <th>Staff ID</th>
+                      <th>Full Name</th>
+                      <th>Monthly Basic Salary</th>
+                      <th>Yearly Basic Salary</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr :key="ec.id" v-for="ec in compensations">
+                      <td>{{ec.unit_budget.budget_period}}</td>
+                      <td>{{ec.staff_number}}</td>
+                      <td>{{ec.first_name}} {{ec.last_name}}</td>
+                      <td>{{ec.monthly_basic}}</td>
+                      <td>{{ec.period_basic}}</td>
+
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
               <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
                 <div class="list-group-flush">
                   <div class="list-group-item">
@@ -198,6 +231,7 @@ export default {
       object_list: {},
       item_name: '',
       assets: {},
+      compensations: {},
       name: '',
       item_type: '',
       asset_name: '',
@@ -218,6 +252,20 @@ export default {
       }).then((response) => {
         this.listLoading = false;
         this.object_list = response.data;
+        // console.log(response.data);
+      }).catch(({ response }) => {
+        this.listLoading = false;
+        console.log(response);
+      });
+    },
+    bp_list(){
+      axios.get(`${config.apiUrl}/api/ecs/`, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+      }).then((response) => {
+        this.listLoading = false;
+        this.compensations = response.data;
         // console.log(response.data);
       }).catch(({ response }) => {
         this.listLoading = false;
@@ -266,12 +314,14 @@ export default {
 
         axios.post(`${config.apiUrl}/api/nc/`, {
           name: this.name,
+          code: this.code,
         }, {
           headers: {
             Authorization: `JWT ${config.get_token()}`,
           },
         }).then((res) => {
           this.loading = false;
+          this.code = '';
           this.categories();
           console.log(res);
           this.name = '';
@@ -333,6 +383,7 @@ export default {
   mounted() {
     this.categories();
     this.assets_list();
+    this.bp_list();
   },
 
 };
