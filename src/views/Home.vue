@@ -5,8 +5,8 @@
     <div class="container">
    <cards/>
     </div>
-    
-    
+
+
   </div>
 </template>
 
@@ -21,7 +21,7 @@ export default {
     navbar,
     jumbo,
     cards,
-    
+
   },
 };
 </script>

@@ -47,7 +47,7 @@ export default function () {
       title: 'Requisitions',
       htmlBefore: '<i class="material-icons">emoji_people</i>',
       to: {
-        name: 'requisitions',
+        name: 'admin-requisitions',
       },
     },
     {

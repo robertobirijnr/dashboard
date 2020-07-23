@@ -49,7 +49,7 @@
     <br><br>
 
     <!-- Default Light Table -->
-    <div class="row">
+    <!-- <div class="row">
       <div class="col">
         <div class="card card-small mb-4">
           <div class="card-header border-bottom">
@@ -67,7 +67,7 @@
                 <th scope="col" class="border-0">At</th>
 
               </tr>
-              </thead>
+
               <tbody :key="activity.activity_id" v-for="activity in activities">
               <tr>
 
@@ -81,61 +81,61 @@
 
 
               </tbody>
-            </table>
-          </div>
+            </table> -->
+          <!-- </div>
           <div class="card-footer text-center">View All >></div>
         </div>
-      </div>
-    </div>
+      </div> -->
+    <!-- <div> -->
 
   </d-container>
 </template>
 <script>
-  import axios from 'axios';
-  import config from '@/config';
-  import moment from 'moment';
+import axios from 'axios';
+import config from '@/config';
+import moment from 'moment';
 
-  export default {
-    data(){
-      return {
-        departs: '',
-        units: '',
-        cats: '',
-        items: '',
-        users: '',
-        activities: {},
-        loading: false,
-      };
+export default {
+  data() {
+    return {
+      departs: '',
+      units: '',
+      cats: '',
+      items: '',
+      users: '',
+      activities: {},
+      loading: false,
+    };
+  },
+  filters: {
+    moment(date) {
+      return moment(date).fromNow();
     },
-    filters: {
-      moment: function (date) {
-        return moment(date).fromNow();
-      },
+  },
+  methods: {
+    dashboard() {
+      this.loading = true;
+      axios.get(`${config.apiUrl}/api/d/`, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+      }).then((res) => {
+        this.loading = false;
+        const results = res.data;
+        this.activities = results.activities;
+        this.departs = results.departments;
+        this.units = results.units;
+        this.cats = results.categories;
+        this.items = results.items;
+        this.users = results.users;
+      }).catch((res) => {
+        console.log(res);
+      });
     },
-    methods: {
-      dashboard(){
-        this.loading = true;
-        axios.get(`${config.apiUrl}/api/d/`, {
-          headers: {
-            Authorization: `JWT ${config.get_token()}`
-          }
-        }).then((res) => {
-          this.loading = false;
-          const results = res.data;
-          this.activities = results.activities;
-          this.departs = results.departments;
-          this.units = results.units;
-          this.cats = results.categories;
-          this.items = results.items;
-          this.users = results.users;
-        }).catch((res) => {
-          console.log(res);
-        });
-      }
-    },
-    mounted(){
-      this.dashboard();
-    }
-  }
+  },
+  mounted() {
+    this.dashboard();
+  },
+};
 </script>
 

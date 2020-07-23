@@ -74,82 +74,83 @@
 </template>
 
 <script>
-  import axios from 'axios';
-  import config from '@/config';
+import axios from 'axios';
+import config from '@/config';
 
-  export default {
-    name: "Requisitions",
-    computed: {
-      userRole() {
-        return this.$root.auth.user.user_role;
-      },
+export default {
+  name: 'Requisitions',
+  computed: {
+    userRole() {
+      return this.$root.auth.user.user_role;
     },
-    data(){
-      return{
-        object_list: {},
-        item: '',
-        items: {},
-        loading: false,
-      };
+  },
+  data() {
+    return {
+      object_list: {},
+      item: '',
+      items: {},
+      loading: false,
+    };
+  },
+  methods: {
+    requests() {
+      axios.get(`${config.apiUrl}/budget/reqs/`, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+      }).then((res) => {
+        this.object_list = res.data;
+      });
     },
-    methods: {
-      requests(){
-        axios.get(`${config.apiUrl}/budget/reqs/`, {
-          headers: {
-            Authorization: `JWT ${config.get_token()}`
-          }
-        }).then((res) => {
-          this.object_list = res.data;
-        })
-      },
-      item_list(){
-        axios.get(`${config.apiUrl}/budget/ibs/`, {
-          headers: {
-            Authorization: `JWT ${config.get_token()}`
-          }
-        }).then((res) => {
-          this.items = res.data;
-        })
-      },
-      new_request(){
-        this.loading = true;
-        axios.post(`${config.apiUrl}/budget/nr/`, {
-          item: this.item
-        }, {
-          headers: {
-            Authorization: `JWT ${config.get_token()}`
-          }
-        }).then((res) => {
-          this.loading = false;
-          console.log(res);
-          $('#newReq').modal('hide');
-        }).catch((res) => {
-          console.log(res);
-        });
-      },
-      approve(id){
-        this.loading = true;
-        axios.post(`${config.apiUrl}/budget/ar/${id}/`, {
-          // item: this.item
-        }, {
-          headers: {
-            Authorization: `JWT ${config.get_token()}`
-          }
-        }).then((res) => {
-          this.loading = false;
-          console.log(res);
-          this.requests();
-          // $('#newReq').modal('hide');
-        }).catch((res) => {
-          console.log(res);
-        });
-      }
+    item_list() {
+      axios.get(`${config.apiUrl}/budget/ibs/`, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+      }).then((res) => {
+        this.items = res.data;
+      });
     },
-    mounted(){
-      this.requests();
-      this.item_list();
-    }
-  }
+    new_request() {
+      this.loading = true;
+      axios.post(`${config.apiUrl}/budget/nr/`, {
+        item: this.item,
+      }, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+      }).then((res) => {
+        this.loading = false;
+        console.log(res);
+        // eslint-disable-next-line no-undef
+        $('#newReq').modal('hide');
+      }).catch((res) => {
+        console.log(res);
+      });
+    },
+    approve(id) {
+      this.loading = true;
+      axios.post(`${config.apiUrl}/budget/ar/${id}/`, {
+        // item: this.item
+      }, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+      }).then((res) => {
+        this.loading = false;
+        console.log(res);
+        this.requests();
+        // $('#newReq').modal('hide');
+      }).catch((res) => {
+        console.log(res);
+      });
+    },
+  },
+  mounted() {
+    this.requests();
+    this.item_list();
+  },
+};
 </script>
 
 <style scoped>

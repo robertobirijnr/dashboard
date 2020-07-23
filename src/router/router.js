@@ -175,6 +175,14 @@ const router = new Router({
       },
     },
     {
+      path: '/requisitions',
+      name: 'admin-requisitions',
+      component: () => import('../views/Admin/Requisition.vue'),
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
       path: '/budget_summary/:period_id',
       name: 'budget_summary',
       component: () => import('../views/Budget/budget_summary.vue'),
