@@ -9,7 +9,9 @@
         <d-dropdown-item>
           <router-link to="/home" class="card-link" ><i class="material-icons">&#xE7FD;</i> Apps</router-link>
         </d-dropdown-item>
-        <d-dropdown-item><i class="material-icons">&#xE7FD;</i> Profile</d-dropdown-item>
+        <d-dropdown-item><i class="material-icons">&#xE7FD;</i>
+        <span @click="viewprofile">Profile</span>
+         </d-dropdown-item>
         <d-dropdown-item><i class="material-icons">&#xE8B8;</i> Edit Profile</d-dropdown-item>
         <d-dropdown-divider />
         <d-dropdown-item class="text-danger" >
@@ -32,6 +34,9 @@ export default {
       localStorage.removeItem('user');
       localStorage.removeItem('token');
       this.$router.push('/login');
+    },
+    viewprofile() {
+      this.$router.push('/profile');
     },
   },
 };

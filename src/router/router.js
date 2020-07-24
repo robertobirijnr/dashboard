@@ -223,6 +223,11 @@ const router = new Router({
       },
     },
     {
+      path: '/profile',
+      name: 'UserProfile',
+      component: () => import('../views/UserProfile.vue'),
+    },
+    {
       path: '*',
       redirect: '/errors',
     },
