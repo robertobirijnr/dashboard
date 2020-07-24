@@ -48,54 +48,34 @@
     </div>
     <br><br>
 
-    <!-- Default Light Table -->
-    <!-- <div class="row">
-      <div class="col">
-        <div class="card card-small mb-4">
-          <div class="card-header border-bottom">
-            <h6 class="m-0">My Activity Logs</h6>
-          </div>
-          <div class="card-body p-0 pb-3 text-center">
-            <table class="table mb-0">
-              <thead class="bg-light">
-              <tr>
+      <d-row>
+      <!-- Users Overview -->
+      <d-col lg="8" md="6" sm="12" class="mb-4">
+        <BudgetOverview/>
+      </d-col>
 
-                <th scope="col" class="border-0">Activity ID</th>
-                <th scope="col" class="border-0">Action</th>
-                <th scope="col" class="border-0">Model</th>
-                <th scope="col" class="border-0">Model ID</th>
-                <th scope="col" class="border-0">At</th>
-
-              </tr>
-
-              <tbody :key="activity.activity_id" v-for="activity in activities">
-              <tr>
-
-                <td>{{activity.activity_id}}</td>
-                <td>{{activity.action}}</td>
-                <td>{{activity.model}}</td>
-                <td>#{{activity.model_id}}</td>
-                <td>{{activity.created_at | moment }}</td>
-
-              </tr>
-
-
-              </tbody>
-            </table> -->
-          <!-- </div>
-          <div class="card-footer text-center">View All >></div>
-        </div>
-      </div> -->
-    <!-- <div> -->
+      <!-- Users by Device (lite) -->
+      <d-col lg="4" md="6" sm="12" class="mb-4">
+        <Summary />
+      </d-col>
+    </d-row>
 
   </d-container>
 </template>
 <script>
+import BudgetOverview from '@/components/chartComponents/BudgetOverview.vue';
+import Summary from '@/components/chartComponents/Summary.vue';
 import axios from 'axios';
 import config from '@/config';
 import moment from 'moment';
 
 export default {
+  components: {
+
+    BudgetOverview,
+    Summary,
+
+  },
   data() {
     return {
       departs: '',
