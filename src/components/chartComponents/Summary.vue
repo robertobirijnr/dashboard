@@ -32,11 +32,11 @@ const defaultChartData = {
       'rgb(196, 24, 60)',
     ],
   }],
-  labels: ['Departments', 'Units', 'Category'],
+  labels: ['Complete', 'Inprogress', 'Pending'],
 };
 
 export default {
-  name: 'Sammary',
+  name: 'Support Requests',
   props: {
     /**
        * The chart config.
@@ -70,7 +70,7 @@ export default {
        */
     title: {
       type: String,
-      default: 'Sammary',
+      default: 'Support Requests',
     },
   },
   mounted() {
