@@ -206,7 +206,7 @@
             </div>
           </div>
           <div class="card-body ">
-            <div v-if="object.unit_budgets.length">
+            <div v-if="object.unit_budgets">
               <div class="list-group-flush" :key="unit.id" v-for="unit in object.unit_budgets">
                 <router-link :to="{name: 'unitBudget-details', params: {unit_id: unit.unit_budget_id}}" class="list-group-item bg-white text-black list-group-item-action flex-column align-items-start">
                   <div class="d-flex w-100 justify-content-between">
@@ -245,9 +245,9 @@
               <li class="nav-item">
                 <a class="nav-link" id="contact1-tab" data-toggle="tab" href="#contact1" role="tab" aria-controls="contact1" aria-selected="false">Assets</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" id="about1-tab" data-toggle="tab" href="#about1" role="tab" aria-controls="about1" aria-selected="false">Imprest</a>
-              </li>
+              <!--<li class="nav-item">-->
+                <!--<a class="nav-link" id="about1-tab" data-toggle="tab" href="#about1" role="tab" aria-controls="about1" aria-selected="false">Imprest</a>-->
+              <!--</li>-->
             </ul>
             <div class="tab-content" id="myTabsContent">
               <div class="tab-pane fade show active mt-2" id="home1" role="tabpanel" aria-labelledby="home1-tab">
@@ -459,30 +459,30 @@
                   <button :disabled="formLoading" @click="new_budget_asset(unit_budget.id)" class="btn btn-sm btn-block btn-primary">Submit</button>
                 </div>
               </div>
-              <div class="tab-pane fade mt-2" id="about1" role="tabpanel" aria-labelledby="about1-tab">
-                <div class="row">
-                  <div class="col-md-12">
-                        <span :key="item.id" v-for="item in unit_budget.imprests" style="margin-right:5px">
-                            <span class="badge badge-primary">{{item.imprest.item_name}} <span @click="remove_budget_imprest(unit_budget.id, item.id)" class="material-icons small" style="cursor: pointer">clear</span></span>
-                        </span>
-                  </div>
-                </div>
-                <hr>
-                <div class="mb-2">Any More?</div>
-                <div class="errors text-danger small" v-if="errors">
-                  {{errors.detail}}
-                </div>
-                <div class="form-group">
-                  <label for="id_imprest1">Select Item</label>
-                  <select id="id_imprest1" v-model="item" class="form-control">
-                    <option value="">Choose...</option>
-                    <option :key="item.id" v-for="item in imprests" :value="item.id">{{item.item_name}}</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <button :disabled="formLoading" @click="new_budget_imprest(unit_budget.id)" class="btn btn-sm btn-block btn-primary">Submit</button>
-                </div>
-              </div>
+              <!--<div class="tab-pane fade mt-2" id="about1" role="tabpanel" aria-labelledby="about1-tab">-->
+                <!--<div class="row">-->
+                  <!--<div class="col-md-12">-->
+                        <!--<span :key="item.id" v-for="item in unit_budget.imprests" style="margin-right:5px">-->
+                            <!--<span class="badge badge-primary">{{item.imprest.item_name}} <span @click="remove_budget_imprest(unit_budget.id, item.id)" class="material-icons small" style="cursor: pointer">clear</span></span>-->
+                        <!--</span>-->
+                  <!--</div>-->
+                <!--</div>-->
+                <!--<hr>-->
+                <!--<div class="mb-2">Any More?</div>-->
+                <!--<div class="errors text-danger small" v-if="errors">-->
+                  <!--{{errors.detail}}-->
+                <!--</div>-->
+                <!--<div class="form-group">-->
+                  <!--<label for="id_imprest1">Select Item</label>-->
+                  <!--<select id="id_imprest1" v-model="item" class="form-control">-->
+                    <!--<option value="">Choose...</option>-->
+                    <!--<option :key="item.id" v-for="item in imprests" :value="item.id">{{item.item_name}}</option>-->
+                  <!--</select>-->
+                <!--</div>-->
+                <!--<div class="form-group">-->
+                  <!--<button :disabled="formLoading" @click="new_budget_imprest(unit_budget.id)" class="btn btn-sm btn-block btn-primary">Submit</button>-->
+                <!--</div>-->
+              <!--</div>-->
             </div>
 
           </div>
@@ -702,9 +702,9 @@
               <li class="nav-item">
                 <a class="nav-link" id="contact2-tab" data-toggle="tab" href="#contact2" role="tab" aria-controls="contact2" aria-selected="false">Assets</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" id="about2-tab" data-toggle="tab" href="#about2" role="tab" aria-controls="about2" aria-selected="false">Imprests</a>
-              </li>
+              <!--<li class="nav-item">-->
+                <!--<a class="nav-link" id="about2-tab" data-toggle="tab" href="#about2" role="tab" aria-controls="about2" aria-selected="false">Imprests</a>-->
+              <!--</li>-->
             </ul>
             <div class="tab-content" id="myTabContent">
               <div class="tab-pane fade show active" id="home2" role="tabpanel" aria-labelledby="home2-tab">
@@ -758,11 +758,11 @@
                   <div class="list-group-item">{{asset.asset.asset_name}}</div>
                 </div>
               </div>
-              <div class="tab-pane fade" id="about2" role="tabpanel" aria-labelledby="about2-tab">
-                <div class="list-group" :key="item.id" v-for="item in unit_budget.imprests">
-                  <div class="list-group-item">{{item.imprest.item_name}}</div>
-                </div>
-              </div>
+              <!--<div class="tab-pane fade" id="about2" role="tabpanel" aria-labelledby="about2-tab">-->
+                <!--<div class="list-group" :key="item.id" v-for="item in unit_budget.imprests">-->
+                  <!--<div class="list-group-item">{{item.imprest.item_name}}</div>-->
+                <!--</div>-->
+              <!--</div>-->
             </div>
 
           </div>
@@ -1060,6 +1060,7 @@
               ub_id: ubid,
               item: this.item,
               quantity: this.quantity,
+              amount: this.amount,
             },
             {
               headers: { Authorization: `JWT ${config.get_token()}` },
@@ -1070,6 +1071,7 @@
             this.quantity = '';
             this.category = '';
             this.item = '';
+            this.amount = '';
             this.current_unit_budget();
           }).catch(({ response }) => {
             this.formLoading = false;

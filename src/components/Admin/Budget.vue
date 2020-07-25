@@ -157,11 +157,44 @@
                 <!--sdsds-->
               <!--</div>-->
               <div class="tab-pane fade" id="compen" role="tabpanel" aria-labelledby="compen-tab">
+                <!--<span class="text-uppercase page-subtitle">Filter</span>-->
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <!--<label for="id_div">Select Division</label>-->
+                      <select v-model="div" name="" id="id_div" class="custom-select form-control-sm">
+                        <option value="">Choose Division</option>
+                        <option :key="div.id" v-for="div in divisions" :value="div.id">{{div.name}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <!--<label for="id_dep">Select Department</label>-->
+                      <select v-model="dep" name="" id="id_dep" class="custom-select form-control-sm">
+                        <option value="">Choose Department</option>
+                        <option :key="dep.id" v-for="dep in departs" :value="dep.depart_id">{{dep.name}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <!--<label for="id_unit">Select Unit</label>-->
+                      <select v-model="unit" name="" id="id_unit" class="custom-select form-control-sm">
+                        <option value="">Choose Unit</option>
+                        <option :key="un.id" v-for="un in units" :value="un.id">{{un.unit_name}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <button :disabled="loading" @click="bp_list()" class="btn btn-sm btn-primary"><i class="material-icons">filter_list</i> Filter</button>
+                  </div>
+                </div>
                 <div class="table-responsive">
                   <table class="table">
                     <thead>
                     <tr>
-                      <th>Budget Period</th>
+                      <th>Unit</th>
                       <th>Staff ID</th>
                       <th>Full Name</th>
                       <th>Monthly Basic Salary</th>
@@ -170,11 +203,11 @@
                     </thead>
                     <tbody>
                     <tr :key="ec.id" v-for="ec in compensations">
-                      <td>{{ec.unit_budget.budget_period}}</td>
+                      <td>{{ec.unit_budget.unit_name}}</td>
                       <td>{{ec.staff_number}}</td>
                       <td>{{ec.first_name}} {{ec.last_name}}</td>
-                      <td>{{ec.monthly_basic}}</td>
-                      <td>{{ec.period_basic}}</td>
+                      <td>GHS {{formatPrice(ec.monthly_basic)}}</td>
+                      <td>GHS {{formatPrice(ec.period_basic)}}</td>
 
                     </tr>
                     </tbody>
@@ -238,11 +271,21 @@ export default {
       code: '',
       loading: false,
       listLoading: false,
+      div: '',
+      dep: '',
+      unit: '',
+      divisions: {},
+      departs: {},
+      units: {},
       // showModal: true,
 
     };
   },
   methods: {
+    formatPrice(value) {
+      let val = (value/1).toFixed(2).replace(',', '.');
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    },
     categories() {
       this.listLoading = true;
       axios.get(`${config.apiUrl}/api/categories/`, {
@@ -259,16 +302,22 @@ export default {
       });
     },
     bp_list(){
-      axios.get(`${config.apiUrl}/api/ecs/`, {
+      this.loading = true;
+      axios.post(`${config.apiUrl}/api/ecs/`,
+        {
+        div: this.div,
+        unit: this.unit,
+        dep: this.dep,
+      },{
         headers: {
           Authorization: `JWT ${config.get_token()}`,
         },
       }).then((response) => {
-        this.listLoading = false;
+        this.loading = false;
         this.compensations = response.data;
-        // console.log(response.data);
+        console.log(response.data);
       }).catch(({ response }) => {
-        this.listLoading = false;
+        this.loading = false;
         console.log(response);
       });
     },
@@ -379,11 +428,59 @@ export default {
         console.log(res);
       });
     },
+    division_list(){
+      this.loading = true;
+      axios.get(`${config.apiUrl}/api/divisions`, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`
+        }
+      }).then((res) => {
+        this.loading = false;
+        this.divisions = res.data;
+      })
+    },
+    department_list(div_id){
+      this.loading = true;
+      axios.get(`${config.apiUrl}/api/dvdl/${div_id}/`, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`
+        }
+      }).then((res) => {
+        this.loading = false;
+        const results = res.data;
+        this.departs = results.departments;
+      })
+    },
+    unit_list(dep_id){
+      this.loading = true;
+      axios.get(`${config.apiUrl}/api/du/${dep_id}`, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`
+        }
+      }).then((res) => {
+        this.loading = false
+        const results = res.data;
+        this.units = results.units;
+      })
+    }
+  },
+  watch: {
+    div(value){
+      if(value){
+        this.department_list(value);
+      }
+    },
+    dep(value){
+      if(value){
+        this.unit_list(value);
+      }
+    }
   },
   mounted() {
     this.categories();
     this.assets_list();
     this.bp_list();
+    this.division_list();
   },
 
 };

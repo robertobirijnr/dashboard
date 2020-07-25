@@ -19,7 +19,7 @@
                   <li class="nav-item"><a href="#home" id="home-tab" data-toggle="tab" class="nav-link active" aria-selected="true">G & S</a></li>
                   <li class="nav-item"><a href="#contact" id="contact-tab" data-toggle="tab" class="nav-link" aria-selected="true">Compensations</a></li>
                   <li class="nav-item"><a href="#profile" id="profile-tab" data-toggle="tab" class="nav-link" aria-selected="true">Assets</a></li>
-                  <li class="nav-item"><a href="#about" id="about-tab" data-toggle="tab" class="nav-link" aria-selected="true">Imprests</a></li>
+                  <!--<li class="nav-item"><a href="#about" id="about-tab" data-toggle="tab" class="nav-link" aria-selected="true">Imprests</a></li>-->
                 </ul>
               </div>
               <div class="col" v-if="object.status !== 'Completed'" align="right">
@@ -51,8 +51,12 @@
                             <td>{{formatPrice(gst)}}</td>
                           </tr>
                           <tr>
-                            <td>Compensation Summary</td>
-                            <td>{{formatPrice(ct)}}</td>
+                            <td>Consolidate Basic Salary</td>
+                            <td>{{formatPrice(cb)}}</td>
+                          </tr>
+                          <tr>
+                            <td>Allowances</td>
+                            <td>{{formatPrice(allawa)}}</td>
                           </tr>
                           <tr>
                             <td>Assets</td>
@@ -129,7 +133,7 @@
                       </td>
                       <!--<td><span v-if="item.item.item_type === 'Good'"></span>{{item.unit_price}}</td>-->
                       <td>
-                        <span v-if="item.item.item_type === 'Good'">{{formatPrice(item.total_amount)}}</span>
+                        <span v-if="item.item.item_type === 'Good'">GHS {{formatPrice(item.total_amount)}}</span>
                         <span v-else-if="item.item.item_type === 'Service'">
                           <span v-if="item.total_amount" :id="`total${item.id}`">GHS {{formatPrice(item.total_amount)}}</span>
                           <span>
@@ -252,29 +256,29 @@
                 <span class="font-weight-bolder">Sub Total = </span> <span>GHS {{formatPrice(object.asset_total)}}</span>
               </div>
             </div>
-            <div class="tab-pane fade" id="about" role="tabpanel" aria-labelledby="about-tab">
-              <div class="card-body">
-                <div class="list-group" :key="imprest.id" v-for="imprest in object.imprests">
-                  <div class="list-group-item">
-                    <div class="row">
-                      <div class="col-md-7">{{imprest.imprest.item_name}}</div>
-                      <div class="col-md-5" align="right">
-                        <d-row>
-                          <div class="col-md-7">
-                            <input type="text" class="form-control">
-                          </div>
-                          <div class="col-md-5">
-                            <button class="btn mr-1 small btn-sm btn-primary"><span class="material-icons small">create</span></button>
-                            <button class="btn mr-1 small btn-sm btn-primary"><span class="material-icons small">create</span></button>
-                            <button class="btn small btn-sm btn-primary"><span class="material-icons small">create</span></button>
-                          </div>
-                        </d-row>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <!--<div class="tab-pane fade" id="about" role="tabpanel" aria-labelledby="about-tab">-->
+              <!--<div class="card-body">-->
+                <!--<div class="list-group" :key="imprest.id" v-for="imprest in object.imprests">-->
+                  <!--<div class="list-group-item">-->
+                    <!--<div class="row">-->
+                      <!--<div class="col-md-7">{{imprest.imprest.item_name}}</div>-->
+                      <!--<div class="col-md-5" align="right">-->
+                        <!--<d-row>-->
+                          <!--<div class="col-md-7">-->
+                            <!--<input type="text" class="form-control">-->
+                          <!--</div>-->
+                          <!--<div class="col-md-5">-->
+                            <!--<button class="btn mr-1 small btn-sm btn-primary"><span class="material-icons small">create</span></button>-->
+                            <!--<button class="btn mr-1 small btn-sm btn-primary"><span class="material-icons small">create</span></button>-->
+                            <!--<button class="btn small btn-sm btn-primary"><span class="material-icons small">create</span></button>-->
+                          <!--</div>-->
+                        <!--</d-row>-->
+                      <!--</div>-->
+                    <!--</div>-->
+                  <!--</div>-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</div>-->
           </div>
           <div class="card-footer" >
             <div class="row">
@@ -283,7 +287,7 @@
                 <!--<router-link to="#" class="btn-sm btn btn-warning">Compensation Summary</router-link>-->
               </div>
               <div class="col" align="right">
-                <span class="font-weight-bolder">Total = </span> <span>GHS {{object.total_budget}}</span>
+                <span class="font-weight-bolder">Total = </span> <span>GHS {{formatPrice(object.total_budget)}}</span>
               </div>
             </div>
           </div>
@@ -304,7 +308,8 @@
         type: '',
         loading: false,
         gst: 0,
-        ct: 0,
+        cb: 0,
+        allawa: 0,
         at: 0,
         tt: 0,
         // unit_price: '',
@@ -316,16 +321,18 @@
         return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
       },
       totals(){
-        this.ct = this.object.employees_compensation_total;
+        this.cb = this.object.consolidated_basic_salary;
+        this.allawa = this.object.allowances;
         this.object.items.forEach(item => {
-          this.gst += Number(item.total_amount);
+          this.gst = this.gst + Number(item.total_amount);
         });
 
         this.object.assets.forEach(asset => {
-          this.at += Number(asset.amount);
+          this.at = this.at + Number(asset.amount);
         });
 
-        this.tt = this.gst + this.at + Number(this.ct);
+        console.log(this.gst);
+        this.tt = this.gst + this.at + Number(this.cb) + Number(this.allawa);
       },
       details() {
         const budgetid = this.$route.params.unit_id;

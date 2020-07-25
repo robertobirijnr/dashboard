@@ -22,12 +22,18 @@
                     </button>
                   </div>
                   <div class="modal-body">
+                    <span v-if="errors" class="text-danger small mb-2">{{errors.detail}}</span>
                     <div class="form-group">
                       <label for="id_item">Select Item</label>
                       <select id="id_item" v-model="item" class="custom-select">
                       <option value="">Choose...</option>
-                      <option :key="item.id" v-for="item in items" :value="item.id">{{item.item.item_name}}</option>
+                      <option :key="item.id" v-for="item in items" :value="item.id">{{item.item.item_name}} - ({{item.left}})</option>
                     </select>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="id_quantity">Quantity</label>
+                      <input type="number" id="id_quantity" v-model="quantity" class="form-control">
                     </div>
 
                   </div>
@@ -48,6 +54,7 @@
                   <th>Request ID</th>
                   <th>Unit</th>
                   <th>Item</th>
+                  <th>Quantity</th>
                   <th>Status</th>
                   <th></th>
                 </tr>
@@ -57,9 +64,10 @@
                   <td>#{{object.request_id}}</td>
                   <td>{{object.unit.unit_name}}</td>
                   <td>{{object.item.item.item_name}}</td>
+                  <td>{{object.quantity}}</td>
                   <td>{{object.status}}</td>
                   <td>
-                    <button :hidden="userRole === 'UU' || object.status !== 'Requested'" :disabled="loading" class="btn btn-sm btn-primary" @click="approve(object.id)">Approve</button>
+                    <button :hidden="userRole !== 'BO' || object.status !== 'Requested'" :disabled="loading" class="btn btn-sm btn-primary" @click="approve(object.id)">Approve</button>
                   </td>
                 </tr>
                 </tbody>
@@ -88,8 +96,10 @@ export default {
     return {
       object_list: {},
       item: '',
+      quantity: 0,
       items: {},
       loading: false,
+      errors: {},
     };
   },
   methods: {
@@ -112,21 +122,32 @@ export default {
       });
     },
     new_request() {
-      this.loading = true;
-      axios.post(`${config.apiUrl}/budget/nr/`, {
-        item: this.item,
-      }, {
-        headers: {
-          Authorization: `JWT ${config.get_token()}`,
-        },
-      }).then((res) => {
-        this.loading = false;
-        console.log(res);
-        // eslint-disable-next-line no-undef
-        $('#newReq').modal('hide');
-      }).catch((res) => {
-        console.log(res);
-      });
+      if(this.item && this.quantity > 0)
+      {
+        this.loading = true;
+        axios.post(`${config.apiUrl}/budget/nr/`, {
+          item: this.item,
+          qty: this.quantity,
+        }, {
+          headers: {
+            Authorization: `JWT ${config.get_token()}`,
+          },
+        }).then((res) => {
+          this.loading = false;
+          console.log(res);
+          this.requests();
+          this.item_list();
+          this.item = '';
+          this.quantity = 0;
+          // eslint-disable-next-line no-undef
+          $('#newReq').modal('hide');
+        }).catch(({response}) => {
+          // console.log(res);
+          this.loading = false;
+          this.errors = response.data;
+        });
+      }
+
     },
     approve(id) {
       this.loading = true;

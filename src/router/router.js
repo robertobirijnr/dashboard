@@ -226,6 +226,9 @@ const router = new Router({
       path: '/profile',
       name: 'UserProfile',
       component: () => import('../views/UserProfile.vue'),
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path: '*',

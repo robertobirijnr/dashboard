@@ -35,9 +35,9 @@ export default function () {
     {
       title: 'Implementations',
       htmlBefore: '<i class="material-icons">fact_check</i>',
-      to: {
-        name: 'implementations',
-      },
+      // to: {
+      //   name: 'implementations',
+      // },
     },
     {
       title: 'Requisitions',
@@ -65,9 +65,9 @@ export default function () {
   {
     title: 'Implementations',
     htmlBefore: '<i class="material-icons">fact_check</i>',
-    to: {
-      name: 'implementations',
-    },
+    // to: {
+    //   name: 'implementations',
+    // },
   },
   {
     title: 'Requisitions',

@@ -108,7 +108,7 @@
                     <td>{{object.grade}}</td>
                     <td>{{object.level_display}}</td>
                     <td>{{object.notch}}</td>
-                    <td>GHS {{object.monthly_basic}}</td>
+                    <td>GHS {{formatPrice(object.monthly_basic)}}</td>
                     <td>
                       <button v-on:click="current_scale(object.id)" class="btn-sm btn btn-primary"><span class="fa fa-pencil"></span></button>
                       <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -224,6 +224,10 @@
       // this.current_scale();
     },
     methods: {
+      formatPrice(value) {
+        let val = (value/1).toFixed(2).replace(',', '.');
+        return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+      },
       scales(){
         this.loading = true;
 

@@ -2,7 +2,12 @@
   <d-container fluid>
     <d-row>
       <!-- Main Sidebar -->
-      <main-sidebar :items="sidebarItems" title="Administration" />
+      <span v-if="user === 'AD'">
+        <main-sidebar :items="sidebarItems" title="Administration" />
+      </span>
+      <span v-else>
+        <main-sidebar :items="sidebarItems" title="GRA ERP" />
+      </span>
 
       <d-col class="main-content offset-lg-2 offset-md-3 p-0" tag="main" lg="10" md="9" sm="12">
 
@@ -19,8 +24,8 @@
 </template>
 
 <script>
-import getSidebarItems from '@/data/admin-sidebar-nav-items';
-
+import adminSidebarItems from '@/data/admin-sidebar-nav-items';
+import othersSidbarItems from '@/data/budget-sidebar-nav-items';
 // Main layout components
 import MainNavbar from '@/components/layout/MainNavbar/MainNavbar.vue';
 import MainSidebar from '@/components/layout/MainSidebar/MainSidebar.vue';
@@ -35,9 +40,15 @@ export default {
     Profile,
 
   },
+  computed: {
+    user() {
+    //   console.log(this.$root.auth.user.user_role);
+      return this.$root.auth.user.user_role;
+    },
+  },
   data() {
     return {
-      sidebarItems: getSidebarItems(),
+      sidebarItems: this.$root.auth.user.user_role === 'AD' ? adminSidebarItems() : othersSidbarItems(),
     };
   },
 };
