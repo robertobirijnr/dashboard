@@ -175,6 +175,14 @@ const router = new Router({
       },
     },
     {
+      path: '/implementations',
+      name: 'implementations',
+      component: () => import('../views/Budget/implements.vue'),
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
       path: '/requisitions',
       name: 'admin-requisitions',
       component: () => import('../views/Admin/Requisition.vue'),
@@ -186,6 +194,14 @@ const router = new Router({
       path: '/budget_summary/:period_id',
       name: 'budget_summary',
       component: () => import('../views/Budget/budget_summary.vue'),
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/implement-details/:budget_id',
+      name: 'implement-details',
+      component: () => import('../views/Budget/implement_details.vue'),
       meta: {
         requiresAuth: true,
       },
