@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Vue from 'vue';
 import ShardsVue from 'shards-vue';
-
+import Toasted from 'vue-toasted';
 // Styles
 import 'bootstrap/dist/css/bootstrap.css';
 import '@/scss/shards-dashboards.scss';
@@ -17,6 +17,7 @@ import Default from '@/layouts/Default.vue';
 
 ShardsVue.install(Vue);
 window.axios = axios;
+Vue.use(Toasted)
 
 Vue.component('default-layout', Default);
 

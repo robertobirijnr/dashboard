@@ -10,7 +10,7 @@
 
         <div class="col">
           <div class="card card-small mb-4">
-            <center class="card-body" v-if="departmentsloading">Loading Departments...</center>
+            <center class="card-body" v-if="departmentsloading"><Spinner/></center>
             <div class="card-body" v-else>
               <div class="table-responsive" >
               <table class="table">
@@ -70,8 +70,12 @@
 
 import axios from 'axios';
 import config from '@/config';
+import Spinner from '@/components/common/Spinner.vue';
 
 export default {
+  components: {
+    Spinner,
+  },
   data() {
     return {
       object_list: {},

@@ -16,7 +16,7 @@
             <!-- <button class="btn btn-success" float-right>New Period</button> -->
           </div>
           <div class="card-body p-0 pb-3 text-center">
-            <center v-if="loading">Loading...</center>
+            <center v-if="loading"><Spinner/></center>
             <div class="table-responsive" v-else>
               <table class="table mb-0">
               <thead class="bg-light">
@@ -52,8 +52,12 @@
 
 import axios from 'axios';
 import config from '@/config';
+import Spinner from '@/components/common/Spinner.vue';
 
 export default {
+  components: {
+    Spinner,
+  },
   data() {
     return {
       object_list: {},

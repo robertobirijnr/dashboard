@@ -11,7 +11,8 @@
         <div class="card">
           <div class="card-header"></div>
           <div class="card-body">
-            <div class="table-responsive" v-if="object_list.length">
+            <center v-if="loading"><Spinner/></center>
+            <div class="table-responsive" v-if="object_list.length" >
               <table class="table table-borderless">
                 <thead>
                 <tr>
@@ -44,31 +45,39 @@
 </template>
 
 <script>
-  import config from "../../config";
-  import axios from 'axios';
+import axios from 'axios';
+import config from '../../config';
+// eslint-disable-next-line import/first
+import Spinner from '@/components/common/Spinner.vue';
 
-  export default {
-    name: "Implementations",
-    data(){
-      return {
-        object_list: {},
-      };
+export default {
+  components: {
+    Spinner,
+  },
+  name: 'Implementations',
+  data() {
+    return {
+      object_list: {},
+      loading: false,
+    };
+  },
+  mounted() {
+    this.implements();
+  },
+  methods: {
+    implements() {
+      this.loading = true;
+      axios.get(`${config.apiUrl}/budget/cubs/`, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+      }).then((res) => {
+        this.loading = false;
+        this.object_list = res.data;
+      });
     },
-    mounted(){
-      this.implements();
-    },
-    methods: {
-      implements(){
-        axios.get(`${config.apiUrl}/budget/cubs/`, {
-          headers: {
-            Authorization: `JWT ${config.get_token()}`
-          }
-        }).then((res) => {
-          this.object_list = res.data;
-        });
-      }
-    }
-  }
+  },
+};
 </script>
 
 <style scoped>

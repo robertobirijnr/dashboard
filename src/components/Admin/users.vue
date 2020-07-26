@@ -17,7 +17,7 @@
           </div>
           <div class="card-body p-0 pb-3 text-center">
             <div v-if="loading">
-              Loading...
+              <Spinner />
             </div>
             <div class="table-responsive" v-else>
               <table class="table mb-0">
@@ -59,8 +59,12 @@
 <script>
 import axios from 'axios';
 import config from '@/config';
+import Spinner from '@/components/common/Spinner.vue';
 
 export default {
+  components: {
+    Spinner,
+  },
   data() {
     return {
       object_list: {},

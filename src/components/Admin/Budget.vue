@@ -22,7 +22,7 @@
           <div class="card-body">
             <div class="tab-content" id="myTabContent">
               <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                <center v-if="listLoading">Loading categories...</center>
+                <center v-if="listLoading"><Spinner/></center>
                 <div class="row" v-else>
                   <div class="col-md-4">
                     <ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
@@ -252,12 +252,14 @@ import axios from 'axios';
 import config from '@/config';
 import DeleteCategory from '@/components/common/deleteCategory.vue';
 import DeleteItem from '@/components/common/deleteItem.vue';
+import Spinner from '@/components/common/Spinner.vue';
 
 export default {
   name: 'budget',
   components: {
     DeleteCategory,
     DeleteItem,
+    Spinner,
   },
   data() {
     return {

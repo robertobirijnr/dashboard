@@ -159,58 +159,58 @@
 </template>
 
 <script>
-  import axios from 'axios';
-  import config from '@/config';
+import axios from 'axios';
+import config from '@/config';
 
-  export default {
-    name: "DivisionSummary",
-    data(){
-      return{
-        object: {},
-        unit_budgets: {},
-        period: {},
-        cb: '',
-        allawa: '',
-        cs: '',
-        gss: '',
-        as: '',
-        bt: '',
-        ubc: '',
-      };
+export default {
+  name: 'DivisionSummary',
+  data() {
+    return {
+      object: {},
+      unit_budgets: {},
+      period: {},
+      cb: '',
+      allawa: '',
+      cs: '',
+      gss: '',
+      as: '',
+      bt: '',
+      ubc: '',
+    };
+  },
+  methods: {
+    formatPrice(value) {
+      const val = (value / 1).toFixed(2).replace(',', '.');
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     },
-    methods: {
-      formatPrice(value) {
-        let val = (value/1).toFixed(2).replace(',', '.');
-        return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-      },
-      details(){
-        const period_id = this.$route.params.period_id;
-        const div_id = this.$route.params.div_id;
-        axios.get(`${config.apiUrl}/budget/dvbs/${period_id}/${div_id}/`, {
-          headers: {
-            Authorization: `JWT ${config.get_token()}`
-          }
-        }).then((res) => {
-          const results = res.data;
-          this.object = results.object;
-          this.period = results.budget_period;
-          this.unit_budgets = results.unit_budgets;
-          this.cb = results.cb;
-          this.allawa = results.allawa;
-          this.cs = results.cs;
-          this.gss = results.gss;
-          this.as = results.as;
-          this.bt = results.bt;
-          this.ubc = results.ubc + 2;
-        }).catch((res) => {
-          console.log(res);
-        })
-      }
+    details() {
+      const period_id = this.$route.params.period_id;
+      const div_id = this.$route.params.div_id;
+      axios.get(`${config.apiUrl}/budget/dvbs/${period_id}/${div_id}/`, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+      }).then((res) => {
+        const results = res.data;
+        this.object = results.object;
+        this.period = results.budget_period;
+        this.unit_budgets = results.unit_budgets;
+        this.cb = results.cb;
+        this.allawa = results.allawa;
+        this.cs = results.cs;
+        this.gss = results.gss;
+        this.as = results.as;
+        this.bt = results.bt;
+        this.ubc = results.ubc + 2;
+      }).catch((res) => {
+        console.log(res);
+      });
     },
-    mounted() {
-      this.details();
-    },
-  }
+  },
+  mounted() {
+    this.details();
+  },
+};
 </script>
 
 <style scoped>

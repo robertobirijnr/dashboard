@@ -144,54 +144,48 @@
 </template>
 
 <script>
-  import axios from 'axios';
-  import config from "../../config";
+import axios from 'axios';
+import config from '../../config';
 
-  export default {
-    name: "ImplementDetails",
-    data(){
-      return{
-        object:{},
-        search: '',
-      };
+export default {
+  name: 'ImplementDetails',
+  data() {
+    return {
+      object: {},
+      search: '',
+    };
+  },
+  computed: {
+    gs_list() {
+      return this.object.items.filter(post => post.item.item_name.toLowerCase().includes(this.search.toLowerCase()));
     },
-    computed: {
-      gs_list(){
-        return this.object.items.filter(post => {
-          return post.item.item_name.toLowerCase().includes(this.search.toLowerCase());
-        });
-      },
-      com_list(){
-        return this.object.employees_compensations.filter(post => {
-          return post.staff_number.toLowerCase().includes(this.search.toLowerCase());
-        });
-      },
-      asset_list(){
-        return this.object.assets.filter(post => {
-          return post.asset.asset_name.toLowerCase().includes(this.search.toLowerCase());
-        });
-      },
+    com_list() {
+      return this.object.employees_compensations.filter(post => post.staff_number.toLowerCase().includes(this.search.toLowerCase()));
     },
-    methods: {
-      formatPrice(value) {
-        let val = (value/1).toFixed(2).replace(',', '.');
-        return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-      },
-      details(){
-        const budget_id = this.$route.params.budget_id;
-        axios.get(`${config.apiUrl}/budget/ubds/${budget_id}`, {
-          headers: {
-            Authorization: `JWT ${config.get_token()}`
-          }
-        }).then((res) => {
-          this.object = res.data;
-        });
-      },
+    asset_list() {
+      return this.object.assets.filter(post => post.asset.asset_name.toLowerCase().includes(this.search.toLowerCase()));
     },
-    mounted(){
-      this.details();
-    }
-  }
+  },
+  methods: {
+    formatPrice(value) {
+      const val = (value / 1).toFixed(2).replace(',', '.');
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    },
+    details() {
+      const budget_id = this.$route.params.budget_id;
+      axios.get(`${config.apiUrl}/budget/ubds/${budget_id}`, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+      }).then((res) => {
+        this.object = res.data;
+      });
+    },
+  },
+  mounted() {
+    this.details();
+  },
+};
 </script>
 
 <style scoped>
