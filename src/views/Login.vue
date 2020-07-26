@@ -18,7 +18,7 @@
                   <div class="form-group">
                      <input v-bind:class="{'is-invalid': errors.response_code === '102' || errors.response_code === '103'}" type="password" v-model="password" class="form-control" placeholder="Password">
                   </div>
-                  <button type="submit" :disabled="loading" class="btn btn-black btn-block" @click="Signin()"><span v-if="!loading">Login</span> <span v-else><Spinner/></span></button>
+                  <button type="submit" :disabled="loading" class="btn btn-black btn-block" @click="Signin()"><span v-if="!loading">Login</span> <span v-else>Loading...</span></button>
                <!-- </form> -->
             </div>
          </div>

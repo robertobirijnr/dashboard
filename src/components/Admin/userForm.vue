@@ -152,7 +152,7 @@ export default {
       return true;
     },
     newUser() {
-      if (this.validPassword()) {
+      if (this.validPassword() && this.first_name && this.last_name && this.email && this.staff_id && this.role) {
         this.formloading = true;
         axios.post(
           `${config.apiUrl}/user/new/`, {
