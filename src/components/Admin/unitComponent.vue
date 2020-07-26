@@ -8,7 +8,7 @@
       </d-row>
         <div class="col">
           <div class="card card-small mb-4">
-            <center v-if="unitloading">loading units...</center>
+            <center v-if="unitloading"><Spinner/></center>
             <div class="table-responsive" v-else>
               <table class="table">
                 <thead>
@@ -82,8 +82,13 @@
 <script>
 import axios from 'axios';
 import config from '@/config';
+import Spinner from '@/components/common/Spinner.vue';
 
 export default {
+  components: {
+    Spinner,
+  },
+
   data() {
     return {
       object_list: {},

@@ -133,132 +133,129 @@
 </template>
 
 <script>
-  import axios from 'axios';
-  import config from '@/config';
+import axios from 'axios';
+import config from '@/config';
 
-  export default {
-    // name: "Divisions"
-    data(){
-      return {
-        object_list: {},
-        loading: false,
-        code: '',
-        abbr: '',
-        name: '',
-        msg: '',
-      };
+export default {
+  // name: "Divisions"
+  data() {
+    return {
+      object_list: {},
+      loading: false,
+      code: '',
+      abbr: '',
+      name: '',
+      msg: '',
+    };
+  },
+  methods: {
+    divisions() {
+      this.loading = true;
+      axios.get(`${config.apiUrl}/api/divisions/`, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+      }).then((res) => {
+        this.loading = false;
+        this.object_list = res.data;
+      }).catch((res) => {
+        this.loading = false;
+        console.log(res);
+      });
     },
-    methods: {
-      divisions(){
+    newDiv() {
+      if (this.name && this.code && this.abbr) {
         this.loading = true;
-        axios.get(`${config.apiUrl}/api/divisions/`, {
+        axios.post(`${config.apiUrl}/api/ndv/`, {
+          code: this.code,
+          abbr: this.abbr,
+          name: this.name,
+        }, {
           headers: {
-            Authorization: `JWT ${config.get_token()}`
-          }
+            Authorization: `JWT ${config.get_token()}`,
+          },
         }).then((res) => {
           this.loading = false;
-          this.object_list = res.data;
+          console.log(res);
+          this.code = '';
+          this.name = '';
+          this.abbr = '';
+          this.divisions();
         }).catch((res) => {
           this.loading = false;
           console.log(res);
         });
-      },
-      newDiv(){
-        if(this.name && this.code && this.abbr){
-          this.loading = true;
-          axios.post(`${config.apiUrl}/api/ndv/`, {
-            code: this.code,
-            abbr: this.abbr,
-            name: this.name,
-          }, {
-            headers: {
-              Authorization: `JWT ${config.get_token()}`
-            }
-          }).then((res) => {
-            this.loading = false;
-            console.log(res);
-            this.code = '';
-            this.name = '';
-            this.abbr = '';
-            this.divisions();
-          }).catch((res) => {
-            this.loading = false;
-            console.log(res);
-          });
-        }else{
-          this.msg = "All fields are required";
-        }
-
-      },
-      newDepart(id){
-        if(this.code && this.name && this.abbr){
-          this.loading = true;
-          axios.post(`${config.apiUrl}/api/nd/${id}/`, {
-            code: this.code,
-            abbr: this.abbr,
-            name: this.name,
-          }, {
-            headers: {
-              Authorization: `JWT ${config.get_token()}`
-            }
-          }).then((res) => {
-            this.loading = false;
-            console.log(res);
-            this.divisions();
-            this.code = '';
-            this.name = '';
-            this.abbr = '';
-          }).catch((res) => {
-            console.log(res);
-          })
-        }
-        else{
-          this.msg = 'All fields are required';
-        }
-      },
-      show_modal(id){
-        $(`#newUnit${id}`).modal('show');
-        this.msg = '';
-      },
-      newUnit(id){
-        if(this.code && this.name && this.abbr){
-          this.loading = true;
-          axios.post(`${config.apiUrl}/api/nu/${id}/`, {
-            code: this.code,
-            abbr: this.abbr,
-            unit_name: this.name,
-          }, {
-            headers: {
-              Authorization: `JWT ${config.get_token()}`
-            }
-          }).then((res) => {
-            this.loading = false;
-            console.log(res);
-            this.divisions();
-            this.code = '';
-            this.name = '';
-            this.abbr = '';
-            $(`#newUnit${id}`).modal('hide');
-          }).catch((res) => {
-            console.log(res);
-          })
-        }
-        else{
-          this.msg = 'All fields are required';
-        }
-      },
-    },
-    mounted(){
-      this.divisions();
-    },
-    watch: {
-      msg(){
-        if(this.name && this.code && this.abbr){
-          this.msg = '';
-        }
+      } else {
+        this.msg = 'All fields are required';
       }
-    }
-  }
+    },
+    newDepart(id) {
+      if (this.code && this.name && this.abbr) {
+        this.loading = true;
+        axios.post(`${config.apiUrl}/api/nd/${id}/`, {
+          code: this.code,
+          abbr: this.abbr,
+          name: this.name,
+        }, {
+          headers: {
+            Authorization: `JWT ${config.get_token()}`,
+          },
+        }).then((res) => {
+          this.loading = false;
+          console.log(res);
+          this.divisions();
+          this.code = '';
+          this.name = '';
+          this.abbr = '';
+        }).catch((res) => {
+          console.log(res);
+        });
+      } else {
+        this.msg = 'All fields are required';
+      }
+    },
+    show_modal(id) {
+      $(`#newUnit${id}`).modal('show');
+      this.msg = '';
+    },
+    newUnit(id) {
+      if (this.code && this.name && this.abbr) {
+        this.loading = true;
+        axios.post(`${config.apiUrl}/api/nu/${id}/`, {
+          code: this.code,
+          abbr: this.abbr,
+          unit_name: this.name,
+        }, {
+          headers: {
+            Authorization: `JWT ${config.get_token()}`,
+          },
+        }).then((res) => {
+          this.loading = false;
+          console.log(res);
+          this.divisions();
+          this.code = '';
+          this.name = '';
+          this.abbr = '';
+          $(`#newUnit${id}`).modal('hide');
+        }).catch((res) => {
+          console.log(res);
+        });
+      } else {
+        this.msg = 'All fields are required';
+      }
+    },
+  },
+  mounted() {
+    this.divisions();
+  },
+  watch: {
+    msg() {
+      if (this.name && this.code && this.abbr) {
+        this.msg = '';
+      }
+    },
+  },
+};
 </script>
 
 <style scoped>
