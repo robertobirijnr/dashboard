@@ -47,13 +47,13 @@
                 <b>Email</b> : {{profile.email}}
               </li>
               <li class="list-group-item">
-                <b>Division</b>: {{profile.division}}
+                <b>Division</b>: {{profile.division_name}}
               </li>
               <li class="list-group-item">
-                <b>Department</b>: {{profile.department}}
+                <b>Department</b>: {{profile.department_name}}
               </li>
               <li class="list-group-item">
-                <b>Unit</b>: {{profile.unit}}
+                <b>Unit</b>: {{profile.unit_name}}
               </li>
                <li class="list-group-item">
                 <b>Staff ID</b>: {{profile.staff_id}}

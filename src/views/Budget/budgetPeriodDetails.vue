@@ -495,7 +495,7 @@
               <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Goods And Services</a>
               <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Compensation</a>
               <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Asset</a>
-              <a class="nav-item nav-link" id="nav-about-tab" data-toggle="tab" href="#nav-about" role="tab" aria-controls="nav-about" aria-selected="false">Imprest</a>
+              <!--<a class="nav-item nav-link" id="nav-about-tab" data-toggle="tab" href="#nav-about" role="tab" aria-controls="nav-about" aria-selected="false">Imprest</a>-->
             </div>
 
             <div class="tab-content" id="nav-tabContent">
@@ -673,18 +673,18 @@
                   <button :disabled="formLoading" @click="new_budget('a')" class="btn btn-sm btn-block btn-primary">Submit</button>
                 </div>
               </div>
-              <div class="tab-pane fade pt-2" id="nav-about" role="tabpanel" aria-labelledby="nav-about-tab">
-                <div class="form-group">
-                  <label for="id_im">Item</label>
-                  <select v-model="item" id="id_im" class="custom-select">
-                    <option value="">Choose...</option>
-                    <option :key="imprest.id" v-for="imprest in imprests" :value="imprest.id">{{imprest.item_name}}</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <button @click="new_budget('i')" :disabled="formLoading" class="btn btn-sm btn-block btn-primary">Submit</button>
-                </div>
-              </div>
+              <!--<div class="tab-pane fade pt-2" id="nav-about" role="tabpanel" aria-labelledby="nav-about-tab">-->
+                <!--<div class="form-group">-->
+                  <!--<label for="id_im">Item</label>-->
+                  <!--<select v-model="item" id="id_im" class="custom-select">-->
+                    <!--<option value="">Choose...</option>-->
+                    <!--<option :key="imprest.id" v-for="imprest in imprests" :value="imprest.id">{{imprest.item_name}}</option>-->
+                  <!--</select>-->
+                <!--</div>-->
+                <!--<div class="form-group">-->
+                  <!--<button @click="new_budget('i')" :disabled="formLoading" class="btn btn-sm btn-block btn-primary">Submit</button>-->
+                <!--</div>-->
+              <!--</div>-->
             </div>
 
           </div>
