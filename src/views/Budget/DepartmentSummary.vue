@@ -12,7 +12,7 @@
           <div class="card h-100">
             <div class="card-header">
               <div class="row">
-                <div class="col"><button class="btn-sm btn btn-primary">EXCEL</button></div>
+                <div class="col"><button class="btn-sm btn btn-primary">EXTRACT</button></div>
                 <!--<div class="col" align="right">-->
                 <!--<div class="btn-group mr-2">-->
                 <!--<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->

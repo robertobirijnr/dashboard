@@ -41,8 +41,8 @@
                       <td>{{gs.item.category_name}}</td>
                       <td>{{gs.item.item_name}}</td>
                       <td>{{gs.quantity}}</td>
-                      <td>GHS {{gs.unit_price}}</td>
-                      <td>GHS {{gs.total_amount}}</td>
+                      <td>GHS {{formatPrice(gs.unit_price)}}</td>
+                      <td>GHS {{formatPrice(gs.total_amount)}}</td>
                     </tr>
                     </tbody>
                   </table>
@@ -73,8 +73,8 @@
                       <td>{{staff.first_name}} {{staff.last_name}}</td>
                       <td>{{staff.employee_type_display}}</td>
                       <td>{{staff.rank}} & {{staff.notch}}</td>
-                      <td>{{staff.monthly_basic}}</td>
-                      <td>{{staff.period_basic}}</td>
+                      <td>{{formatPrice(staff.monthly_basic)}}</td>
+                      <td>{{formatPrice(staff.period_basic)}}</td>
                       <td>{{staff.status}}</td>
                     </tr>
                     </tbody>
@@ -91,7 +91,7 @@
                   <div class="list-group-item" :key="asset.id" v-for="asset in asset_list">
                     <div class="row">
                       <div class="col">{{asset.asset.asset_name}}</div>
-                      <div class="col" align="right">GHS {{asset.amount}}</div>
+                      <div class="col" align="right">GHS {{formatPrice(asset.amount)}}</div>
                     </div>
                   </div>
 
