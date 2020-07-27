@@ -23,8 +23,10 @@
                 </ul>
               </div>
               <div class="col" v-if="object.status !== 'Completed'" align="right">
-
                 <button data-toggle="modal" data-target="#confirmModal" class="btn btn-sm btn-primary">Complete</button>
+              </div>
+              <div class="col" align="right" v-else>
+                <button @click="exporrt(object.id)" :disabled="!object" class="btn btn-primary btn-sm">EXTRACT</button>
               </div>
               <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -82,20 +84,20 @@
           <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
               <div class="card-body">
-                <div class="row mb-3">
-                  <div class="col"></div>
-                  <div class="col-md-3" align="right">
-                    <div class="row">
-                      <div class="col">
-                        <select name="" id="" v-model="type" class="form-control" @change="exp(object.id)">
-                          <option value="">Export to...</option>
-                          <option value="csv">CSV</option>
-                          <option value="excel">Excel</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <!--<div class="row mb-3">-->
+                  <!--<div class="col"></div>-->
+                  <!--<div class="col-md-3" align="right">-->
+                    <!--<div class="row">-->
+                      <!--<div class="col">-->
+                        <!--<select name="" id="" v-model="type" class="form-control" @change="exp(object.id)">-->
+                          <!--<option value="">Export to...</option>-->
+                          <!--<option value="csv">CSV</option>-->
+                          <!--<option value="excel">Excel</option>-->
+                        <!--</select>-->
+                      <!--</div>-->
+                    <!--</div>-->
+                  <!--</div>-->
+                <!--</div>-->
                 <div class="table-responsive">
                   <table class="table">
                     <thead>
@@ -510,6 +512,23 @@
           console.log(res);
         });
       },
+      exporrt(uid){
+      axios.get(`${config.apiUrl}/budget/exub/${uid}/`, {
+        responseType: 'blob',
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        }
+      }).then((res) => {
+        const url = URL.createObjectURL(new Blob([res.data], {type: 'application/vnd.ms-excel'}));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `${this.object.unit_name}.xls`);
+        document.body.appendChild(link);
+        link.click();
+      }).catch((res) => {
+        console.log(res);
+      })
+    },
       complete(id) {
         this.loading = true;
         axios.get(`${config.apiUrl}/budget/cub/${id}/`, {

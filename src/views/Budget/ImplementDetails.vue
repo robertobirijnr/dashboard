@@ -10,12 +10,20 @@
       <div class="col-md-12 col-lg-12">
         <div class="card">
           <div class="card-header">
-            <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+            <div class="row">
+              <div class="col">
+                <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
               <li class="nav-item"><a href="#gs" id="gs-tab" data-toggle="tab" class="nav-link active" aria-selected="true">Goods & Services</a></li>
               <li class="nav-item"><a href="#com" id="com-tab" data-toggle="tab" class="nav-link" aria-selected="false">Employees Compensations</a></li>
               <li class="nav-item"><a href="#asset" id="asset-tab" data-toggle="tab" class="nav-link" aria-selected="false">Assets</a></li>
               <li class="nav-item"><a href="#sum" id="sum-tab" data-toggle="tab" class="nav-link" aria-selected="false">Summary</a></li>
             </ul>
+              </div>
+              <div class="col" align="right">
+                <button @click="exporrt(object.id)" :disabled="!object" class="btn btn-primary btn-sm">EXTRACT</button>
+              </div>
+            </div>
+
           </div>
           <div class="card-body">
             <div class="tab-content" id="myTabContent">
@@ -180,6 +188,23 @@ export default {
       }).then((res) => {
         this.object = res.data;
       });
+    },
+    exporrt(uid){
+      axios.get(`${config.apiUrl}/budget/exub/${uid}/`, {
+        responseType: 'blob',
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        }
+      }).then((res) => {
+        const url = URL.createObjectURL(new Blob([res.data], {type: 'application/vnd.ms-excel'}));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `${this.object.unit_name}.xls`);
+        document.body.appendChild(link);
+        link.click();
+      }).catch((res) => {
+        console.log(res);
+      })
     },
   },
   mounted() {

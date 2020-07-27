@@ -11,11 +11,9 @@
     <!-- Default Light Table -->
     <div class="row">
       <div class="col-md-4">
-        <div class="row">
-          <div class="col-md-12 mb-2">
-            <div class="card">
+        <div class="card">
               <div class="card-body">
-                <div class="list-group">
+                <div class="list-group-flush">
                   <div class="list-group-item">
                     <div class="row">
                       <div class="col">Start Date</div>
@@ -49,150 +47,6 @@
                 </div>
               </div>
             </div>
-          </div>
-          <!--<div class="col-md-12">-->
-            <!--<div class="card card-small bg-">-->
-              <!--<div class="card-header small">Compensation Summary</div>-->
-              <!--<div class="card-body small">-->
-                <!--<div class="list-group-flush">-->
-                  <!--<div class="list-group-item">-->
-                    <!--<div class="row">-->
-                      <!--<div class="col">Consolidated Basic Salary</div>-->
-                      <!--<div class="col" align="right">600000</div>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                  <!--<div class="list-group-item">-->
-                    <!--<div class="row">-->
-                      <!--<div class="col">Casuals</div>-->
-                      <!--<div class="col" align="right"></div>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                  <!--<div class="list-group-item">-->
-                    <!--<div class="row">-->
-                      <!--<div class="col">Vehicle Maintenance</div>-->
-                      <!--<div class="col" align="right"></div>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                  <!--<div class="list-group-item">-->
-                    <!--<div class="row">-->
-                      <!--<div class="col">Book Subsidy</div>-->
-                      <!--<div class="col" align="right"></div>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                  <!--<div class="list-group-item">-->
-                    <!--<div class="row">-->
-                      <!--<div class="col">Night Watchman</div>-->
-                      <!--<div class="col" align="right"></div>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                  <!--<div class="list-group-item">-->
-                    <!--<div class="row">-->
-                      <!--<div class="col">Training</div>-->
-                      <!--<div class="col" align="right"></div>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                  <!--<div class="list-group-item">-->
-                    <!--<div class="row">-->
-                      <!--<div class="col">Duty</div>-->
-                      <!--<div class="col" align="right"></div>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                  <!--<div class="list-group-item">-->
-                    <!--<div class="row">-->
-                      <!--<div class="col">Risk</div>-->
-                      <!--<div class="col" align="right"></div>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                  <!--<div class="list-group-item">-->
-                    <!--<div class="row">-->
-                      <!--<div class="col">Clothing</div>-->
-                      <!--<div class="col" align="right"></div>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                  <!--<div class="list-group-item">-->
-                    <!--<div class="row">-->
-                      <!--<div class="col">Cashier</div>-->
-                      <!--<div class="col" align="right"></div>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                  <!--<div class="list-group-item">-->
-                    <!--<div class="row">-->
-                      <!--<div class="col">Professional</div>-->
-                      <!--<div class="col" align="right"></div>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                  <!--<div class="list-group-item">-->
-                    <!--<div class="row">-->
-                      <!--<div class="col">Acting</div>-->
-                      <!--<div class="col" align="right"></div>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                  <!--<div class="list-group-item">-->
-                    <!--<div class="row">-->
-                      <!--<div class="col">IT</div>-->
-                      <!--<div class="col" align="right"></div>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                  <!--<div class="list-group-item">-->
-                    <!--<div class="row">-->
-                      <!--<div class="col">Entertainment</div>-->
-                      <!--<div class="col" align="right"></div>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                  <!--<div class="list-group-item">-->
-                    <!--<div class="row">-->
-                      <!--<div class="col">Fuel</div>-->
-                      <!--<div class="col" align="right"></div>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                  <!--<div class="list-group-item">-->
-                    <!--<div class="row">-->
-                      <!--<div class="col">Housing Subsidy</div>-->
-                      <!--<div class="col" align="right"></div>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                  <!--<div class="list-group-item">-->
-                    <!--<div class="row">-->
-                      <!--<div class="col">Travel</div>-->
-                      <!--<div class="col" align="right"></div>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                  <!--<div class="list-group-item">-->
-                    <!--<div class="row">-->
-                      <!--<div class="col">Domestic Servant</div>-->
-                      <!--<div class="col" align="right"></div>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                  <!--<div class="list-group-item">-->
-                    <!--<div class="row">-->
-                      <!--<div class="col">Garden Boy</div>-->
-                      <!--<div class="col" align="right"></div>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                  <!--<div class="list-group-item">-->
-                    <!--<div class="row">-->
-                      <!--<div class="col">Driver Subsidy</div>-->
-                      <!--<div class="col" align="right"></div>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                  <!--<div class="list-group-item">-->
-                    <!--<div class="row">-->
-                      <!--<div class="col">Overtime</div>-->
-                      <!--<div class="col" align="right"></div>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                  <!--<div class="list-group-item">-->
-                    <!--<div class="row">-->
-                      <!--<div class="col">Funeral</div>-->
-                      <!--<div class="col" align="right"></div>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                <!--</div>-->
-              <!--</div>-->
-            <!--</div>-->
-          <!--</div>-->
-        </div>
-
       </div>
       <div class="col-md-8">
         <div class="card" v-if="userRole === 'BO'">
@@ -206,9 +60,9 @@
             </div>
           </div>
           <div class="card-body ">
-            <div v-if="object.unit_budgets">
-              <div class="list-group-flush" :key="unit.id" v-for="unit in object.unit_budgets">
-                <router-link :to="{name: 'unitBudget-details', params: {unit_id: unit.unit_budget_id}}" class="list-group-item bg-white text-black list-group-item-action flex-column align-items-start">
+            <div v-if="object.unit_budgets.length">
+              <div class="list-group-flush">
+                <router-link  :key="unit.id" v-for="unit in object.unit_budgets" :to="{name: 'unitBudget-details', params: {unit_id: unit.unit_budget_id}}" class="list-group-item bg-white text-black list-group-item-action flex-column align-items-start">
                   <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">{{unit.unit_name}}</h5>
                     <!-- <small class="text-muted">3 days ago</small> -->

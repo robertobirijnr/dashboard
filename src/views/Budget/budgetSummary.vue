@@ -12,14 +12,15 @@
           <div class="card h-100">
             <div class="card-header">
               <div class="row">
-                <div class="col"><button class="btn-sm btn btn-primary">EXTRACT</button></div>
+                <div class="col"><button @click="exporrt(object.id)" :disabled="!object" class="btn-sm btn btn-primary">EXTRACT</button></div>
+                <!--{{departments}}-->
                 <div class="col" align="right">
                   <div class="btn-group mr-2">
                     <button type="button" :disabled="!departments.length" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       Departments Summary
                     </button>
-                    <div class="dropdown-menu" :key="depart.id" v-for="depart in departments">
-                      <router-link class="dropdown-item" :to="`/department-budget-summary/${object.budget_period_id}/${depart.id}`">{{depart.name}}</router-link>
+                    <div class="dropdown-menu">
+                      <router-link class="dropdown-item" :key="depart.id" v-for="depart in departments" :to="`/department-budget-summary/${object.budget_period_id}/${depart.id}`">{{depart.name}}</router-link>
                       <!--<a class="dropdown-item" href="#">Another action</a>-->
                       <!--<a class="dropdown-item" href="#">Something else here</a>-->
                       <!--<div class="dropdown-divider"></div>-->
@@ -30,8 +31,8 @@
                     <button type="button" :disabled="!divisions.length" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       Divisions Summary
                     </button>
-                    <div class="dropdown-menu" :key="div.id" v-for="div in divisions">
-                      <router-link class="dropdown-item" :to="`/division-budget-summary/${object.budget_period_id}/${div.id}`">{{div.name}}</router-link>
+                    <div class="dropdown-menu">
+                      <router-link class="dropdown-item"  :key="div.id" v-for="div in divisions" :to="`/division-budget-summary/${object.budget_period_id}/${div.id}`">{{div.name}}</router-link>
                       <!--<a class="dropdown-item" href="#">Another action</a>-->
                       <!--<a class="dropdown-item" href="#">Something else here</a>-->
                       <!--<div class="dropdown-divider"></div>-->
@@ -205,8 +206,26 @@ export default {
           this.gss = results.gss;
           this.as = results.as;
           this.bt = results.bt;
+          console.log(this.departments);
         });
     },
+    exporrt(pid){
+      axios.get(`${config.apiUrl}/budget/exbs/${pid}/`, {
+        responseType: 'blob',
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        }
+      }).then((res) => {
+        const url = URL.createObjectURL(new Blob([res.data], {type: 'application/vnd.ms-excel'}));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `${this.object.budget_period_id}.xls`);
+        document.body.appendChild(link);
+        link.click();
+      }).catch((res) => {
+        console.log(res);
+      })
+    }
   },
   mounted() {
     this.details();

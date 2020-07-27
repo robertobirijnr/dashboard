@@ -12,7 +12,7 @@
           <div class="card h-100">
             <div class="card-header">
               <div class="row">
-                <div class="col"><button class="btn-sm btn btn-primary">EXTRACT</button></div>
+                <div class="col"><button :disabled="!unit_budgets" @click="exporrt(period.id, object.id)" class="btn-sm btn btn-primary">EXTRACT</button></div>
                 <!--<div class="col" align="right">-->
                 <!--<div class="btn-group mr-2">-->
                 <!--<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
@@ -206,6 +206,23 @@ export default {
         console.log(res);
       });
     },
+    exporrt(pid, did){
+      axios.get(`${config.apiUrl}/budget/exdvbs/${pid}/${did}`, {
+        responseType: 'blob',
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        }
+      }).then((res) => {
+        const url = URL.createObjectURL(new Blob([res.data], {type: 'application/vnd.ms-excel'}));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `${this.object.name}.xls`);
+        document.body.appendChild(link);
+        link.click();
+      }).catch((res) => {
+        console.log(res);
+      })
+    }
   },
   mounted() {
     this.details();
