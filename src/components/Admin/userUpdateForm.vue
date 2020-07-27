@@ -27,7 +27,13 @@
                   <d-col>
                     <d-form-row>
                       <d-col md="12 mb-2">
-                        <label for="fePassword">User Role</label>
+                        <label for="id_staffid">Staff ID</label>
+                        <input type="text" v-model="staff_id" id="id_staffid" class="form-control">
+                      </d-col>
+                    </d-form-row>
+                    <d-form-row>
+                      <d-col md="12 mb-2">
+                        <label for="id_role">User Role</label>
                         <select name="role" v-model="role" id="id_role"   class="form-control">
                           <option value="">Choose...</option>
                           <option value="AD">Administrator</option>
@@ -127,6 +133,7 @@
         logs: {},
         role: '',
         depart: '',
+        staff_id: '',
         unit: '',
         departs: {},
         divisions: {},
@@ -206,6 +213,7 @@
           unit: this.unit,
           div: this.division,
           depart: this.depart,
+          staff_id: this.staff_id,
         }, {
           headers: {
             Authorization: `JWT ${config.get_token()}`,
@@ -238,7 +246,7 @@
     mounted() {
       this.details();
       this.division_list();
-      this.departments();
+      // this.departments();
       // this.unit_list(),
     },
     watch: {
@@ -248,6 +256,7 @@
           this.depart = this.object.department;
           this.unit = this.object.unit;
           this.division = this.object.division;
+          this.staff_id = this.object.staff_id;
         }
       },
       division(value){
