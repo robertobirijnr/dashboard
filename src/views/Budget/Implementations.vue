@@ -12,7 +12,8 @@
           <div class="card-header"></div>
           <div class="card-body">
             <center v-if="loading"><Spinner/></center>
-            <div class="table-responsive" v-if="object_list.length" >
+            <span v-else-if="!object_list.length">Nothing to show here!</span>
+            <div class="table-responsive" v-else>
               <table class="table table-borderless">
                 <thead>
                 <tr>
@@ -36,7 +37,7 @@
                 </tbody>
               </table>
             </div>
-            <span v-else>Nothing to show here!</span>
+
           </div>
         </div>
       </div>
