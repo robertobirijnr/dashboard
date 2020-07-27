@@ -355,6 +355,7 @@
             <div class="tab-content" id="nav-tabContent">
               <div class="tab-pane fade show active pt-2  border-bottom-0" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                 <span v-if="msg">{{msg}}</span>
+                <span v-if="errors" class="mt-2 text-danger">{{errors.details}}</span>
                 <div class="form-group">
                   <label >Category</label>
                   <select name="category" v-model="category" id="id_cat" class="form-control">
