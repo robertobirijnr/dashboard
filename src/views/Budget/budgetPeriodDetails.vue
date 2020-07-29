@@ -13,6 +13,28 @@
       <!--{{unit_budget.status}}-->
       <div class="col-md-4">
         <div class="card">
+          <!--<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop">-->
+            <!--Launch static backdrop modal-->
+          <!--</button>-->
+          <div class="modal fade" id="confirmModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <!--<div class="modal-header">-->
+                  <!--<h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>-->
+                  <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+                    <!--<span aria-hidden="true">&times;</span>-->
+                  <!--</button>-->
+                <!--</div>-->
+                <div class="modal-body">
+                  <i class="fa fa-spinner fa-spin" style="font-size:24px; color: crimson"></i> Please wait whiles your budget is being confirmed. This may take a minute or more
+                </div>
+                <!--<div class="modal-footer">-->
+                  <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+                  <!--<button type="button" class="btn btn-primary">Understood</button>-->
+                <!--</div>-->
+              </div>
+            </div>
+          </div>
               <div class="card-body">
                 <div class="list-group-flush">
                   <div class="list-group-item">
@@ -87,6 +109,7 @@
                   <span v-if="!loading">Confirm</span><span v-else>Confirming...</span>
                 </button>
               </div>
+
             </div>
           </div>
           <div class="card-body">
@@ -1165,11 +1188,13 @@
       },
       confirm_budget(ubid) {
         this.loading = true;
+        $('#confirmModal').modal('show');
         document.getElementById('id_confirm').disabled = true;
         axios.post(`${config.apiUrl}/budget/cfub/${ubid}/`, {}, {
           headers: { Authorization: `JWT ${config.get_token()}` },
         }).then((response) => {
           this.loading = false;
+          $('#confirmModal').modal('hide');
           document.getElementById('id_confirm').disabled = false;
           console.log(response);
           this.current_unit_budget();
