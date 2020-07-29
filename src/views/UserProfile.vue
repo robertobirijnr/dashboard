@@ -3,10 +3,10 @@
     <d-row>
       <!-- Main Sidebar -->
       <span v-if="user === 'AD'">
-        <main-sidebar :items="sidebarItems" title="Administration" />
+        <main-sidebar  title="Administration" />
       </span>
       <span v-else>
-        <main-sidebar :items="sidebarItems" title="GRA ERP" />
+        <main-sidebar title="GRA ERP" />
       </span>
 
       <d-col class="main-content offset-lg-2 offset-md-3 p-0" tag="main" lg="10" md="9" sm="12">

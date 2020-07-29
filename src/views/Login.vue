@@ -61,11 +61,13 @@ export default {
         config.set_auth(JSON.stringify(results));
         config.set_user(JSON.stringify(results.user));
         this.$root.auth = results;
+        this.$noty.success('Great! Login Successful!');
         this.$router.push('/home');
       }).catch(({ response }) => {
         this.loading = false;
         // console.log(response);
         this.errors = response.data;
+        this.$noty.error(`Oops! ${this.errors.detail}`);
       });
     },
   },

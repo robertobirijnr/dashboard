@@ -215,6 +215,7 @@ export default {
       pc: '',
       cats: {},
       asss: {},
+      errors: {},
     };
   },
   methods: {
@@ -224,6 +225,7 @@ export default {
       },
     details() {
       const id = this.$route.params.period_id;
+      this.$noty.info('Loading...');
       axios
         .get(`${config.apiUrl}/budget/bs/${id}/`, {
           headers: {
@@ -249,9 +251,22 @@ export default {
           this.cats = results.cats;
           this.asss = results.asss;
           console.log(this.departments);
-        });
+          this.$noty.success('Everything looks great!');
+        }).catch(({response}) => {
+          this.errors = response.data;
+        if(response.status === 401){
+          this.$noty.error(`Oops! Your session has expired.`);
+          localStorage.removeItem('auth');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          this.$router.push('/login');
+        }else{
+          this.$noty.error(`Oops! ${this.errors.detail}`);
+        }
+      });
     },
     exporrt(pid){
+      this.$noty.info('Exporting...');
       axios.get(`${config.apiUrl}/budget/exbs/${pid}/`, {
         responseType: 'blob',
         headers: {
@@ -264,8 +279,19 @@ export default {
         link.setAttribute('download', `${this.object.budget_period_id}.xls`);
         document.body.appendChild(link);
         link.click();
-      }).catch((res) => {
-        console.log(res);
+        this.$noty.success('Export successful');
+      }).catch(({response}) => {
+        this.errors = response.data;
+        console.log(response);
+        if(response.status === 401){
+          this.$noty.error(`Oops! Your session has expired.`);
+          localStorage.removeItem('auth');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          this.$router.push('/login');
+        }else{
+          this.$noty.error(`Oops! ${this.errors.detail}`);
+        }
       })
     }
   },

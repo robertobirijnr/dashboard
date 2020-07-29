@@ -33,6 +33,7 @@ export default {
       localStorage.removeItem('user');
       localStorage.removeItem('token');
       this.$router.push('/login');
+      this.$noty.success('Logout successful');
     },
     viewprofile() {
       this.$router.push('/profile');

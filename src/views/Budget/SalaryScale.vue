@@ -238,9 +238,20 @@
         }).then((res) => {
           this.loading = false;
           this.object_list = res.data;
-        }).catch((res) => {
+          this.$noty.success('Everything looks great');
+        }).catch(({response}) => {
           this.loading = false;
-          console.log(res);
+          console.log(response);
+          const error = response.data;
+          if(response.status === 401){
+            this.$noty.error(`Oops! Your session has expired.`);
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            this.$router.push('/login');
+          }else{
+            this.$noty.error(`Oops! ${error.detail}`);
+          }
         });
       },
       new_scale(){
@@ -261,10 +272,21 @@
           this.basic = '';
           this.level = '';
           this.msg = null;
+          this.$noty.success('New Salary Scale added');
           $('#exampleModalCenter').modal('hide');
         }).catch(({response}) => {
           this.loading = false;
           this.msg = response.data;
+          if(response.status === 401){
+            this.$noty.error(`Oops! Your session has expired.`);
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            $('#exampleModalCenter').modal('hide');
+            this.$router.push('/login');
+          }else{
+            this.$noty.error(`Oops! ${this.msg.detail}`);
+          }
         })
       },
       current_scale(id){
@@ -290,10 +312,21 @@
         }).then((res) => {
           this.loading = false;
           $('#editModal').modal('hide');
+          this.$noty.success('Salary scale updated!');
           this.scales();
-        }).catch((res) => {
-          console.log(res);
+        }).catch(({response}) => {
+          console.log(response);
           this.loading = false;
+          if(response.status === 401){
+            this.$noty.error(`Oops! Your session has expired.`);
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            $('#editModal').modal('hide');
+            this.$router.push('/login');
+          }else{
+            this.$noty.error(`Oops! ${this.msg.detail}`);
+          }
         })
       },
     },

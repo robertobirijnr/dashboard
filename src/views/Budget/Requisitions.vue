@@ -109,7 +109,19 @@ export default {
           Authorization: `JWT ${config.get_token()}`,
         },
       }).then((res) => {
+        this.$noty.success('Everything looks great');
         this.object_list = res.data;
+      }).catch(({response}) => {
+        this.errors = response.data;
+        if(response.status === 401){
+          this.$noty.error(`Oops! Your session has expired.`);
+          localStorage.removeItem('auth');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          this.$router.push('/login');
+        }else{
+          this.$noty.error(`Oops! ${this.errors.detail}`);
+        }
       });
     },
     item_list() {
@@ -139,18 +151,30 @@ export default {
           this.item_list();
           this.item = '';
           this.quantity = 0;
+          this.$noty.success('New request has been made successfully');
           // eslint-disable-next-line no-undef
           $('#newReq').modal('hide');
         }).catch(({response}) => {
           // console.log(res);
           this.loading = false;
           this.errors = response.data;
+          if(response.status === 401){
+            this.$noty.error(`Oops! Your session has expired.`);
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            $('#newReq').modal('hide');
+            this.$router.push('/login');
+          }else{
+            this.$noty.error(`Oops! ${this.errors.detail}`);
+          }
         });
       }
 
     },
     approve(id) {
       this.loading = true;
+      this.$noty.info('Loading...');
       axios.post(`${config.apiUrl}/budget/ar/${id}/`, {
         // item: this.item
       }, {
@@ -159,11 +183,22 @@ export default {
         },
       }).then((res) => {
         this.loading = false;
+        this.$noty.success('Request Approved');
         console.log(res);
         this.requests();
         // $('#newReq').modal('hide');
-      }).catch((res) => {
-        console.log(res);
+      }).catch(({response}) => {
+        console.log(response);
+        const errors = response.data;
+        if(response.status === 401){
+          this.$noty.error(`Oops! Your session has expired.`);
+          localStorage.removeItem('auth');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          this.$router.push('/login');
+        }else{
+          this.$noty.error(`Oops! ${errors.detail}`);
+        }
       });
     },
   },

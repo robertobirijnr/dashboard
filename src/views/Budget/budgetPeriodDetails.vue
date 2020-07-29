@@ -813,9 +813,17 @@
           this.details();
           this.loading = false;
           console.log(res);
-        }).catch((response) => {
+          this.$noty.success(`Great! Budget Period is now opened to new unit budgets`);
+        }).catch(({response}) => {
           this.loading = false;
           console.log(response);
+          if(response.status === 401){
+            this.$noty.error(`Oops! Your session has expired.`);
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            this.$router.push('/login');
+          }
         });
       },
       close_period(id){
@@ -826,11 +834,20 @@
           }
         }).then((res) => {
           this.details();
+          this.$noty.success('Great! Budget Period is closed to new unit budgets');
           this.loading = false;
           console.log(res);
-        }).catch((response) => {
+
+        }).catch(({response}) => {
           this.loading = false;
           console.log(response);
+          if(response.status === 401){
+            this.$noty.error(`Oops! Your session has expired.`);
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            this.$router.push('/login');
+          }
         });
       },
       details() {
@@ -842,9 +859,17 @@
         }).then((response) => {
           this.object = response.data;
           console.log(response);
-        }).catch((response) => {
+          this.$noty.success('Everything looks great!');
+        }).catch(({response}) => {
           console.log(response);
-        });
+          if(response.status === 401){
+            this.$noty.error(`Oops! Your session has expired.`);
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            this.$router.push('/login');
+          }
+        })
       },
       category_list() {
         axios.get(`${config.apiUrl}/api/categories/`, {
@@ -901,6 +926,7 @@
 
       },
       current_unit_budget() {
+        this.$noty.info('Loading...');
         const id = this.$route.params.period_id;
         axios.get(`${config.apiUrl}/budget/cpub/${id}`, {
           headers: { Authorization: `JWT ${config.get_token()}` },
@@ -908,9 +934,17 @@
           // var results = response.data
           this.unit_budget = response.data;
           console.log(response.data);
+          this.$noty.success('Everything looks great');
         }).catch(({response}) => {
           this.unit_budget = response.data;
           console.log(response);
+          if(response.status === 401){
+            this.$noty.error(`Oops! Your session has expired.`);
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            this.$router.push('/login');
+          }
         });
       },
       new_budget(type) {
@@ -934,11 +968,21 @@
               this.item = '';
               this.amount = '';
               this.errors = {};
+              this.$noty.success('New Goods and Services Item Added');
               this.current_unit_budget();
             }).catch(({ response }) => {
               this.formLoading = false;
               this.errors = response.data;
               console.log(response.data);
+              if(response.status === 401){
+                this.$noty.error(`Oops! Your session has expired.`);
+                localStorage.removeItem('auth');
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                this.$router.push('/login');
+              }else{
+                this.$noty.error(`Oops! ${this.errors.detail}`);
+              }
             });
           }else{
             this.msg = "All fields are required"
@@ -974,12 +1018,22 @@
               this.errors = {};
               document.getElementById('id_basic').value = '';
               document.getElementById('id_period').value = '';
+              this.$noty.success('New Employee Compensation added');
               this.current_unit_budget();
             }).catch(({response}) => {
               this.current_unit_budget();
               this.errors = response.data;
               this.formLoading = false;
               console.log(response);
+              if(response.status === 401){
+                this.$noty.error(`Oops! Your session has expired.`);
+                localStorage.removeItem('auth');
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                this.$router.push('/login');
+              }else{
+                this.$noty.warning(`Oops! ${this.errors.detail}`);
+              }
             })
           }else{
             this.msg2 = "All fields are required";
@@ -999,11 +1053,21 @@
               this.formLoading = false;
               this.asset = '';
               this.errors = {};
+              this.$noty.success('New Asset Item selected');
               this.current_unit_budget();
             }).catch(({response}) => {
               this.current_unit_budget();
               this.errors = response;
               this.formLoading = false;
+              if(response.status === 401){
+                this.$noty.error(`Oops! Your session has expired.`);
+                localStorage.removeItem('auth');
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                this.$router.push('/login');
+              }else{
+                this.$noty.error(`Oops! ${this.errors.detail}`);
+              }
             })
           }else{
             this.msg3 = "All fields are required";
@@ -1051,11 +1115,21 @@
             this.item = '';
             this.amount = '';
             this.errors = {};
+            this.$noty.success('New Goods and Services Item added');
             this.current_unit_budget();
           }).catch(({ response }) => {
             this.formLoading = false;
             this.errors = response.data;
             console.log(response.data);
+            if(response.status === 401){
+              this.$noty.error(`Oops! Your session has expired.`);
+              localStorage.removeItem('auth');
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              this.$router.push('/login');
+            }else{
+              this.$noty.error(`Oops! ${this.errors.detail}`);
+            }
           });
         }
       },
@@ -1092,11 +1166,21 @@
             document.getElementById('id_basic1').value = '';
             document.getElementById('id_period1').value = '';
             this.errors = {};
+            this.$noty.success('New Employee Compensation added');
             this.current_unit_budget();
           }).catch(({response}) => {
             this.errors = response.data;
             this.formLoading = false;
             console.log(response.data);
+            if(response.status === 401){
+                this.$noty.error(`Oops! Your session has expired.`);
+                localStorage.removeItem('auth');
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                this.$router.push('/login');
+              }else{
+                this.$noty.error(`Oops! ${this.errors.detail}`);
+              }
             this.current_unit_budget();
           });
         }
@@ -1115,12 +1199,22 @@
             this.formLoading = false;
             this.asset = '';
             this.errors = {};
+            this.$noty.success('New Asset Item added');
             this.current_unit_budget();
           }).catch(({response}) => {
             this.formLoading = false;
             this.errors = response.data;
             this.current_unit_budget();
             console.log(response);
+            if(response.status === 401){
+              this.$noty.error(`Oops! Your session has expired.`);
+              localStorage.removeItem('auth');
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              this.$router.push('/login');
+            }else{
+              this.$noty.error(`Oops! ${this.errors.detail}`);
+            }
           })
         }
       },
@@ -1151,9 +1245,19 @@
           headers: { Authorization: `JWT ${config.get_token()}` },
         }).then((response) => {
           console.log(response);
+          this.$noty.success('Item has been removed');
           this.current_unit_budget();
         }).catch(({ response }) => {
           console.log(response.data);
+          if(response.status === 401){
+            this.$noty.error(`Oops! Your session has expired.`);
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            this.$router.push('/login');
+          }else{
+            this.$noty.error(`Oops! ${this.errors.detail}`);
+          }
         });
       },
       remove_budget_com(ubid, com){
@@ -1161,9 +1265,19 @@
           headers: { Authorization: `JWT ${config.get_token()}` },
         }).then((res) => {
           console.log(res);
+          this.$noty.success('Employee Compensation has been removed');
           this.current_unit_budget();
-        }).catch(({res}) => {
-          console.log(res.data);
+        }).catch(({response}) => {
+          console.log(response.data);
+          if(response.status === 401){
+            this.$noty.error(`Oops! Your session has expired.`);
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            this.$router.push('/login');
+          }else{
+            this.$noty.error(`Oops! ${this.errors.detail}`);
+          }
         })
       },
       remove_budget_asset(ubid, asset){
@@ -1172,8 +1286,18 @@
         }).then((res) => {
           this.current_unit_budget();
           console.log(res);
-        }).catch(({res}) => {
-          console.log(res.data);
+          this.$noty('Asset Item has been removed');
+        }).catch(({response}) => {
+          console.log(response.data);
+          if(response.status === 401){
+            this.$noty.error(`Oops! Your session has expired.`);
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            this.$router.push('/login');
+          }else{
+            this.$noty.error(`Oops! ${this.errors.detail}`);
+          }
         })
       },
       remove_budget_imprest(ubid, imp){
@@ -1189,6 +1313,7 @@
       confirm_budget(ubid) {
         this.loading = true;
         $('#confirmModal').modal('show');
+        this.$noty.info('Please wait a minute!');
         document.getElementById('id_confirm').disabled = true;
         axios.post(`${config.apiUrl}/budget/cfub/${ubid}/`, {}, {
           headers: { Authorization: `JWT ${config.get_token()}` },
@@ -1196,6 +1321,7 @@
           this.loading = false;
           $('#confirmModal').modal('hide');
           document.getElementById('id_confirm').disabled = false;
+          this.$noty.success('Great! Your budget selection has been confirmed now!');
           console.log(response);
           this.current_unit_budget();
         }).catch(({ response }) => {
@@ -1203,6 +1329,15 @@
           this.loading = false;
           this.errors = response.data;
           console.log(response.data);
+          if(response.status === 401){
+            this.$noty.error(`Oops! Your session has expired.`);
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            this.$router.push('/login');
+          }else{
+            this.$noty.error(`Oops! ${this.errors.detail}`);
+          }
         });
       },
       find_scale(rank, notch){

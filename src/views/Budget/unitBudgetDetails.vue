@@ -93,18 +93,18 @@
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
               <div class="card-body">
                 <!--<div class="row mb-3">-->
-                  <!--<div class="col"></div>-->
-                  <!--<div class="col-md-3" align="right">-->
-                    <!--<div class="row">-->
-                      <!--<div class="col">-->
-                        <!--<select name="" id="" v-model="type" class="form-control" @change="exp(object.id)">-->
-                          <!--<option value="">Export to...</option>-->
-                          <!--<option value="csv">CSV</option>-->
-                          <!--<option value="excel">Excel</option>-->
-                        <!--</select>-->
-                      <!--</div>-->
-                    <!--</div>-->
-                  <!--</div>-->
+                <!--<div class="col"></div>-->
+                <!--<div class="col-md-3" align="right">-->
+                <!--<div class="row">-->
+                <!--<div class="col">-->
+                <!--<select name="" id="" v-model="type" class="form-control" @change="exp(object.id)">-->
+                <!--<option value="">Export to...</option>-->
+                <!--<option value="csv">CSV</option>-->
+                <!--<option value="excel">Excel</option>-->
+                <!--</select>-->
+                <!--</div>-->
+                <!--</div>-->
+                <!--</div>-->
                 <!--</div>-->
                 <div class="table-responsive">
                   <table class="table">
@@ -177,18 +177,18 @@
             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
               <div class="card-body">
                 <!--<div class="row">-->
-                  <!--<div class="col"></div>-->
-                  <!--<div class="col-md-3" align="right">-->
-                    <!--<div class="row">-->
-                      <!--<div class="col">-->
-                        <!--<select v-model="type" class="form-control" @change="exp(object.id)">-->
-                          <!--<option value="">Export to...</option>-->
-                          <!--<option value="csv">CSV</option>-->
-                          <!--<option value="excel">Excel</option>-->
-                        <!--</select>-->
-                      <!--</div>-->
-                    <!--</div>-->
-                  <!--</div>-->
+                <!--<div class="col"></div>-->
+                <!--<div class="col-md-3" align="right">-->
+                <!--<div class="row">-->
+                <!--<div class="col">-->
+                <!--<select v-model="type" class="form-control" @change="exp(object.id)">-->
+                <!--<option value="">Export to...</option>-->
+                <!--<option value="csv">CSV</option>-->
+                <!--<option value="excel">Excel</option>-->
+                <!--</select>-->
+                <!--</div>-->
+                <!--</div>-->
+                <!--</div>-->
                 <!--</div>-->
                 <div class="table-responsive">
                   <table class="table mb-0">
@@ -272,27 +272,27 @@
               </div>
             </div>
             <!--<div class="tab-pane fade" id="about" role="tabpanel" aria-labelledby="about-tab">-->
-              <!--<div class="card-body">-->
-                <!--<div class="list-group" :key="imprest.id" v-for="imprest in object.imprests">-->
-                  <!--<div class="list-group-item">-->
-                    <!--<div class="row">-->
-                      <!--<div class="col-md-7">{{imprest.imprest.item_name}}</div>-->
-                      <!--<div class="col-md-5" align="right">-->
-                        <!--<d-row>-->
-                          <!--<div class="col-md-7">-->
-                            <!--<input type="text" class="form-control">-->
-                          <!--</div>-->
-                          <!--<div class="col-md-5">-->
-                            <!--<button class="btn mr-1 small btn-sm btn-primary"><span class="material-icons small">create</span></button>-->
-                            <!--<button class="btn mr-1 small btn-sm btn-primary"><span class="material-icons small">create</span></button>-->
-                            <!--<button class="btn small btn-sm btn-primary"><span class="material-icons small">create</span></button>-->
-                          <!--</div>-->
-                        <!--</d-row>-->
-                      <!--</div>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                <!--</div>-->
-              <!--</div>-->
+            <!--<div class="card-body">-->
+            <!--<div class="list-group" :key="imprest.id" v-for="imprest in object.imprests">-->
+            <!--<div class="list-group-item">-->
+            <!--<div class="row">-->
+            <!--<div class="col-md-7">{{imprest.imprest.item_name}}</div>-->
+            <!--<div class="col-md-5" align="right">-->
+            <!--<d-row>-->
+            <!--<div class="col-md-7">-->
+            <!--<input type="text" class="form-control">-->
+            <!--</div>-->
+            <!--<div class="col-md-5">-->
+            <!--<button class="btn mr-1 small btn-sm btn-primary"><span class="material-icons small">create</span></button>-->
+            <!--<button class="btn mr-1 small btn-sm btn-primary"><span class="material-icons small">create</span></button>-->
+            <!--<button class="btn small btn-sm btn-primary"><span class="material-icons small">create</span></button>-->
+            <!--</div>-->
+            <!--</d-row>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
             <!--</div>-->
           </div>
           <div class="card-footer" >
@@ -362,8 +362,19 @@
         }).then((response) => {
           this.object = response.data;
           console.log(response);
-        }).catch((response) => {
+          this.$noty.success('Everything looks great');
+        }).catch(({response}) => {
           console.log(response);
+          const errors = response.data;
+          if(response.status === 401){
+            this.$noty.error(`Oops! Your session has expired.`);
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            this.$router.push('/login');
+          }else{
+            this.$noty.error(`Oops! ${errors.detail}`);
+          }
         });
       },
       show_save(id) {
@@ -439,10 +450,21 @@
             document.getElementById(`price${itemId}`).hidden = false;
             document.getElementById(`qty${itemId}`).hidden = false;
             this.details();
-          }).catch((res) => {
+            this.$noty.success('Amount recorded');
+          }).catch(({response}) => {
             this.loading = false;
-            console.log(res);
+            console.log(response);
             this.details();
+            const error = response.data;
+            if(response.status === 401){
+              this.$noty.error(`Oops! Your session has expired.`);
+              localStorage.removeItem('auth');
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              this.$router.push('/login');
+            }else{
+              this.$noty.error(`Oops! ${error.detail}`);
+            }
           });
         }
       },
@@ -467,10 +489,22 @@
             document.getElementById(`id_tclear${itemId}`).hidden = true;
             document.getElementById(`total${itemId}`).hidden = false;
             this.details();
-          }).catch((res) => {
+            this.$noty.success('Amount recorded');
+          }).catch(({res}) => {
             this.loading = false;
             console.log(res);
+            const errors = res.data;
+            if(res.status === 401){
+              this.$noty.error(`Oops! Your session has expired.`);
+              localStorage.removeItem('auth');
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              this.$router.push('/login');
+            }else{
+              this.$noty.error(`Oops! ${errors.detail}`);
+            }
             this.details();
+
           });
         }
       },
@@ -495,9 +529,20 @@
             document.getElementById(`id_asset_clear${assetId}`).hidden = true;
             document.getElementById(`amount${assetId}`).hidden = false;
             this.details();
-          }).catch((res) => {
+            this.$noty.success('Amount recorded');
+          }).catch(({res}) => {
             this.loading = false;
             console.log(res);
+            const errors = res.data;
+            if(res.status === 401){
+              this.$noty.error(`Oops! Your session has expired.`);
+              localStorage.removeItem('auth');
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              this.$router.push('/login');
+            }else{
+              this.$noty.error(`Oops! ${errors.detail}`);
+            }
             this.details();
           });
         }
@@ -530,22 +575,34 @@
         });
       },
       exporrt(uid){
-      axios.get(`${config.apiUrl}/budget/exub/${uid}/`, {
-        responseType: 'blob',
-        headers: {
-          Authorization: `JWT ${config.get_token()}`,
-        }
-      }).then((res) => {
-        const url = URL.createObjectURL(new Blob([res.data], {type: 'application/vnd.ms-excel'}));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', `${this.object.unit_name}.xls`);
-        document.body.appendChild(link);
-        link.click();
-      }).catch((res) => {
-        console.log(res);
-      })
-    },
+        this.$noty.info('Extracting...');
+        axios.get(`${config.apiUrl}/budget/exub/${uid}/`, {
+          responseType: 'blob',
+          headers: {
+            Authorization: `JWT ${config.get_token()}`,
+          }
+        }).then((res) => {
+          const url = URL.createObjectURL(new Blob([res.data], {type: 'application/vnd.ms-excel'}));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', `${this.object.unit_name}.xls`);
+          document.body.appendChild(link);
+          link.click();
+          this.noty.success('Extracted successfully');
+        }).catch(({res}) => {
+          console.log(res);
+          const errors = res.data;
+          if(res.status === 401){
+            this.$noty.error(`Oops! Your session has expired.`);
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            this.$router.push('/login');
+          }else{
+            this.$noty.error(`Oops! ${errors.detail}`);
+          }
+        })
+      },
       complete(id) {
         this.loading = true;
         axios.get(`${config.apiUrl}/budget/cub/${id}/`, {
@@ -556,10 +613,22 @@
           this.loading = false;
           console.log(res);
           this.details();
+          this.$noty.success('Unit budget completed successfully');
           $('#confirmModal').modal('hide');
-        }).catch((res) => {
+        }).catch(({res}) => {
           this.loading = false;
           console.log(res);
+          const errors = res.data;
+          if(res.status === 401){
+            this.$noty.error(`Oops! Your session has expired.`);
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            $('#confirmModal').modal('hide');
+            this.$router.push('/login');
+          }else{
+            this.$noty.error(`Oops! ${errors.detail}`);
+          }
         });
       },
 

@@ -152,10 +152,24 @@ export default {
       }).then((res) => {
         this.loading = false;
         this.profile = res.data;
-      })
+        this.$noty.success('Everything looks great');
+      }).catch(({response}) => {
+        this.loading = false;
+        const errors = response.data;
+        if(response.status === 401){
+          this.$noty.error(`Oops! Your session has expired.`);
+          localStorage.removeItem('auth');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          this.$router.push('/login');
+        }else{
+          this.$noty.error(`Oops! ${errors.detail}`);
+        }
+      });
     },
     edit(){
       this.loading = true;
+      this.$noty.info('Saving...');
       axios.post(`${config.apiUrl}/user/up/`, {
         fname: this.profile.first_name,
         lname: this.profile.last_name,
@@ -172,13 +186,25 @@ export default {
         localStorage.removeItem('user');
         this.$root.auth.user = results.user;
         config.set_user(JSON.stringify(results.user));
-      }).catch((res) => {
+        this.$noty.success('Profile Updated');
+      }).catch(({res}) => {
         this.loading = false;
         console.log(res);
+        const errors = res.data;
+        if(response.status === 401){
+          this.$noty.error(`Oops! Your session has expired.`);
+          localStorage.removeItem('auth');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          this.$router.push('/login');
+        }else{
+          this.$noty.error(`Oops! ${errors.detail}`);
+        }
       })
     },
     change_password(){
       this.loading = true;
+      this.$noty.info('Saving');
       axios.post(`${config.apiUrl}/user/cp/`, {
         new: this.neww,
         old: this.old,
@@ -194,6 +220,7 @@ export default {
         this.old = '';
         this.again = '';
         this.errors = {};
+        this.$noty.success('Password changed');
       }).catch(({response}) => {
         this.loading = false;
         console.log(response);
@@ -201,6 +228,15 @@ export default {
         this.neww = '';
         this.old = '';
         this.again = '';
+        if(response.status === 401){
+          this.$noty.error(`Oops! Your session has expired.`);
+          localStorage.removeItem('auth');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          this.$router.push('/login');
+        }else{
+          this.$noty.error(`Oops! ${this.errors.detail}`);
+        }
       });
     }
   },

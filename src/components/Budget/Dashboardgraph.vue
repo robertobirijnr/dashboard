@@ -114,8 +114,15 @@ export default {
         this.confirmed = results.confirmed;
         this.completed = results.completed;
         this.activities = results.activities;
-      }).catch((res) => {
-        console.log(res);
+      }).catch(({response}) => {
+        console.log(response);
+        if(response.status === 401){
+          this.$noty.error(`Oops! Your session has expired.`);
+          localStorage.removeItem('auth');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          this.$router.push('/login');
+        }
       });
     },
   },

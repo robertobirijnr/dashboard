@@ -2,10 +2,13 @@
 import Vue from 'vue';
 import ShardsVue from 'shards-vue';
 import Toasted from 'vue-toasted';
+import VueNoty from 'vuejs-noty'
 // Styles
 import 'bootstrap/dist/css/bootstrap.css';
 import '@/scss/shards-dashboards.scss';
 import '@/assets/scss/date-range.scss';
+import 'vuejs-noty/dist/vuejs-noty.css';
+// @import '~vuejs-noty/dist/vuejs-noty.css';
 
 // Core
 import App from './App.vue';
@@ -17,7 +20,9 @@ import Default from '@/layouts/Default.vue';
 
 ShardsVue.install(Vue);
 window.axios = axios;
-Vue.use(Toasted)
+
+Vue.use(VueNoty);
+Vue.use(Toasted);
 
 Vue.component('default-layout', Default);
 

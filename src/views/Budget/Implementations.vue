@@ -60,6 +60,7 @@ export default {
     return {
       object_list: {},
       loading: false,
+      errors: {},
     };
   },
   mounted() {
@@ -67,6 +68,7 @@ export default {
   },
   methods: {
     implements() {
+      this.$noty.info('Loading...');
       this.loading = true;
       axios.get(`${config.apiUrl}/budget/cubs/`, {
         headers: {
@@ -74,7 +76,19 @@ export default {
         },
       }).then((res) => {
         this.loading = false;
+        this.$noty.success('Everything looks great');
         this.object_list = res.data;
+      }).catch(({response}) => {
+        this.errors = response.data;
+        if(response.status === 401){
+          this.$noty.error(`Oops! Your session has expired.`);
+          localStorage.removeItem('auth');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          this.$router.push('/login');
+        }else{
+          this.$noty.error(`Oops! ${this.errors.detail}`);
+        }
       });
     },
   },

@@ -161,6 +161,7 @@ export default {
     return {
       object: {},
       search: '',
+      errors: {},
     };
   },
   computed: {
@@ -187,9 +188,22 @@ export default {
         },
       }).then((res) => {
         this.object = res.data;
+        this.$noty.success('Everything looks great!');
+      }).catch(({response}) => {
+        this.errors = response.data;
+        if(response.status === 401){
+          this.$noty.error(`Oops! Your session has expired.`);
+          localStorage.removeItem('auth');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          this.$router.push('/login');
+        }else{
+          this.$noty.error(`Oops! ${this.errors.detail}`);
+        }
       });
     },
     exporrt(uid){
+      this.$noty.info('Extracting...');
       axios.get(`${config.apiUrl}/budget/exub/${uid}/`, {
         responseType: 'blob',
         headers: {
@@ -202,8 +216,19 @@ export default {
         link.setAttribute('download', `${this.object.unit_name}.xls`);
         document.body.appendChild(link);
         link.click();
-      }).catch((res) => {
-        console.log(res);
+        this.$noty.success('Extracted Succesfully');
+      }).catch(({response}) => {
+        console.log(response);
+        this.errors = response.data;
+        if(response.status === 401){
+          this.$noty.error(`Oops! Your session has expired.`);
+          localStorage.removeItem('auth');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          this.$router.push('/login');
+        }else{
+          this.$noty.error(`Oops! ${this.errors.detail}`);
+        }
       })
     },
   },

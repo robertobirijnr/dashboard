@@ -114,11 +114,13 @@ export default {
           this.loading = false;
           console.log(response);
           $('#newPeriod').modal('hide');
+          this.$noty.success("Great! New Budget Period added");
           this.periods();
           // this.$router.push('/budget-periods');
         }).catch((response) => {
           this.laoding = false;
           console.log(response);
+          this.$noty.error("Oops! Something went terribly wrong!");
         });
       }
 
@@ -129,11 +131,22 @@ export default {
         headers: { Authorization: `JWT ${config.get_token()}` },
       }).then((response) => {
         this.loading = false;
+        this.$noty.success('Everything looks great!');
         // console.log(response);
         this.object_list = response.data;
       }).catch(({ response }) => {
         this.loading = false;
         console.log(response);
+        const error = response.data;
+
+        if(response.status === 401){
+          this.$noty.error(`Oops! Your session has expired.`);
+          localStorage.removeItem('auth');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          this.$router.push('/login');
+        }
+        // this.$noty.error(`Oops! ${error.detail}!`);
       });
     },
   },
