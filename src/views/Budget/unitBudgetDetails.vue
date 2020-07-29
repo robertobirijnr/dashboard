@@ -16,7 +16,7 @@
             <div class="row">
               <div class="col">
                 <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
-                  <li class="nav-item"><a href="#home" id="home-tab" data-toggle="tab" class="nav-link active" aria-selected="true">G & S</a></li>
+                  <li class="nav-item"><a href="#home" id="home-tab" data-toggle="tab" class="nav-link active" aria-selected="true">Goods & Services</a></li>
                   <li class="nav-item"><a href="#contact" id="contact-tab" data-toggle="tab" class="nav-link" aria-selected="true">Compensations</a></li>
                   <li class="nav-item"><a href="#profile" id="profile-tab" data-toggle="tab" class="nav-link" aria-selected="true">Assets</a></li>
                   <!--<li class="nav-item"><a href="#about" id="about-tab" data-toggle="tab" class="nav-link" aria-selected="true">Imprests</a></li>-->
@@ -61,6 +61,14 @@
                             <td>{{formatPrice(allawa)}}</td>
                           </tr>
                           <tr>
+                            <td>Social Security Fund</td>
+                            <td>{{formatPrice(ssf)}}</td>
+                          </tr>
+                          <tr>
+                            <td>Pension Costs</td>
+                            <td>{{formatPrice(pc)}}</td>
+                          </tr>
+                          <tr>
                             <td>Assets</td>
                             <td>{{formatPrice(at)}}</td>
                           </tr>
@@ -74,7 +82,7 @@
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                      <button @click="complete(object.id)" :disabled="loading" type="button" class="btn btn-primary">Confirm</button>
+                      <button @click="complete(object.id)" :disabled="loading" type="button" class="btn btn-primary">Complete</button>
                     </div>
                   </div>
                 </div>
@@ -190,7 +198,8 @@
                       <th scope="col" class="border-0">Name</th>
                       <!--<th scope="col" class="border-0">Position</th>-->
                       <th scope="col" class="border-0">Category</th>
-                      <th scope="col" class="border-0">G & N</th>
+                      <th scope="col" class="border-0">Grade</th>
+                      <th scope="col" class="border-0">Notch</th>
                       <th scope="col" class="border-0">Monthly Basic (GHS)</th>
                       <th scope="col" class="border-0">Yearly Basic (GHS)</th>
                       <th scope="col" class="border-0">Status</th>
@@ -203,7 +212,8 @@
                       <td>{{employ.first_name}} {{employ.last_name}}</td>
                       <!--<td>{{employ.position}}</td>-->
                       <td>{{employ.employee_type_display}}</td>
-                      <td>{{employ.rank}} & {{employ.notch}}</td>
+                      <td>{{employ.rank}}</td>
+                      <td>{{employ.notch}}</td>
                       <td>{{formatPrice(employ.monthly_basic)}}</td>
                       <td>{{formatPrice(employ.period_basic)}}</td>
                       <td>{{employ.status}}</td>
@@ -236,7 +246,10 @@
                 <div class="list-group" :key="asset.id" v-for="asset in object.assets">
                   <div class="list-group-item">
                     <div class="row">
-                      <div class="col-md-7">{{asset.asset.asset_name}}</div>
+                      <div class="col-md-1">
+                        <input class="form-check-input" disabled type="checkbox" :checked="asset.is_selected" value="" id="defaultCheck1">
+                      </div>
+                      <div class="col-md-6">{{asset.asset.asset_name}}</div>
                       <div class="col-md-5" align="right">
                         <d-row>
                           <div class="col-md-7">
@@ -244,7 +257,7 @@
                             <input type="number" :id="`id_asset${asset.id}`" hidden="hidden" class="form-control">
                           </div>
                           <div class="col-md-5">
-                            <button :disabled="object.status === 'Completed'" :id="`id_asset_edit${asset.id}`" @click="a_show_save(asset.id)" class="btn mr-1 small btn-sm btn-success"><span class="material-icons small">create</span></button>
+                            <button :disabled="object.status === 'Completed' || !asset.is_selected" :id="`id_asset_edit${asset.id}`" @click="a_show_save(asset.id)" class="btn mr-1 small btn-sm btn-success"><span class="material-icons small">create</span></button>
                             <button :id="`id_asset_save${asset.id}`" hidden="hidden" @click="asset_amount(object.id, asset.id)" :disabled="loading" class="btn mr-1 small btn-sm btn-primary"><span class="material-icons small">check</span></button>
                             <button :id="`id_asset_clear${asset.id}`" hidden="hidden" @click="a_hide_save(asset.id)" class="btn small btn-sm btn-warning"><span class="material-icons small">clear</span></button>
                           </div>
@@ -312,6 +325,8 @@
         gst: 0,
         cb: 0,
         allawa: 0,
+        ssf: 0,
+        pc: 0,
         at: 0,
         tt: 0,
         // unit_price: '',
@@ -323,6 +338,8 @@
         return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
       },
       totals(){
+        this.ssf = this.object.social_security_fund;
+        this.pc = this.object.pension_costs;
         this.cb = this.object.consolidated_basic_salary;
         this.allawa = this.object.allowances;
         this.object.items.forEach(item => {
@@ -334,7 +351,7 @@
         });
 
         console.log(this.gst);
-        this.tt = this.gst + this.at + Number(this.cb) + Number(this.allawa);
+        this.tt = this.gst + this.at + Number(this.cb) + Number(this.allawa) + Number(this.ssf) + Number(this.pc);
       },
       details() {
         const budgetid = this.$route.params.unit_id;

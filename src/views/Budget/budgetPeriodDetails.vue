@@ -10,6 +10,7 @@
 
     <!-- Default Light Table -->
     <div class="row">
+      <!--{{unit_budget.status}}-->
       <div class="col-md-4">
         <div class="card">
               <div class="card-body">
@@ -77,13 +78,13 @@
             </div>
           </div>
         </div>
-        <div class="card" v-if="userRole === 'UU' && unit_budget && !unit_budget.detail && unit_budget.status !== 'Confirmed'">
+        <div class="card" v-if="userRole === 'UU' && unit_budget.status === 'Pending'">
           <div class="card-header">
             <div class="row">
               <div class="col-md-6">{{unit_budget.unit_name}} Unit Budget </div>
               <div class="col-md-6" align="right">
-                <button @click="confirm_budget(unit_budget.id)" :disabled="loading" class="btn btn-icon btn-xs btn-success" title="Confirm your selections">
-                  <span>Confirm</span>
+                <button @click="confirm_budget(unit_budget.id)" id="id_confirm" :disabled="!unit_budget.items.length || !unit_budget.assets.length" class="btn btn-icon btn-xs btn-success" title="Confirm your selections">
+                  <span v-if="!loading">Confirm</span><span v-else>Confirming...</span>
                 </button>
               </div>
             </div>
@@ -355,7 +356,7 @@
             <div class="tab-content" id="nav-tabContent">
               <div class="tab-pane fade show active pt-2  border-bottom-0" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                 <span v-if="msg">{{msg}}</span>
-                <span v-if="errors" class="mt-2 text-danger">{{errors.details}}</span>
+                <span v-if="errors" class="mt-2 text-danger">{{errors.detail}}</span>
                 <div class="form-group">
                   <label >Category</label>
                   <select name="category" v-model="category" id="id_cat" class="form-control">
@@ -384,6 +385,7 @@
               </div>
               <div class="tab-pane fade pt-2" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                 <span v-if="msg2" class="small text-warning">{{msg2}} <hr></span>
+                <span v-if="errors" class="mt-2 text-danger">{{errors.detail}}</span>
                 <div class="row">
                   <div class="col">
                     <div class="form-group">
@@ -517,6 +519,7 @@
               </div>
               <div class="tab-pane fade pt-2" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
                 <span v-if="msg3" class="small text-warning">{{msg3}} <hr></span>
+                <span v-if="errors" class="mt-2 text-danger">{{errors.detail}}</span>
                 <div class="form-group">
                   <label for="id_asset">Select Asset</label>
                   <select id="id_asset" v-model="asset" class="form-control">
@@ -592,7 +595,8 @@
                     <thead>
                     <tr class="small" align="center">
                       <th>Staff Name</th>
-                      <th>Rank & Notch</th>
+                      <th>Rank</th>
+                      <th>Notch</th>
                       <th>Monthly Basic (GHS)</th>
                       <th>{{object.period}} Basic (GHS)</th>
                     </tr>
@@ -600,7 +604,8 @@
                     <tbody :key="employ.id" v-for="employ in unit_budget.employees_compensations">
                     <tr class="small" align="center">
                       <td>{{employ.first_name}} {{employ.last_name}}</td>
-                      <td>{{employ.rank}} & {{employ.notch}}</td>
+                      <td>{{employ.rank}}</td>
+                      <td>{{employ.notch}}</td>
                       <td>{{formatPrice(employ.monthly_basic)}}</td>
                       <td>{{formatPrice(employ.period_basic)}}</td>
                     </tr>
@@ -610,7 +615,98 @@
               </div>
               <div class="tab-pane fade" id="contact2" role="tabpanel" aria-labelledby="contact2-tab">
                 <div class="list-group" :key="asset.id" v-for="asset in unit_budget.assets">
-                  <div class="list-group-item">{{asset.asset.asset_name}}</div>
+                  <div class="list-group-item">
+                    <div class="row">
+                      <div class="col-md-1"><input class="form-check-input" disabled type="checkbox" :checked="asset.is_selected" value="" id="defaultCheck1"></div>
+                      <div class="col">{{asset.asset.asset_name}}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--<div class="tab-pane fade" id="about2" role="tabpanel" aria-labelledby="about2-tab">-->
+                <!--<div class="list-group" :key="item.id" v-for="item in unit_budget.imprests">-->
+                  <!--<div class="list-group-item">{{item.imprest.item_name}}</div>-->
+                <!--</div>-->
+              <!--</div>-->
+            </div>
+
+          </div>
+        </div>
+        <div class="card" v-else-if="userRole === 'UU' && unit_budget.status === 'Completed'">
+          <div class="card-header">{{unit_budget.unit_name}} Budget Details</div>
+          <div class="card-body">
+            <ul class="nav nav-tabs" id="my-Tab" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="home3-tab" data-toggle="tab" href="#home3" role="tab" aria-controls="home3" aria-selected="true">G & S</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="profile3-tab" data-toggle="tab" href="#profile3" role="tab" aria-controls="profile3" aria-selected="false">Compensations</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="contact3-tab" data-toggle="tab" href="#contact3" role="tab" aria-controls="contact3" aria-selected="false">Assets</a>
+              </li>
+              <!--<li class="nav-item">-->
+                <!--<a class="nav-link" id="about2-tab" data-toggle="tab" href="#about2" role="tab" aria-controls="about2" aria-selected="false">Imprests</a>-->
+              <!--</li>-->
+            </ul>
+            <div class="tab-content" id="my-TabContent">
+              <div class="tab-pane fade show active" id="home3" role="tabpanel" aria-labelledby="home3-tab">
+                <div class="table-responsive">
+                  <table class="table table-stripe">
+                    <thead>
+                    <tr class="small" align="center">
+                      <th>Item</th>
+                      <th>Category</th>
+                      <th>Type</th>
+                      <th>Quantity</th>
+                      <th>Amount (GHS)</th>
+                    </tr>
+                    </thead>
+                    <tbody :key="item.id" v-for="item in unit_budget.items">
+                    <tr class="small" align="center">
+                      <td>{{item.item.item_name}}</td>
+                      <td>{{item.item.category_name}}</td>
+                      <td>{{item.item.item_type}}</td>
+                      <td>{{item.quantity}}</td>
+                      <td>{{formatPrice(item.total_amount)}}</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="tab-pane fade" id="profile3" role="tabpanel" aria-labelledby="profile3-tab">
+                <div class="table-responsive">
+                  <table class="table table-stripe">
+                    <thead>
+                    <tr class="small" align="center">
+                      <th>Staff Name</th>
+                      <th>Rank</th>
+                      <th>Notch</th>
+                      <th>Monthly Basic (GHS)</th>
+                      <th>{{object.period}} Basic (GHS)</th>
+                    </tr>
+                    </thead>
+                    <tbody :key="employ.id" v-for="employ in unit_budget.employees_compensations">
+                    <tr class="small" align="center">
+                      <td>{{employ.first_name}} {{employ.last_name}}</td>
+                      <td>{{employ.rank}}</td>
+                      <td>{{employ.notch}}</td>
+                      <td>{{formatPrice(employ.monthly_basic)}}</td>
+                      <td>{{formatPrice(employ.period_basic)}}</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="tab-pane fade" id="contact3" role="tabpanel" aria-labelledby="contact3-tab">
+                <div class="list-group" :key="asset.id" v-for="asset in unit_budget.assets">
+                  <div class="list-group-item">
+                    <div class="row">
+                      <div class="col-md-1"><input class="form-check-input" disabled type="checkbox" :checked="asset.is_selected" value="" id="defaultCheck2"></div>
+                      <div class="col">{{asset.asset.asset_name}}</div>
+                    </div>
+                  </div>
+
                 </div>
               </div>
               <!--<div class="tab-pane fade" id="about2" role="tabpanel" aria-labelledby="about2-tab">-->
@@ -814,6 +910,7 @@
               this.category = '';
               this.item = '';
               this.amount = '';
+              this.errors = {};
               this.current_unit_budget();
             }).catch(({ response }) => {
               this.formLoading = false;
@@ -851,6 +948,7 @@
               this.status = '';
               this.position = '';
               this.em_type = '';
+              this.errors = {};
               document.getElementById('id_basic').value = '';
               document.getElementById('id_period').value = '';
               this.current_unit_budget();
@@ -877,6 +975,7 @@
             }).then((res) => {
               this.formLoading = false;
               this.asset = '';
+              this.errors = {};
               this.current_unit_budget();
             }).catch(({response}) => {
               this.current_unit_budget();
@@ -898,6 +997,7 @@
             }).then((res) => {
               this.formLoading = false;
               this.item = '';
+              this.errors = {};
               this.current_unit_budget();
               console.log(res.data);
               this.errors = {};
@@ -927,6 +1027,7 @@
             this.category = '';
             this.item = '';
             this.amount = '';
+            this.errors = {};
             this.current_unit_budget();
           }).catch(({ response }) => {
             this.formLoading = false;
@@ -1064,14 +1165,18 @@
       },
       confirm_budget(ubid) {
         this.loading = true;
+        document.getElementById('id_confirm').disabled = true;
         axios.post(`${config.apiUrl}/budget/cfub/${ubid}/`, {}, {
           headers: { Authorization: `JWT ${config.get_token()}` },
         }).then((response) => {
           this.loading = false;
+          document.getElementById('id_confirm').disabled = false;
           console.log(response);
           this.current_unit_budget();
         }).catch(({ response }) => {
+          document.getElementById('id_confirm').disabled = true;
           this.loading = false;
+          this.errors = response.data;
           console.log(response.data);
         });
       },

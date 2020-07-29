@@ -12,7 +12,6 @@
         <d-dropdown-item><i class="material-icons">&#xE7FD;</i>
         <router-link to="/profile" class="card-link">Profile</router-link>
          </d-dropdown-item>
-        <d-dropdown-item><i class="material-icons">&#xE8B8;</i> Edit Profile</d-dropdown-item>
         <d-dropdown-divider />
         <d-dropdown-item class="text-danger" >
           <span @click="logout()" ><i class="material-icons text-danger">&#xE879;</i> Logout</span>

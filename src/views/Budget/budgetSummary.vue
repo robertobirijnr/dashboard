@@ -12,7 +12,7 @@
           <div class="card h-100">
             <div class="card-header">
               <div class="row">
-                <div class="col"><button @click="exporrt(object.id)" :disabled="!object" class="btn-sm btn btn-primary">EXTRACT</button></div>
+                <div class="col"><button @click="exporrt(object.id)" :disabled="!budgets.length" class="btn-sm btn btn-primary">EXTRACT</button></div>
                 <!--{{departments}}-->
                 <div class="col" align="right">
                   <div class="btn-group mr-2">
@@ -71,7 +71,7 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <th :colspan="ubc">Compensation Summary</th>
+                      <th :colspan="ubc">Compensation of Employees</th>
                     </tr>
                     <tr>
                       <td>Consolidated Basic</td>
@@ -84,6 +84,21 @@
                       <td>GHS {{formatPrice(allawa)}}</td>
                     </tr>
                     <tr>
+                      <td>Social Security Fund</td>
+                      <td :key="ub.id" v-for="ub in budgets">GHS {{formatPrice(ub.social_security_fund)}}</td>
+                      <td>GHS {{formatPrice(ssf)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Gratuity</td>
+                      <td :key="ub.id" v-for="ub in budgets">GHS {{formatPrice(ub.gratuity)}}</td>
+                      <td>GHS {{formatPrice(gratuity)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Staff Welfare Benefits (Pension Costs)</td>
+                      <td :key="ub.id" v-for="ub in budgets">GHS {{formatPrice(ub.pension_costs)}}</td>
+                      <td>GHS {{formatPrice(pc)}}</td>
+                    </tr>
+                    <tr>
                       <th>Sub Total</th>
                       <td :key="ub.id" v-for="ub in budgets">GHS {{formatPrice(ub.employees_compensation_total)}}</td>
                       <td>GHS {{formatPrice(cs)}}</td>
@@ -91,13 +106,21 @@
                     <tr>
                       <th :colspan="ubc">Goods & Services</th>
                     </tr>
-                    <!--<tr>-->
-                    <!--<td>Travel and Transport</td>-->
-                    <!--<td></td>-->
-                    <!--<td></td>-->
-                    <!--<td></td>-->
-                    <!--<td></td>-->
-                    <!--</tr>-->
+                    <tr :key="cat.id" v-for="cat in cats">
+                      <td>{{cat.name}}</td>
+                      <td :key="ub.id" v-for="ub in budgets">
+                        <span :key="ite.id" v-for="ite in ub.categories">
+                          <span v-if="cat.name === ite.category.name">GHS {{formatPrice(ite.items_total)}}</span>
+                        </span>
+                      </td>
+                      <td>
+                        <!--<span :key="ub.id" v-for="ub in budgets">{{ub.categories}}</span>-->
+                        <!--<span :key="ite.id" v-for="ite in ub.caterogies">-->
+                          <!--<span>{{ite.unit_budget}}</span>-->
+                        <!--</span>-->
+                      </td>
+                      <!--<td></td>-->
+                    </tr>
                     <!--<tr>-->
                     <!--<td>General Cleaning</td>-->
                     <!--<td></td>-->
@@ -112,6 +135,15 @@
                     </tr>
                     <tr>
                       <th :colspan="ubc">Assets</th>
+                    </tr>
+                    <tr :key="cat.id" v-for="cat in asss">
+                      <td>{{cat.asset_name}}</td>
+                      <td :key="ub.id" v-for="ub in budgets">
+                        <span :key="ite.id" v-for="ite in ub.assets">
+                          <span v-if="cat.asset_name === ite.asset.asset_name">GHS {{formatPrice(ite.amount)}}</span>
+                        </span>
+                      </td>
+                      <td></td>
                     </tr>
                     <!--<tr>-->
                     <!--<td>Land</td>-->
@@ -176,8 +208,13 @@ export default {
       cs: '',
       gss: '',
       as: '',
+      gst: 0,
       bt: '',
-
+      gratuity: '',
+      ssf: '',
+      pc: '',
+      cats: {},
+      asss: {},
     };
   },
   methods: {
@@ -206,6 +243,11 @@ export default {
           this.gss = results.gss;
           this.as = results.as;
           this.bt = results.bt;
+          this.pc = results.pc;
+          this.ssf = results.ssf;
+          this.gratuity = results.gratuity;
+          this.cats = results.cats;
+          this.asss = results.asss;
           console.log(this.departments);
         });
     },
