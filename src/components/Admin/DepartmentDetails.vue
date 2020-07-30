@@ -188,6 +188,7 @@ export default {
         this.object = results.department;
         this.units = results.units;
         this.division = results.division;
+        this.$noty.success('Everything looks great!');
       }).catch((res) => {
         console.log(res);
       });
@@ -195,7 +196,7 @@ export default {
     editDepart(id) {
       const name = document.getElementById('id_name').value;
       const abbr = document.getElementById('id_abbr').value;
-      var div = document.getElementById('id_div').value;
+      const div = document.getElementById('id_div').value;
 
       this.loading = true;
       axios.post(`${config.apiUrl}/api/ed/${id}/`, {
@@ -234,8 +235,18 @@ export default {
           this.loading = false;
           console.log(res);
           this.details();
+          this.$noty.success('Unit added successfully');
         }).catch((res) => {
           this.loading = false;
+          if (res.status === 401) {
+            this.$noty.error('Oops! Your session has expired.');
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            this.$router.push('/login');
+          } else {
+            this.$noty.error(`Oops! ${this.errors.detail}`);
+          }
           console.log(res);
         });
       }
@@ -251,9 +262,19 @@ export default {
         $(`#delUnit${id}`).modal('hide');
         this.details();
         console.log(res);
+        this.$noty.warning('Unit deleted successfully');
       }).catch((res) => {
         this.loading = false;
         console.log(res);
+        if (res.status === 401) {
+          this.$noty.error('Oops! Your session has expired.');
+          localStorage.removeItem('auth');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          this.$router.push('/login');
+        } else {
+          this.$noty.error(`Oops! ${this.errors.detail}`);
+        }
       });
     },
     delDepart(id) {
@@ -268,9 +289,19 @@ export default {
         $('#deletDepart').modal('hide');
         console.log(res);
         this.$router.push('/departments');
+        this.$noty.success('Departments deleted successfuly');
       }).catch((res) => {
         console.log(res);
         this.loading = false;
+        if (res.status === 401) {
+          this.$noty.error('Oops! Your session has expired.');
+          localStorage.removeItem('auth');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          this.$router.push('/login');
+        } else {
+          this.$noty.error(`Oops! ${this.errors.detail}`);
+        }
       });
     },
     division_list() {
@@ -280,8 +311,18 @@ export default {
         },
       }).then((response) => {
         this.divisions = response.data;
+        this.$noty.success('Everything looks great!');
       }).catch((response) => {
         console.log(response);
+        if (response.status === 401) {
+          this.$noty.error('Oops! Your session has expired.');
+          localStorage.removeItem('auth');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          this.$router.push('/login');
+        } else {
+          this.$noty.error(`Oops! ${this.errors.detail}`);
+        }
       });
     },
 

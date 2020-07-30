@@ -43,37 +43,38 @@
 </template>
 
 <script>
-  import axios from 'axios';
-  import config from '@/config';
-  import moment from 'moment';
+import axios from 'axios';
+import config from '@/config';
+import moment from 'moment';
 
-  export default {
-    name: "LogsComponent",
-    data(){
-      return{
-        object_list: {},
-      }
+export default {
+  name: 'LogsComponent',
+  data() {
+    return {
+      object_list: {},
+    };
+  },
+  filters: {
+    moment(date) {
+      return moment(date).fromNow();
     },
-    filters: {
-      moment: function (date) {
-        return moment(date).fromNow();
-      },
+  },
+  methods: {
+    logs() {
+      axios.get(`${config.apiUrl}/api/logs/`, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+      }).then((res) => {
+        this.object_list = res.data;
+        this.$noty.success('Everything works great');
+      });
     },
-    methods: {
-      logs(){
-        axios.get(`${config.apiUrl}/api/logs/`, {
-          headers: {
-            Authorization: `JWT ${config.get_token()}`
-          }
-        }).then((res) => {
-          this.object_list = res.data;
-        })
-      }
-    },
-    mounted(){
-      this.logs();
-    }
-  }
+  },
+  mounted() {
+    this.logs();
+  },
+};
 </script>
 
 <style scoped>

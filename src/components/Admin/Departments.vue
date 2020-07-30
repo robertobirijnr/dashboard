@@ -96,8 +96,18 @@ export default {
         },
       }).then((response) => {
         this.divisions = response.data;
+        this.$noty.success('Everything looks great!');
       }).catch((response) => {
         console.log(response);
+        if (response.status === 401) {
+          this.$noty.error('Oops! Your session has expired.');
+          localStorage.removeItem('auth');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          this.$router.push('/login');
+        } else {
+          this.$noty.error(`Oops! ${this.errors.detail}`);
+        }
       });
     },
     departments() {
@@ -134,9 +144,19 @@ export default {
           this.abbr = '';
           this.name = '';
           this.departments();
+          this.$noty.success('New department added successfully');
         }).catch(({ response }) => {
           this.loading = false;
           console.log(response);
+          if (response.status === 401) {
+            this.$noty.error('Oops! Your session has expired.');
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            this.$router.push('/login');
+          } else {
+            this.$noty.error(`Oops! ${this.errors.detail}`);
+          }
         });
       }
     },

@@ -158,6 +158,7 @@ export default {
       }).then((res) => {
         this.loading = false;
         this.object_list = res.data;
+        this.$noty.success('Everything works great!');
       }).catch((res) => {
         this.loading = false;
         console.log(res);
@@ -181,12 +182,14 @@ export default {
           this.name = '';
           this.abbr = '';
           this.divisions();
+          this.$noty.success('New Division added');
         }).catch((res) => {
           this.loading = false;
           console.log(res);
         });
       } else {
         this.msg = 'All fields are required';
+        this.$noty.danger(this.msg);
       }
     },
     newDepart(id) {
@@ -207,11 +210,13 @@ export default {
           this.code = '';
           this.name = '';
           this.abbr = '';
+          this.$noty.success('New Department added');
         }).catch((res) => {
           console.log(res);
         });
       } else {
         this.msg = 'All fields are required';
+        this.$noty.danger(this.msg);
       }
     },
     show_modal(id) {
@@ -242,6 +247,7 @@ export default {
         });
       } else {
         this.msg = 'All fields are required';
+        this.$noty.danger(this.msg);
       }
     },
   },

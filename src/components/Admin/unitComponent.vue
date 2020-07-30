@@ -110,8 +110,18 @@ export default {
       }).then((response) => {
         this.unitloading = false;
         this.object_list = response.data;
+        this.noty.success('Everything works great!');
       }).catch(({ response }) => {
         console.log(response);
+        if (response.status === 401) {
+          this.$noty.error('Oops! Your session has expired.');
+          localStorage.removeItem('auth');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          this.$router.push('/login');
+        } else {
+          this.$noty.error(`Oops! ${this.errors.detail}`);
+        }
       });
     },
     newUnit() {
@@ -126,8 +136,18 @@ export default {
       }).then((response) => {
         console.log(response);
         this.units();
+        this.$noty.success('New unit added');
       }).catch(({ response }) => {
         console.log(response);
+        if (response.status === 401) {
+          this.$noty.error('Oops! Your session has expired.');
+          localStorage.removeItem('auth');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          this.$router.push('/login');
+        } else {
+          this.$noty.error(`Oops! ${this.errors.detail}`);
+        }
       });
     },
     departments() {
@@ -137,8 +157,18 @@ export default {
         },
       }).then((response) => {
         this.departs = response.data;
+        this.$noty.success('Everything works great!');
       }).catch(({ response }) => {
         console.log(response);
+        if (response.status === 401) {
+          this.$noty.error('Oops! Your session has expired.');
+          localStorage.removeItem('auth');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          this.$router.push('/login');
+        } else {
+          this.$noty.error(`Oops! ${this.errors.detail}`);
+        }
       });
     },
     delUnit(id) {
@@ -151,6 +181,7 @@ export default {
         this.loading = false;
         $(`#delUnit${id}`).modal('hide');
         this.units();
+        this.$noty.success('unit has been removed');
         console.log(res);
       }).catch((res) => {
         this.loading = false;

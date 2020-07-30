@@ -81,9 +81,19 @@ export default {
       }).then((response) => {
         this.loading = false;
         this.object_list = response.data;
+        this.$noty.success('Everything looks great!');
       }).catch((response) => {
         this.loading = false;
         console.log(response);
+        if (response.status === 401) {
+          this.$noty.error('Oops! Your session has expired.');
+          localStorage.removeItem('auth');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          this.$router.push('/login');
+        } else {
+          this.$noty.error(`Oops! ${this.errors.detail}`);
+        }
       });
     },
   },

@@ -285,8 +285,8 @@ export default {
   },
   methods: {
     formatPrice(value) {
-      let val = (value/1).toFixed(2).replace(',', '.');
-      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+      const val = (value / 1).toFixed(2).replace(',', '.');
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     },
     categories() {
       this.listLoading = true;
@@ -297,30 +297,51 @@ export default {
       }).then((response) => {
         this.listLoading = false;
         this.object_list = response.data;
-        // console.log(response.data);
+        this.$noty.success('Everything looks great!');
       }).catch(({ response }) => {
         this.listLoading = false;
         console.log(response);
+        if (response.status === 401) {
+          this.$noty.error('Oops! Your session has expired.');
+          localStorage.removeItem('auth');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          this.$router.push('/login');
+        } else {
+          this.$noty.error(`Oops! ${this.errors.detail}`);
+        }
       });
     },
-    bp_list(){
+    bp_list() {
       this.loading = true;
-      axios.post(`${config.apiUrl}/api/ecs/`,
+      axios.post(
+        `${config.apiUrl}/api/ecs/`,
         {
-        div: this.div,
-        unit: this.unit,
-        dep: this.dep,
-      },{
-        headers: {
-          Authorization: `JWT ${config.get_token()}`,
+          div: this.div,
+          unit: this.unit,
+          dep: this.dep,
+        }, {
+          headers: {
+            Authorization: `JWT ${config.get_token()}`,
+          },
         },
-      }).then((response) => {
+      ).then((response) => {
         this.loading = false;
         this.compensations = response.data;
+        this.$noty.success('Everything looks great!');
         console.log(response.data);
       }).catch(({ response }) => {
         this.loading = false;
         console.log(response);
+        if (response.status === 401) {
+          this.$noty.error('Oops! Your session has expired.');
+          localStorage.removeItem('auth');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          this.$router.push('/login');
+        } else {
+          this.$noty.error(`Oops! ${this.errors.detail}`);
+        }
       });
     },
     assets_list() {
@@ -332,9 +353,19 @@ export default {
       }).then((res) => {
         this.listLoading = false;
         this.assets = res.data;
+        this.$noty.success('Everything looks great!');
       }).catch((res) => {
         this.listLoading = false;
         console.log(res);
+        if (res.status === 401) {
+          this.$noty.error('Oops! Your session has expired.');
+          localStorage.removeItem('auth');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          this.$router.push('/login');
+        } else {
+          this.$noty.error(`Oops! ${this.errors.detail}`);
+        }
       });
     },
     newItem(catId) {
@@ -357,6 +388,15 @@ export default {
       }).catch(({ res }) => {
         this.loading = false;
         console.log(res);
+        if (res.status === 401) {
+          this.$noty.error('Oops! Your session has expired.');
+          localStorage.removeItem('auth');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          this.$router.push('/login');
+        } else {
+          this.$noty.error(`Oops! ${this.errors.detail}`);
+        }
       });
     },
     newCat() {
@@ -430,53 +470,53 @@ export default {
         console.log(res);
       });
     },
-    division_list(){
+    division_list() {
       this.loading = true;
       axios.get(`${config.apiUrl}/api/divisions`, {
         headers: {
-          Authorization: `JWT ${config.get_token()}`
-        }
+          Authorization: `JWT ${config.get_token()}`,
+        },
       }).then((res) => {
         this.loading = false;
         this.divisions = res.data;
-      })
+      });
     },
-    department_list(div_id){
+    department_list(div_id) {
       this.loading = true;
       axios.get(`${config.apiUrl}/api/dvdl/${div_id}/`, {
         headers: {
-          Authorization: `JWT ${config.get_token()}`
-        }
+          Authorization: `JWT ${config.get_token()}`,
+        },
       }).then((res) => {
         this.loading = false;
         const results = res.data;
         this.departs = results.departments;
-      })
+      });
     },
-    unit_list(dep_id){
+    unit_list(dep_id) {
       this.loading = true;
       axios.get(`${config.apiUrl}/api/du/${dep_id}`, {
         headers: {
-          Authorization: `JWT ${config.get_token()}`
-        }
+          Authorization: `JWT ${config.get_token()}`,
+        },
       }).then((res) => {
-        this.loading = false
+        this.loading = false;
         const results = res.data;
         this.units = results.units;
-      })
-    }
+      });
+    },
   },
   watch: {
-    div(value){
-      if(value){
+    div(value) {
+      if (value) {
         this.department_list(value);
       }
     },
-    dep(value){
-      if(value){
+    dep(value) {
+      if (value) {
         this.unit_list(value);
       }
-    }
+    },
   },
   mounted() {
     this.categories();

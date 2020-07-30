@@ -122,152 +122,152 @@
   </div>
 </template>
 <script>
-  import axios from 'axios';
-  import config from '@/config';
-  import moment from 'moment';
+import axios from 'axios';
+import config from '@/config';
+import moment from 'moment';
 
-  export default {
-    data() {
-      return {
-        object: {},
-        logs: {},
-        role: '',
-        depart: '',
-        staff_id: '',
-        unit: '',
-        departs: {},
-        divisions: {},
-        division: '',
-        units: {},
-        loading: false,
-        formloading: false,
-      };
+export default {
+  data() {
+    return {
+      object: {},
+      logs: {},
+      role: '',
+      depart: '',
+      staff_id: '',
+      unit: '',
+      departs: {},
+      divisions: {},
+      division: '',
+      units: {},
+      loading: false,
+      formloading: false,
+    };
+  },
+  filters: {
+    moment(date) {
+      return moment(date).fromNow();
     },
-    filters: {
-      moment: function (date) {
-        return moment(date).fromNow();
-      },
+  },
+  methods: {
+    details() {
+      this.loading = true;
+      const id = this.$route.params.userId;
+      axios.get(`${config.apiUrl}/user/u/${id}/`, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+      }).then((res) => {
+        const results = res.data;
+        this.object = results.object;
+        this.logs = results.logs;
+        this.loading = false;
+      }).catch((res) => {
+        this.loading = false;
+        console.log(res);
+      });
     },
-    methods: {
-      details() {
-        this.loading = true;
-        const id = this.$route.params.userId;
-        axios.get(`${config.apiUrl}/user/u/${id}/`, {
+    division_list() {
+      axios.get(`${config.apiUrl}/api/divisions/`, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+      }).then((response) => {
+        this.divisions = response.data;
+      }).catch((response) => {
+        console.log(response);
+      });
+    },
+    departments(value) {
+      if (value) {
+        axios.get(`${config.apiUrl}/api/dvdl/${value}/`, {
           headers: {
             Authorization: `JWT ${config.get_token()}`,
           },
         }).then((res) => {
-          const results = res.data;
-          this.object = results.object;
-          this.logs = results.logs;
-          this.loading = false;
+          this.departs = res.data;
         }).catch((res) => {
-          this.loading = false;
           console.log(res);
         });
-      },
-      division_list() {
-        axios.get(`${config.apiUrl}/api/divisions/`, {
+      }
+    },
+    unit_list(value) {
+      // console.log(sel.value);
+      if (value) {
+        axios.get(`${config.apiUrl}/api/dul/${value}`, {
           headers: {
             Authorization: `JWT ${config.get_token()}`,
           },
         }).then((response) => {
-          this.divisions = response.data;
+          this.units = response.data;
+          console.log(response.data);
         }).catch((response) => {
           console.log(response);
         });
-      },
-      departments(value) {
-        if(value){
-          axios.get(`${config.apiUrl}/api/dvdl/${value}/`, {
-            headers: {
-              Authorization: `JWT ${config.get_token()}`
-            }
-          }).then((res) => {
-            this.departs = res.data;
-          }).catch((res) => {
-            console.log(res);
-          });
-        }
+      }
+    },
+    update(id) {
+      this.formloading = true;
+      axios.post(`${config.apiUrl}/user/edit/${id}/`, {
+        role: this.role,
+        unit: this.unit,
+        div: this.division,
+        depart: this.depart,
+        staff_id: this.staff_id,
+      }, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+      }).then((res) => {
+        console.log(res);
+        this.formloading = false;
+        this.details();
+        this.$noty.success('updated successfully');
+      }).catch((res) => {
+        this.formloading = false;
+        console.log(res);
+      });
+    },
+    status(id, status) {
+      this.loading = true;
+      axios.get(`${config.apiUrl}/user/s/${id}/${status}/`, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`,
+        },
+      }).then((res) => {
+        console.log(res);
+        this.details();
+        this.loading = false;
+      }).catch((res) => {
+        this.loading = false;
+        console.log(res);
+      });
+    },
+  },
+  mounted() {
+    this.details();
+    this.division_list();
+    // this.departments();
+    // this.unit_list(),
+  },
+  watch: {
+    object() {
+      if (this.object) {
+        this.role = this.object.user_type;
+        this.depart = this.object.department;
+        this.unit = this.object.unit;
+        this.division = this.object.division;
+        this.staff_id = this.object.staff_id;
+      }
+    },
+    division(value) {
+      this.division = value;
+      if (this.division) { this.departments(this.division); }
+    },
+    depart(value) {
+      this.depart = value;
+      if (this.depart) { this.unit_list(this.depart); }
+    },
+  },
 
-      },
-      unit_list(value) {
-        // console.log(sel.value);
-        if (value) {
-          axios.get(`${config.apiUrl}/api/dul/${value}`, {
-            headers: {
-              Authorization: `JWT ${config.get_token()}`,
-            },
-          }).then((response) => {
-            this.units = response.data;
-            console.log(response.data);
-          }).catch((response) => {
-            console.log(response);
-          });
-        }
-      },
-      update(id) {
-        this.formloading = true;
-        axios.post(`${config.apiUrl}/user/edit/${id}/`, {
-          role: this.role,
-          unit: this.unit,
-          div: this.division,
-          depart: this.depart,
-          staff_id: this.staff_id,
-        }, {
-          headers: {
-            Authorization: `JWT ${config.get_token()}`,
-          },
-        }).then((res) => {
-          console.log(res);
-          this.formloading = false;
-          this.details();
-        }).catch((res) => {
-          this.formloading = false;
-          console.log(res);
-        });
-      },
-      status(id, status) {
-        this.loading = true;
-        axios.get(`${config.apiUrl}/user/s/${id}/${status}/`, {
-          headers: {
-            Authorization: `JWT ${config.get_token()}`,
-          },
-        }).then((res) => {
-          console.log(res);
-          this.details();
-          this.loading = false;
-        }).catch((res) => {
-          this.loading = false;
-          console.log(res);
-        });
-      },
-    },
-    mounted() {
-      this.details();
-      this.division_list();
-      // this.departments();
-      // this.unit_list(),
-    },
-    watch: {
-      object() {
-        if (this.object) {
-          this.role = this.object.user_type;
-          this.depart = this.object.department;
-          this.unit = this.object.unit;
-          this.division = this.object.division;
-          this.staff_id = this.object.staff_id;
-        }
-      },
-      division(value){
-        this.division = value;
-        if(this.division){ this.departments(this.division);}
-      },
-      depart(value) {
-        this.depart = value;
-        if (this.depart) { this.unit_list(this.depart); }
-      },
-    },
-
-  };
+};
 </script>

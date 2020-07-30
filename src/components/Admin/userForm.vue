@@ -174,11 +174,21 @@ export default {
         ).then((response) => {
           this.formloading = false;
           console.log(response);
+          this.$noty.success('New user has been created successfuly');
           this.$router.push('/users');
         }).catch(({ response }) => {
           this.formloading = false;
           console.log(response);
           this.errors = response.data;
+          if (response.status === 401) {
+            this.$noty.error('Oops! Your session has expired.');
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            this.$router.push('/login');
+          } else {
+            this.$noty.error(`Oops! ${this.errors.detail}`);
+          }
         });
       }
     },
@@ -196,13 +206,13 @@ export default {
     departments(value) {
       axios.get(`${config.apiUrl}/api/dvdl/${value}/`, {
         headers: {
-          Authorization: `JWT ${config.get_token()}`
-        }
+          Authorization: `JWT ${config.get_token()}`,
+        },
       }).then((res) => {
         this.departs = res.data;
       }).catch((res) => {
         console.log(res);
-      })
+      });
     },
     unit_list(value) {
       // console.log(sel.value);
@@ -225,9 +235,9 @@ export default {
       this.pass2 = value;
       this.validPassword();
     },
-    division(value){
+    division(value) {
       this.division = value;
-      if(this.division){ this.departments(this.division);}
+      if (this.division) { this.departments(this.division); }
     },
     depart(value) {
       this.depart = value;
