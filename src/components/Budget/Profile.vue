@@ -9,9 +9,9 @@
     </d-row>
 
     <!-- Content -->
-
-    <div class="row">
-      <div class="col-md-6">
+    
+    <div class="row pl-5">
+      <div class="col-md-9">
         <div class="card">
           <div class="card-header">
             <div align="right">
@@ -65,16 +65,9 @@
                 <!--<b>Department</b>: Human Resources-->
               <!--</li>-->
             </ul>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">Change Password</div>
-          </div>
-          <div class="card-body">
-            <small class="text-danger p-2" v-if="errors">{{errors.detail}}</small>
+            <hr>
+                <div class="card-title text-center"> <b>CHANGE PASSWORD</b> </div>
+                <small class="text-danger p-2" v-if="errors">{{errors.detail}}</small>
             <div class="form-group">
               <label for="oldPassword">Enter Old Password</label>
               <input v-model="old" type="password" id="oldPassword" class="form-control">
@@ -92,7 +85,13 @@
           </div>
         </div>
       </div>
-    </div>
+      
+            
+          </div>
+          <div class="card-body">
+           
+          </div>
+        
 
 
   </d-container>
