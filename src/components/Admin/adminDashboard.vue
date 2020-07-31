@@ -50,13 +50,13 @@
 
       <d-row>
       <!-- Users Overview -->
-      <d-col lg="8" md="6" sm="12" class="mb-4">
-        <BudgetOverview/>
+      <d-col lg="4" md="6" sm="12" class="mb-4">
+        <Summary />
       </d-col>
 
       <!-- Users by Device (lite) -->
-      <d-col lg="4" md="6" sm="12" class="mb-4">
-        <Summary />
+      <d-col lg="8" md="6" sm="12" class="mb-4">
+
       </d-col>
     </d-row>
 

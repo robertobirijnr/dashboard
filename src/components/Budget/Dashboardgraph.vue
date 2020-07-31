@@ -41,13 +41,13 @@
 
    <d-row>
       <!-- Users Overview -->
-      <d-col lg="8" md="6" sm="12" class="mb-4">
-        <BudgetOverview/>
+      <d-col lg="4" md="6" sm="12" class="mb-4">
+         <Summary />
       </d-col>
 
       <!-- Users by Device (lite) -->
-      <d-col lg="4" md="6" sm="12" class="mb-4">
-        <Summary />
+      <d-col lg="8" md="6" sm="12" class="mb-4">
+
       </d-col>
     </d-row>
 
@@ -114,10 +114,10 @@ export default {
         this.confirmed = results.confirmed;
         this.completed = results.completed;
         this.activities = results.activities;
-      }).catch(({response}) => {
+      }).catch(({ response }) => {
         console.log(response);
-        if(response.status === 401){
-          this.$noty.error(`Oops! Your session has expired.`);
+        if (response.status === 401) {
+          this.$noty.error('Oops! Your session has expired.');
           localStorage.removeItem('auth');
           localStorage.removeItem('token');
           localStorage.removeItem('user');
