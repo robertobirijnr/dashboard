@@ -1,5 +1,5 @@
 <template>
-  <div class="card card-small h-100">
+  <div class="card card-small h-100 ">
 
     <!-- Card Header -->
     <div class="card-header border-bottom">
@@ -7,7 +7,7 @@
     </div>
 
     <!-- Chart -->
-    <div class="card-body d-flex py-0">
+    <div class="card-body d-flex ">
       <canvas height="220" ref="canvas" class="blog-users-by-device m-auto"></canvas>
     </div>
 

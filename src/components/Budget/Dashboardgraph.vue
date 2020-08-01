@@ -41,13 +41,13 @@
 
    <d-row>
       <!-- Users Overview -->
-      <d-col lg="4" md="6" sm="12" class="mb-4">
+      <d-col lg="4" md="6" sm="12" class="mb-4 pl-5">
          <Summary />
       </d-col>
 
       <!-- Users by Device (lite) -->
-      <d-col lg="8" md="6" sm="12" class="mb-4">
-
+      <d-col lg="6" md="6" sm="12" class="mb-4 pl-5">
+        <barChart/>
       </d-col>
     </d-row>
 
@@ -57,7 +57,7 @@
 
 <script>
 
-import BudgetOverview from '@/components/chartComponents/BudgetOverview.vue';
+import barChart from '@/components/chartComponents/barChart.vue';
 import Summary from '@/components/chartComponents/Summary.vue';
 import axios from 'axios';
 import config from '@/config';
@@ -68,7 +68,7 @@ export default {
   name: 'users-overview',
   components: {
 
-    BudgetOverview,
+    barChart,
     Summary,
 
   },

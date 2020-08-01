@@ -56,14 +56,14 @@
 
       <!-- Users by Device (lite) -->
       <d-col lg="8" md="6" sm="12" class="mb-4">
-
+        <barChart/>
       </d-col>
     </d-row>
 
   </d-container>
 </template>
 <script>
-import BudgetOverview from '@/components/chartComponents/BudgetOverview.vue';
+import barChart from '@/components/chartComponents/barChart.vue';
 import Summary from '@/components/chartComponents/Summary.vue';
 import axios from 'axios';
 import config from '@/config';
@@ -72,7 +72,7 @@ import moment from 'moment';
 export default {
   components: {
 
-    BudgetOverview,
+    barChart,
     Summary,
 
   },
