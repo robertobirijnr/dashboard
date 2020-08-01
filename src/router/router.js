@@ -25,8 +25,8 @@ const router = new Router({
     },
     {
       path: '/login',
-      name: 'confirmToken',
-      component: () => import('../views/Auth/confirmToken.vue'),
+      name: 'Login',
+      component: () => import('../views/Auth/Login.vue'),
     },
     // {
     //   path: '/department',
