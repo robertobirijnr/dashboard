@@ -98,7 +98,7 @@ h2{
 
 
 .main {
-    padding: 2px 10px;
+     padding: 2px 10px 0 80px;
 }
 
 @media screen and (max-height: 450px) {
