@@ -77,7 +77,7 @@
                       </d-col>
                     </d-form-row>
                     <div class="pt-3">
-                      <button  :disabled="formloading" @click="update(object.id)" class="btn btn-sm btn-primary float-left" type="submit"><span v-if="formloading">Loading..</span> <span v-else>Update</span> </button>
+                      <button  :disabled="formloading" @click="update(object.slug)" class="btn btn-sm btn-primary float-left" type="submit"><span v-if="formloading">Loading..</span> <span v-else>Update</span> </button>
                     </div>
 
                   </d-col>
