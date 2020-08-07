@@ -1,5 +1,5 @@
 export default {
-  apiUrl: 'http://localhost:8000/api',
+  apiUrl: 'https://moon-procure.herokuapp.com/api',
 
 
   set_token(token) {
