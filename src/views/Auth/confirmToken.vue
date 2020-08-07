@@ -7,27 +7,49 @@
     </div>
     <div class="main">
       <div class="col-md-8 col-sm-12">
+
         <div class="login-form">
-          <div class="form-group">
-            <input
-              type="password"
-              class="form-control"
-              placeholder="Enter your token"
-            />
+          <div class="card">
+            <div class="card-body">
+              Hi {{object.full_name}}, an email has been sent to <i>{{object.email}}</i>
+            </div>
+            <div class="card-footer" align="right">
+              <router-link to="/login" class="btn btn-primary btn-sm">Back to Login</router-link>
+            </div>
           </div>
-          <button
-            type="submit"
-            class="btn btn-black btn-block"
-          >
-            <span v-if="!loading">confirm token</span>
-            <span v-else>Loading...</span>
-          </button>
         </div>
       </div>
     </div>
   </div>
 </template>
+<script>
+  import axios from 'axios';
+  import config from '@/config';
 
+  export default {
+    data(){
+      return{
+        object: {},
+        errors: {},
+      };
+    },
+    methods:{
+      user(){
+        const slug = this.$route.params.slug;
+        axios.get(`${config.apiUrl}/user/fp/${slug}/`,).then((res) => {
+          this.object = res.data;
+          console.log(res.data);
+        }).catch(({res}) => {
+          this.errors = res.data;
+          console.log(this.errors);
+        });
+      }
+    },
+    mounted(){
+      this.user();
+    }
+  }
+</script>
 
 <style scoped>
 body {

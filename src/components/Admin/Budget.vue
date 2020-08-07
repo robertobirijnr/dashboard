@@ -85,8 +85,7 @@
                           </div>
                         </div>
                       </div>
-                      <div class="tab-pane fade" :key="object.id" v-for="object in object_list"
-                           :id="`v-pills-home${object.id}`" role="tabpanel" :aria-labelledby="`v-pills-home${object.id}-tab`">
+                      <div class="tab-pane fade" :key="object.id" v-for="object in object_list" :id="`v-pills-home${object.id}`" role="tabpanel" :aria-labelledby="`v-pills-home${object.id}-tab`">
                         <div class="list-group-flush">
                           <div class="list-group-item">
                             <div class="row">
@@ -96,7 +95,7 @@
                                     <input type="text" v-model="code" placeholder="Code" class="form-control">
                                   </div>
                                   <div class="col-md-4">
-                                    <select class="form-control" v-model="item_type">
+                                    <select class="custom-select" v-model="item_type">
                                       <option value="">Choose...</option>
                                       <option value="Good">Good</option>
                                       <option value="Service">Service</option>
@@ -115,12 +114,13 @@
                           </div>
                           <div class="list-group-item" :key="item.id" v-for="item in object.items">
                             <div class="row">
-                              <div class="col">{{item.item_id}} | {{item.item_type}} | {{item.item_name}}</div>
-                              <div class="col" align="right">
+                              <div class="col-md-9">{{item.item_id}} | {{item.item_type}} | {{item.item_name}}</div>
+                              <div class="col-md-1" align="right">
                                 <!-- <DeleteItem /> -->
                                 <button class='btn btn-sm btn-primary'  data-toggle="modal" :data-target="`#item${item.id}`">
-                                  <i class="fa fa-close" style="color:white"></i>
+                                  <span class="fa fa-close" style="color:white"></span>
                                 </button>
+
                               </div>
                               <div class="modal fade" :id="`item${item.id}`" tabindex="-1" role="dialog" aria-labelledby="itemlabel${item.id}" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -141,20 +141,44 @@
                                   </div>
                                 </div>
                               </div>
+                              <div class="col-md-2 mt-1" align="right">
+                                <a :href="`#subCol${item.id}`" @click="expand(item.id)" data-toggle="collapse" role="button" aria-expanded="false" :aria-controls="`subCol${item.id}`">
+                                  <i :id="`sub${item.id}`" class="fas fa-plus"></i>
+                                </a>
+                              </div>
                             </div>
-
+                            <div class="collapse multi-collapse" :id="`subCol${item.id}`">
+                              <div class="list-group-flush pt-2">
+                                <div class="list-group-item">
+                                  <div class="row">
+                                    <div class="col-md-5">
+                                      <input type="text" v-model="isub_code" class="form-control" placeholder="Code">
+                                    </div>
+                                    <div class="col-md-5">
+                                      <input type="text" v-model="isub_name" class="form-control" placeholder="Name">
+                                    </div>
+                                    <div class="col-md-2" align="right">
+                                      <button @click="new_sub_item(item.id)" :disabled="loading" class="btn-sm btn btn-outline-primary">
+                                        <i class="fa fa-save"></i>
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="list-group-item" :key="sub.id" v-for="sub in item.subs">
+                                  {{sub.sub_id}} | {{sub.name}}
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
 
                       </div>
-
-
                     </div>
                   </div>
                 </div>
               </div>
               <!--<div class="tab-pane fade" id="imprest" role="tabpanel" aria-labelledby="imprest-tab">-->
-                <!--sdsds-->
+              <!--sdsds-->
               <!--</div>-->
               <div class="tab-pane fade" id="compen" role="tabpanel" aria-labelledby="compen-tab">
                 <!--<span class="text-uppercase page-subtitle">Filter</span>-->
@@ -232,7 +256,36 @@
                     </div>
                   </div>
                   <div class="list-group-item" :key="asset.id" v-for="asset in assets">
-                    {{asset.asset_id}} | {{asset.asset_name}}
+                    <div class="row">
+                      <div class="col">{{asset.asset_id}} | {{asset.asset_name}}</div>
+                      <div class="col" align="right">
+                        <a :href="`#asubCol${asset.id}`" @click="expand(asset.id)" data-toggle="collapse" role="button" aria-expanded="false" :aria-controls="`asubCol${asset.id}`">
+                          <i :id="`asub${asset.id}`" class="fas fa-plus"></i>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="collapse multi-collapse" :id="`asubCol${asset.id}`">
+                      <div class="list-group-flush pt-2">
+                        <div class="list-group-item">
+                          <div class="row">
+                            <div class="col-md-5">
+                              <input type="text" placeholder="Code" v-model="asub_code" class="form-control">
+                            </div>
+                            <div class="col-md-5">
+                              <input type="text" placeholder="Name" v-model="asub_name" class="form-control">
+                            </div>
+                            <div class="col-md-2" align="right">
+                              <button @click="new_sub_asset(asset.id)" :disabled="loading" class="btn btn-sm btn-outline-primary">
+                                <i class="fa fa-save"></i>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="list-group-item" :key="sub.id" v-for="sub in asset.subs">
+                          {{sub.sub_id}} | {{sub.name}}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -248,163 +301,228 @@
 </template>
 <script>
 
-import axios from 'axios';
-import config from '@/config';
-import DeleteCategory from '@/components/common/deleteCategory.vue';
-import DeleteItem from '@/components/common/deleteItem.vue';
-import Spinner from '@/components/common/Spinner.vue';
+  import axios from 'axios';
+  import config from '@/config';
+  import DeleteCategory from '@/components/common/deleteCategory.vue';
+  import DeleteItem from '@/components/common/deleteItem.vue';
+  import Spinner from '@/components/common/Spinner.vue';
 
-export default {
-  name: 'budget',
-  components: {
-    DeleteCategory,
-    DeleteItem,
-    Spinner,
-  },
-  data() {
-    return {
-      object_list: {},
-      item_name: '',
-      assets: {},
-      compensations: {},
-      name: '',
-      item_type: '',
-      asset_name: '',
-      code: '',
-      loading: false,
-      listLoading: false,
-      div: '',
-      dep: '',
-      unit: '',
-      divisions: {},
-      departs: {},
-      units: {},
-      // showModal: true,
 
-    };
-  },
-  methods: {
-    formatPrice(value) {
-      const val = (value / 1).toFixed(2).replace(',', '.');
-      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+  export default {
+    name: 'budget',
+    components: {
+      DeleteCategory,
+      DeleteItem,
+      Spinner,
     },
-    categories() {
-      this.listLoading = true;
-      axios.get(`${config.apiUrl}/api/categories/`, {
-        headers: {
-          Authorization: `JWT ${config.get_token()}`,
-        },
-      }).then((response) => {
-        this.listLoading = false;
-        this.object_list = response.data;
-        this.$noty.success('Everything looks great!');
-      }).catch(({ response }) => {
-        this.listLoading = false;
-        console.log(response);
-        if (response.status === 401) {
-          this.$noty.error('Oops! Your session has expired.');
-          localStorage.removeItem('auth');
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
-          this.$router.push('/login');
-        } else {
-          this.$noty.error(`Oops! ${this.errors.detail}`);
+    data() {
+      return {
+        object_list: {},
+        item_name: '',
+        assets: {},
+        compensations: {},
+        name: '',
+        item_type: '',
+        asset_name: '',
+        isub_name: '',
+        isub_code: '',
+        asub_name: '',
+        asub_code: '',
+        code: '',
+        loading: false,
+        listLoading: false,
+        div: '',
+        dep: '',
+        unit: '',
+        divisions: {},
+        departs: {},
+        units: {},
+        // showModal: true,
+
+      };
+    },
+    methods: {
+      expand(itemid){
+        if(document.getElementById(`sub${itemid}`).classList.contains('fa-plus')){
+          document.getElementById(`sub${itemid}`).classList.remove('fa-plus');
+          document.getElementById(`sub${itemid}`).classList.add('fa-minus');
+          document.getElementById(`sub${itemid}`).innerText = ' Collapse';
+        }else if (document.getElementById(`sub${itemid}`).classList.contains('fa-minus')){
+          document.getElementById(`sub${itemid}`).classList.remove('fa-minus');
+          document.getElementById(`sub${itemid}`).classList.add('fa-plus');
+          document.getElementById(`sub${itemid}`).innerText = ' Expand';
         }
-      });
-    },
-    bp_list() {
-      this.loading = true;
-      axios.post(
-        `${config.apiUrl}/api/ecs/`,
-        {
-          div: this.div,
-          unit: this.unit,
-          dep: this.dep,
-        }, {
+
+        if(document.getElementById(`asub${itemid}`).classList.contains('fa-plus')){
+          document.getElementById(`asub${itemid}`).classList.remove('fa-plus');
+          document.getElementById(`asub${itemid}`).classList.add('fa-minus');
+          document.getElementById(`asub${itemid}`).innerText = ' Collapse';
+        }else if (document.getElementById(`asub${itemid}`).classList.contains('fa-minus')){
+          document.getElementById(`asub${itemid}`).classList.remove('fa-minus');
+          document.getElementById(`asub${itemid}`).classList.add('fa-plus');
+          document.getElementById(`asub${itemid}`).innerText = ' Expand';
+        }
+
+      },
+      formatPrice(value) {
+        const val = (value / 1).toFixed(2).replace(',', '.');
+        return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      },
+      new_sub_item(item_id){
+        if(this.isub_code && this.isub_name){
+          this.loading = true;
+          axios.post(`${config.apiUrl}/api/nsi/${item_id}/`, {
+            name: this.isub_name,
+            code: this.isub_code
+          }, {
+            headers: {
+              Authorization: `JWT ${config.get_token()}`,
+            },
+          }).then((response) => {
+            this.loading = false;
+            this.$noty.success('New sub item added!');
+            this.categories();
+            console.log(response.data);
+            this.isub_name = '';
+            this.isub_code = '';
+          }).catch(({res}) => {
+            this.loading = false;
+            console.log(res);
+            this.isub_name = '';
+            this.isub_code = '';
+            if (res.status === 401) {
+              this.$noty.error('Oops! Your session has expired.');
+              localStorage.removeItem('auth');
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              this.$router.push('/login');
+            } else {
+              this.$noty.error(`Oops! ${this.errors.detail}`);
+            }
+          });
+        }
+
+      },
+      new_sub_asset(asset_id){
+        if(this.asub_code && this.asub_name){
+          this.loading = true;
+          axios.post(`${config.apiUrl}/api/nsa/${asset_id}/`, {
+            name: this.asub_name,
+            code: this.asub_code,
+          }, {
+            headers: {
+              Authorization: `JWT ${config.get_token()}`,
+            }
+          }).then((response) => {
+            this.loading = false;
+            console.log(response);
+            this.assets_list();
+            this.asub_code = '';
+            this.asub_name = '';
+            this.$noty.success('New sub asset added!');
+          }).catch(({res}) => {
+            this.loading = false;
+            this.asub_code = '';
+            this.asub_name = '';
+            if (res.status === 401) {
+              this.$noty.error('Oops! Your session has expired.');
+              localStorage.removeItem('auth');
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              this.$router.push('/login');
+            } else {
+              this.$noty.error(`Oops! ${this.errors.detail}`);
+            }
+          });
+        }
+      },
+      categories() {
+        this.listLoading = true;
+        axios.get(`${config.apiUrl}/api/categories/`, {
           headers: {
             Authorization: `JWT ${config.get_token()}`,
           },
-        },
-      ).then((response) => {
-        this.loading = false;
-        this.compensations = response.data;
-        this.$noty.success('Everything looks great!');
-        console.log(response.data);
-      }).catch(({ response }) => {
-        this.loading = false;
-        console.log(response);
-        if (response.status === 401) {
-          this.$noty.error('Oops! Your session has expired.');
-          localStorage.removeItem('auth');
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
-          this.$router.push('/login');
-        } else {
-          this.$noty.error(`Oops! ${this.errors.detail}`);
-        }
-      });
-    },
-    assets_list() {
-      this.listLoading = true;
-      axios.get(`${config.apiUrl}/api/assets/`, {
-        headers: {
-          Authorization: `JWT ${config.get_token()}`,
-        },
-      }).then((res) => {
-        this.listLoading = false;
-        this.assets = res.data;
-        this.$noty.success('Everything looks great!');
-      }).catch((res) => {
-        this.listLoading = false;
-        console.log(res);
-        if (res.status === 401) {
-          this.$noty.error('Oops! Your session has expired.');
-          localStorage.removeItem('auth');
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
-          this.$router.push('/login');
-        } else {
-          this.$noty.error(`Oops! ${this.errors.detail}`);
-        }
-      });
-    },
-    newItem(catId) {
-      this.loading = true;
-      axios.post(`${config.apiUrl}/api/ni/${catId}/`, {
-        item_name: this.item_name,
-        type: this.item_type,
-        code: this.code,
-      }, {
-        headers: {
-          Authorization: `JWT ${config.get_token()}`,
-        },
-      }).then((res) => {
-        this.loading = false;
-        console.log(res);
-        this.categories();
-        this.item_name = '';
-        this.code = '';
-        this.item_type = '';
-      }).catch(({ res }) => {
-        this.loading = false;
-        console.log(res);
-        if (res.status === 401) {
-          this.$noty.error('Oops! Your session has expired.');
-          localStorage.removeItem('auth');
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
-          this.$router.push('/login');
-        } else {
-          this.$noty.error(`Oops! ${this.errors.detail}`);
-        }
-      });
-    },
-    newCat() {
-      if (this.name) {
+        }).then((response) => {
+          this.listLoading = false;
+          this.object_list = response.data;
+          this.$noty.success('Everything looks great!');
+          console.log(response.data);
+        }).catch(({ response }) => {
+          this.listLoading = false;
+          console.log(response);
+          if (response.status === 401) {
+            this.$noty.error('Oops! Your session has expired.');
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            this.$router.push('/login');
+          } else {
+            this.$noty.error(`Oops! ${this.errors.detail}`);
+          }
+        });
+      },
+      bp_list() {
         this.loading = true;
-
-        axios.post(`${config.apiUrl}/api/nc/`, {
-          name: this.name,
+        axios.post(
+          `${config.apiUrl}/api/ecs/`,
+          {
+            div: this.div,
+            unit: this.unit,
+            dep: this.dep,
+          }, {
+            headers: {
+              Authorization: `JWT ${config.get_token()}`,
+            },
+          },
+        ).then((response) => {
+          this.loading = false;
+          this.compensations = response.data;
+          this.$noty.success('Everything looks great!');
+          console.log(response.data);
+        }).catch(({ response }) => {
+          this.loading = false;
+          console.log(response);
+          if (response.status === 401) {
+            this.$noty.error('Oops! Your session has expired.');
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            this.$router.push('/login');
+          } else {
+            this.$noty.error(`Oops! ${this.errors.detail}`);
+          }
+        });
+      },
+      assets_list() {
+        this.listLoading = true;
+        axios.get(`${config.apiUrl}/api/assets/`, {
+          headers: {
+            Authorization: `JWT ${config.get_token()}`,
+          },
+        }).then((res) => {
+          this.listLoading = false;
+          this.assets = res.data;
+          this.$noty.success('Everything looks great!');
+        }).catch((res) => {
+          this.listLoading = false;
+          console.log(res);
+          if (res.status === 401) {
+            this.$noty.error('Oops! Your session has expired.');
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            this.$router.push('/login');
+          } else {
+            this.$noty.error(`Oops! ${this.errors.detail}`);
+          }
+        });
+      },
+      newItem(catId) {
+        this.loading = true;
+        axios.post(`${config.apiUrl}/api/ni/${catId}/`, {
+          item_name: this.item_name,
+          type: this.item_type,
           code: this.code,
         }, {
           headers: {
@@ -412,120 +530,152 @@ export default {
           },
         }).then((res) => {
           this.loading = false;
-          this.code = '';
-          this.categories();
           console.log(res);
-          this.name = '';
+          this.categories();
+          this.item_name = '';
+          this.code = '';
+          this.item_type = '';
         }).catch(({ res }) => {
           this.loading = false;
           console.log(res);
+          if (res.status === 401) {
+            this.$noty.error('Oops! Your session has expired.');
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            this.$router.push('/login');
+          } else {
+            this.$noty.error(`Oops! ${this.errors.detail}`);
+          }
         });
-      }
-    },
-    newAsset() {
-      if (this.asset_name) {
+      },
+      newCat() {
+        if (this.name) {
+          this.loading = true;
+
+          axios.post(`${config.apiUrl}/api/nc/`, {
+            name: this.name,
+            code: this.code,
+          }, {
+            headers: {
+              Authorization: `JWT ${config.get_token()}`,
+            },
+          }).then((res) => {
+            this.loading = false;
+            this.code = '';
+            this.categories();
+            console.log(res);
+            this.name = '';
+          }).catch(({ res }) => {
+            this.loading = false;
+            console.log(res);
+          });
+        }
+      },
+      newAsset() {
+        if (this.asset_name) {
+          this.loading = true;
+          axios.post(`${config.apiUrl}/api/na/`, {
+            name: this.asset_name,
+            code: this.code,
+          }, {
+            headers: {
+              Authorization: `JWT ${config.get_token()}`,
+            },
+          }).then((res) => {
+            this.loading = false;
+            this.asset_name = '';
+            this.code = '';
+            this.assets_list();
+            console.log(res);
+          }).catch((res) => {
+            console.log(res);
+          });
+        }
+      },
+      delItem(itemId) {
+        axios.post(`${config.apiUrl}/api/di/${itemId}/`, {}, {
+          headers: {
+            Authorization: `JWT ${config.get_token()}`,
+          },
+        }).then((res) => {
+          // this.showModal = false;
+          console.log(res);
+          $(`#item${itemId}`).modal('hide');
+          this.categories();
+        }).catch((res) => {
+          console.log(res);
+        });
+      },
+      delCat(catId) {
+        axios.post(`${config.apiUrl}/api/dc/${catId}/`, {}, {
+          headers: {
+            Authorization: `JWT ${config.get_token()}`,
+          },
+        }).then((res) => {
+          console.log(res);
+          $(`#category${catId}`).modal('hide');
+          this.categories();
+        }).catch((res) => {
+          console.log(res);
+        });
+      },
+      division_list() {
         this.loading = true;
-        axios.post(`${config.apiUrl}/api/na/`, {
-          name: this.asset_name,
-          code: this.code,
-        }, {
+        axios.get(`${config.apiUrl}/api/divisions`, {
           headers: {
             Authorization: `JWT ${config.get_token()}`,
           },
         }).then((res) => {
           this.loading = false;
-          this.asset_name = '';
-          this.code = '';
-          this.assets_list();
-          console.log(res);
-        }).catch((res) => {
-          console.log(res);
+          this.divisions = res.data;
         });
-      }
+      },
+      department_list(div_id) {
+        this.loading = true;
+        axios.get(`${config.apiUrl}/api/dvdl/${div_id}/`, {
+          headers: {
+            Authorization: `JWT ${config.get_token()}`,
+          },
+        }).then((res) => {
+          this.loading = false;
+          const results = res.data;
+          this.departs = results.departments;
+        });
+      },
+      unit_list(dep_id) {
+        this.loading = true;
+        axios.get(`${config.apiUrl}/api/du/${dep_id}`, {
+          headers: {
+            Authorization: `JWT ${config.get_token()}`,
+          },
+        }).then((res) => {
+          this.loading = false;
+          const results = res.data;
+          this.units = results.units;
+        });
+      },
     },
-    delItem(itemId) {
-      axios.post(`${config.apiUrl}/api/di/${itemId}/`, {}, {
-        headers: {
-          Authorization: `JWT ${config.get_token()}`,
-        },
-      }).then((res) => {
-        // this.showModal = false;
-        console.log(res);
-        $(`#item${itemId}`).modal('hide');
-        this.categories();
-      }).catch((res) => {
-        console.log(res);
-      });
+    watch: {
+      div(value) {
+        if (value) {
+          this.department_list(value);
+        }
+      },
+      dep(value) {
+        if (value) {
+          this.unit_list(value);
+        }
+      },
     },
-    delCat(catId) {
-      axios.post(`${config.apiUrl}/api/dc/${catId}/`, {}, {
-        headers: {
-          Authorization: `JWT ${config.get_token()}`,
-        },
-      }).then((res) => {
-        console.log(res);
-        $(`#category${catId}`).modal('hide');
-        this.categories();
-      }).catch((res) => {
-        console.log(res);
-      });
+    mounted() {
+      this.categories();
+      this.assets_list();
+      this.bp_list();
+      this.division_list();
     },
-    division_list() {
-      this.loading = true;
-      axios.get(`${config.apiUrl}/api/divisions`, {
-        headers: {
-          Authorization: `JWT ${config.get_token()}`,
-        },
-      }).then((res) => {
-        this.loading = false;
-        this.divisions = res.data;
-      });
-    },
-    department_list(div_id) {
-      this.loading = true;
-      axios.get(`${config.apiUrl}/api/dvdl/${div_id}/`, {
-        headers: {
-          Authorization: `JWT ${config.get_token()}`,
-        },
-      }).then((res) => {
-        this.loading = false;
-        const results = res.data;
-        this.departs = results.departments;
-      });
-    },
-    unit_list(dep_id) {
-      this.loading = true;
-      axios.get(`${config.apiUrl}/api/du/${dep_id}`, {
-        headers: {
-          Authorization: `JWT ${config.get_token()}`,
-        },
-      }).then((res) => {
-        this.loading = false;
-        const results = res.data;
-        this.units = results.units;
-      });
-    },
-  },
-  watch: {
-    div(value) {
-      if (value) {
-        this.department_list(value);
-      }
-    },
-    dep(value) {
-      if (value) {
-        this.unit_list(value);
-      }
-    },
-  },
-  mounted() {
-    this.categories();
-    this.assets_list();
-    this.bp_list();
-    this.division_list();
-  },
 
-};
+  };
 </script>
 <style scoped>
   .modal{

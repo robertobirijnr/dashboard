@@ -3,7 +3,7 @@
     <div class="page-header row no-gutters py-4">
       <div class="col-12 col-sm-12 text-center text-sm-left mb-0">
         <span class="text-uppercase page-subtitle">Overview</span>
-        <h3 class="page-title">{{object.name}} Budget Summary</h3>
+        <h3 class="page-title">{{division.name}} Budget Summary</h3>
       </div>
     </div>
     <div>
@@ -12,7 +12,7 @@
           <div class="card h-100">
             <div class="card-header">
               <div class="row">
-                <div class="col"><button :disabled="!unit_budgets.length" @click="exporrt(period.id, object.id)" class="btn-sm btn btn-primary">EXTRACT</button></div>
+                <div class="col"><button :disabled="!unit_budgets.length" @click="exporrt(object.id, division.id)" class="btn-sm btn btn-primary">EXTRACT</button></div>
                 <!--<div class="col" align="right">-->
                 <!--<div class="btn-group mr-2">-->
                 <!--<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
@@ -58,7 +58,7 @@
                 <table class="table table-sm table-bordered">
                   <thead>
                   <tr align="center">
-                    <th :colspan="ubc">{{period.start_date}} - {{period.end_date}} Budget Summary</th>
+                    <th :colspan="ubc">{{object.start_date}} - {{object.end_date}} Budget Summary</th>
                   </tr>
                   <tr>
                     <th>Item</th>
@@ -70,12 +70,17 @@
                   </thead>
                   <tbody>
                   <tr>
-                    <th :colspan="ubc">Compensation Summary</th>
+                    <th :colspan="ubc">Compensation of Employees</th>
                   </tr>
                   <tr>
-                    <td>Consolidated Basic</td>
-                    <td :key="ub.id" v-for="ub in unit_budgets">GHS {{formatPrice(ub.consolidated_basic_salary)}}</td>
-                    <td>GHS {{formatPrice(cb)}}</td>
+                    <td>Established Posts</td>
+                    <td :key="ub.id" v-for="ub in unit_budgets">GHS {{formatPrice(ub.established_posts)}}</td>
+                    <td>GHS {{formatPrice(ep)}}</td>
+                  </tr>
+                  <tr>
+                    <td>Non-Established Posts</td>
+                    <td :key="ub.id" v-for="ub in unit_budgets">GHS {{formatPrice(ub.non_established_posts)}}</td>
+                    <td>GHS {{formatPrice(nep)}}</td>
                   </tr>
                   <tr>
                     <td>Allowances</td>
@@ -83,58 +88,74 @@
                     <td>GHS {{formatPrice(allawa)}}</td>
                   </tr>
                   <tr>
+                    <td>Social Security Fund</td>
+                    <td :key="ub.id" v-for="ub in unit_budgets">GHS {{formatPrice(ub.social_security_fund)}}</td>
+                    <td>GHS {{formatPrice(ssf)}}</td>
+                  </tr>
+                  <tr>
+                    <td>Gratuity</td>
+                    <td :key="ub.id" v-for="ub in unit_budgets">GHS {{formatPrice(ub.gratuity)}}</td>
+                    <td>GHS {{formatPrice(gratuity)}}</td>
+                  </tr>
+                  <tr>
+                    <td>Long Service Awards</td>
+                    <td :key="ub.id" v-for="ub in unit_budgets">GHS {{formatPrice(ub.long_service_awards)}}</td>
+                    <td>GHS {{formatPrice(lsa)}}</td>
+                  </tr>
+                  <tr>
+                    <td>Staff Welfare Benefits (Pension Costs)</td>
+                    <td :key="ub.id" v-for="ub in unit_budgets">GHS {{formatPrice(ub.pension_costs)}}</td>
+                    <td>GHS {{formatPrice(pc)}}</td>
+                  </tr>
+                  <tr>
                     <th>Sub Total</th>
-                    <td :key="ub.id" v-for="ub in unit_budgets">GHS {{formatPrice(ub.employees_compensation_total)}}</td>
-                    <td>GHS {{formatPrice(cs)}}</td>
+                    <th :key="ub.id" v-for="ub in unit_budgets">GHS {{formatPrice(ub.employees_compensation_total)}}</th>
+                    <th>GHS {{formatPrice(ec)}}</th>
                   </tr>
                   <tr>
                     <th :colspan="ubc">Goods & Services</th>
                   </tr>
-                  <!--<tr>-->
-                  <!--<td>Travel and Transport</td>-->
-                  <!--<td></td>-->
-                  <!--<td></td>-->
-                  <!--<td></td>-->
-                  <!--<td></td>-->
-                  <!--</tr>-->
-                  <!--<tr>-->
-                  <!--<td>General Cleaning</td>-->
-                  <!--<td></td>-->
-                  <!--<td></td>-->
-                  <!--<td></td>-->
-                  <!--<td></td>-->
-                  <!--</tr>-->
+                  <tr :key="cat.id" v-for="cat in cats">
+                    <td>{{cat.name}}</td>
+                    <td :key="ub.id" v-for="ub in unit_budgets">
+                        <span :key="ite.id" v-for="ite in ub.categories">
+                          <span v-if="cat.name === ite.category.name">GHS {{formatPrice(ite.items_total)}}</span>
+                        </span>
+                    </td>
+                    <td>
+                      <!--<span :key="ub.id" v-for="ub in budgets">{{ub.categories}}</span>-->
+                      <!--<span :key="ite.id" v-for="ite in ub.caterogies">-->
+                      <!--<span>{{ite.unit_budget}}</span>-->
+                      <!--</span>-->
+                    </td>
+                    <!--<td></td>-->
+                  </tr>
                   <tr>
                     <th>Sub Total</th>
-                    <td :key="ub.id" v-for="ub in unit_budgets">GHS {{formatPrice(ub.goods_services_total)}}</td>
-                    <td>GHS {{formatPrice(gss)}}</td>
+                    <th :key="ub.id" v-for="ub in unit_budgets">GHS {{formatPrice(ub.goods_services_total)}}</th>
+                    <th>GHS {{formatPrice(gss)}}</th>
                   </tr>
                   <tr>
                     <th :colspan="ubc">Assets</th>
                   </tr>
-                  <!--<tr>-->
-                  <!--<td>Land</td>-->
-                  <!--<td></td>-->
-                  <!--<td></td>-->
-                  <!--<td></td>-->
-                  <!--<td></td>-->
-                  <!--</tr>-->
-                  <!--<tr>-->
-                  <!--<td>Office Building</td>-->
-                  <!--<td></td>-->
-                  <!--<td></td>-->
-                  <!--<td></td>-->
-                  <!--<td></td>-->
-                  <!--</tr>-->
+                  <tr :key="cat.id" v-for="cat in asss">
+                    <td>{{cat.asset_name}}</td>
+                    <td :key="ub.id" v-for="ub in unit_budgets">
+                        <span :key="ite.id" v-for="ite in ub.assets">
+                          <span v-if="cat.asset_name === ite.asset.asset_name">GHS {{formatPrice(ite.amount)}}</span>
+                        </span>
+                    </td>
+                    <td></td>
+                  </tr>
                   <tr>
                     <th>Sub Total</th>
-                    <td :key="ub.id" v-for="ub in unit_budgets">GHS {{formatPrice(ub.asset_total)}}</td>
-                    <td>GHS {{formatPrice(as)}}</td>
+                    <th :key="ub.id" v-for="ub in unit_budgets">GHS {{formatPrice(ub.asset_total)}}</th>
+                    <th>GHS {{formatPrice(as)}}</th>
                   </tr>
                   <tr>
                     <th>Budget Total</th>
                     <td :key="ub.id" v-for="ub in unit_budgets">GHS {{formatPrice(ub.total_budget)}}</td>
-                    <td>GHS {{formatPrice(bt)}}</td>
+                    <th>GHS {{formatPrice(bt)}}</th>
                   </tr>
                   </tbody>
                 </table>
@@ -167,16 +188,23 @@ export default {
   data() {
     return {
       object: {},
-      unit_budgets: {},
-      period: {},
-      cb: '',
-      allawa: '',
-      cs: '',
-      gss: '',
-      as: '',
-      bt: '',
-      ubc: '',
-      errors: {},
+        unit_budgets: {},
+        division: {},
+        ec: '',
+        allawa: '',
+        ep: '',
+        nep: '',
+        lsa: '',
+        gss: '',
+        as: '',
+        gst: 0,
+        bt: '',
+        gratuity: '',
+        ssf: '',
+        pc: '',
+        ubc: '',
+        cats: {},
+        asss: {},
     };
   },
   methods: {
@@ -193,19 +221,27 @@ export default {
         },
       }).then((res) => {
         const results = res.data;
-        this.object = results.object;
-        this.period = results.budget_period;
-        this.unit_budgets = results.unit_budgets;
-        this.cb = results.cb;
-        this.allawa = results.allawa;
-        this.cs = results.cs;
-        this.gss = results.gss;
-        this.as = results.as;
-        this.bt = results.bt;
-        this.ubc = results.ubc + 2;
-        this.$noty.success('Everything looks great!');
+          this.object = results.object;
+          this.division = results.division;
+          this.unit_budgets = results.unit_budgets;
+          this.ec = results.ec;
+          this.allawa = results.allawa;
+          this.ep = results.ep;
+          this.nep = results.nep;
+          this.lsa = results.lsa;
+          this.gss = results.gss;
+          this.as = results.as;
+          this.bt = results.bt;
+          this.pc = results.pc;
+          this.ssf = results.ssf;
+          this.gratuity = results.gratuity;
+          this.ubc = results.ubc + 2;
+          this.cats = results.cats;
+          this.asss = results.asss;
+          this.$noty.success('Everything looks great!');
       }).catch(({response}) => {
         console.log(response);
+        const errors = {};
         if(response.status === 401){
           this.$noty.error(`Oops! Your session has expired.`);
           localStorage.removeItem('auth');
@@ -213,7 +249,7 @@ export default {
           localStorage.removeItem('user');
           this.$router.push('/login');
         }else{
-          this.$noty.error(`Oops! ${this.errors.detail}`);
+          this.$noty.error(`Oops! ${errors.detail}`);
         }
       });
     },
@@ -228,13 +264,13 @@ export default {
         const url = URL.createObjectURL(new Blob([res.data], {type: 'application/vnd.ms-excel'}));
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', `${this.object.name}.xls`);
+        link.setAttribute('download', `${this.division.name}.xls`);
         document.body.appendChild(link);
         link.click();
         this.$noty('Export Successful');
-      }).catch(({response}) => {
+      }).catch((response) => {
         console.log(response);
-        this.errors = response.data;
+        const errors = response.data;
         if(response.status === 401){
           this.$noty.error(`Oops! Your session has expired.`);
           localStorage.removeItem('auth');
@@ -242,7 +278,7 @@ export default {
           localStorage.removeItem('user');
           this.$router.push('/login');
         }else{
-          this.$noty.error(`Oops! ${this.errors.detail}`);
+          this.$noty.error(`Oops! ${errors.detail}`);
         }
       })
     }

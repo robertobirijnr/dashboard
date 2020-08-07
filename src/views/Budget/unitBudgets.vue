@@ -34,7 +34,7 @@
                   <td>{{object.budget_period}}</td>
                   <td>{{object.status}}</td>
                   <td>
-                    <router-link :to="{name: 'unitBudget-details', params: {unit_id: object.unit_budget_id}}" class="btn btn-sm btn-primary">
+                    <router-link :to="{name: 'unitBudget-details', params: {unit_id: object.slug}}" class="btn btn-sm btn-primary">
                       Details
                     </router-link>
                   </td>

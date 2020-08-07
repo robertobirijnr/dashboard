@@ -44,7 +44,7 @@
                       <span v-else>Disabled</span>
                     </td>
                     <td>
-                      <router-link :to="`/update-user/${object.id}`" class="btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></router-link>
+                      <router-link :to="`/update-user/${object.slug}`" class="btn btn-primary"><i class="fa fa-tasks" aria-hidden="true"></i></router-link>
                     </td>
                   </tr>
                 </tbody>

@@ -19,17 +19,17 @@
                   <li class="nav-item"><a href="#home" id="home-tab" data-toggle="tab" class="nav-link active" aria-selected="true">Goods & Services</a></li>
                   <li class="nav-item"><a href="#contact" id="contact-tab" data-toggle="tab" class="nav-link" aria-selected="true">Compensations</a></li>
                   <li class="nav-item"><a href="#profile" id="profile-tab" data-toggle="tab" class="nav-link" aria-selected="true">Assets</a></li>
-                  <!--<li class="nav-item"><a href="#about" id="about-tab" data-toggle="tab" class="nav-link" aria-selected="true">Imprests</a></li>-->
+                  <li class="nav-item"><a href="#about" id="about-tab" data-toggle="tab" class="nav-link" aria-selected="true">Allowances</a></li>
                 </ul>
               </div>
               <div class="col" v-if="object.status !== 'Completed'" align="right">
                 <button data-toggle="modal" data-target="#confirmModal" class="btn btn-sm btn-primary">Complete</button>
               </div>
               <div class="col" align="right" v-else>
-                <button @click="exporrt(object.id)" :disabled="!object" class="btn btn-primary btn-sm">EXTRACT</button>
+                <button @click="exporrt(object.unit)" :disabled="!object" class="btn btn-primary btn-sm">EXTRACT</button>
               </div>
               <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
                       <h5 class="modal-title" id="exampleModalLongTitle">Budget Summary</h5>
@@ -49,12 +49,16 @@
                           </thead>
                           <tbody>
                           <tr>
-                            <td>Goods & Services</td>
-                            <td>{{formatPrice(gst)}}</td>
+                            <th>Compensation of Employees</th>
+                            <td></td>
                           </tr>
                           <tr>
-                            <td>Consolidate Basic Salary</td>
-                            <td>{{formatPrice(cb)}}</td>
+                            <td>Established Post</td>
+                            <td>{{formatPrice(ep)}}</td>
+                          </tr>
+                          <tr>
+                            <td>Non-Established Post</td>
+                            <td>{{formatPrice(nep)}}</td>
                           </tr>
                           <tr>
                             <td>Allowances</td>
@@ -65,13 +69,45 @@
                             <td>{{formatPrice(ssf)}}</td>
                           </tr>
                           <tr>
-                            <td>Pension Costs</td>
+                            <td>Gratuity</td>
+                            <td>{{formatPrice(gratuity)}}</td>
+                          </tr>
+                          <tr>
+                            <td>Staff Welfare Benefit (Pension Costs)</td>
                             <td>{{formatPrice(pc)}}</td>
                           </tr>
                           <tr>
-                            <td>Assets</td>
-                            <td>{{formatPrice(at)}}</td>
+                            <td>Long Service Awards</td>
+                            <td>{{formatPrice(lsa)}}</td>
                           </tr>
+                          <tr>
+                            <th>Sub Total</th>
+                            <th>{{formatPrice(compensate)}}</th>
+                          </tr>
+                          <tr>
+                            <td>Goods and Services Total</td>
+                            <th>{{formatPrice(gst)}}</th>
+                          </tr>
+                          <tr>
+                            <td>Asset Total</td>
+                            <th>{{formatPrice(at)}}</th>
+                          </tr>
+                          <!--<tr>-->
+                            <!--<td>Allowances</td>-->
+                            <!--<td>{{formatPrice(allawa)}}</td>-->
+                          <!--</tr>-->
+                          <!--<tr>-->
+                            <!--<td>Social Security Fund</td>-->
+                            <!--<td>{{formatPrice(ssf)}}</td>-->
+                          <!--</tr>-->
+                          <!--<tr>-->
+                            <!--<td>Pension Costs</td>-->
+                            <!--<td>{{formatPrice(pc)}}</td>-->
+                          <!--</tr>-->
+                          <!--<tr>-->
+                            <!--<td>Assets</td>-->
+                            <!--<td>{{formatPrice(at)}}</td>-->
+                          <!--</tr>-->
                           <tr>
                             <th>Total</th>
                             <th>{{formatPrice(tt)}}</th>
@@ -82,7 +118,7 @@
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                      <button @click="complete(object.id)" :disabled="loading" type="button" class="btn btn-primary">Complete</button>
+                      <button @click="complete()" :disabled="loading" type="button" class="btn btn-primary">Complete</button>
                     </div>
                   </div>
                 </div>
@@ -110,10 +146,11 @@
                   <table class="table">
                     <thead>
                     <tr>
-                      <th>Category</th>
+                      <!--<th>Category</th>-->
                       <th>Item</th>
                       <th>Item Type</th>
                       <th>Quantity</th>
+                      <th align="center">No. Sub Items</th>
                       <th>Unit Price (GHS)</th>
                       <th>Total Price (GHS)</th>
                       <th>Actions</th>
@@ -121,7 +158,7 @@
                     </thead>
                     <tbody>
                     <tr :key="item.id" v-for="item in object.items">
-                      <td>{{item.item.category_name}}</td>
+                      <!--<td>{{item.item.category_name}}</td>-->
                       <td>{{item.item.item_name}}</td>
                       <td>{{item.item.item_type}}</td>
                       <td>
@@ -132,6 +169,7 @@
                         <span v-else>N/A</span>
 
                       </td>
+                      <td align="center">{{item.subs.length}}</td>
                       <td>
                         <span v-if="item.item.item_type === 'Good'">
                           <span v-if="item.unit_price" :id="`price${item.id}`">GHS {{formatPrice(item.unit_price)}}</span>
@@ -153,16 +191,75 @@
 
                       </td>
                       <td>
-                        <span v-if="item.item.item_type === 'Good'">
-                          <button :disabled="object.status === 'Completed'" :id="`id_edit${item.id}`" @click="show_save(item.id)" class="btn btn-sm btn-success"><i class="large material-icons">create</i></button>
-                          <button :id="`id_save${item.id}`" :disabled="loading" @click="unit_price(object.id, item.id)" hidden="hidden" class="btn btn-sm btn-primary ml-2"><i class="large material-icons">check</i></button>
-                          <button :id="`id_clear${item.id}`" hidden="hidden" @click="hide_save(item.id)" class="btn btn-sm btn-warning ml-2"><i class="large material-icons">clear</i></button>
+                        <span v-if="!item.subs.length">
+                          <span v-if="item.item.item_type === 'Good'">
+                            <button :disabled="object.status === 'Completed'" :id="`id_edit${item.id}`" @click="show_save(item.id)" class="btn btn-sm btn-success"><i class="large material-icons">create</i></button>
+                            <button :id="`id_save${item.id}`" :disabled="loading" @click="unit_price(object.id, item.id)" hidden="hidden" class="btn btn-sm btn-primary ml-2"><i class="large material-icons">check</i></button>
+                            <button :id="`id_clear${item.id}`" hidden="hidden" @click="hide_save(item.id)" class="btn btn-sm btn-warning ml-2"><i class="large material-icons">clear</i></button>
+                          </span>
+                          <span v-else-if="item.item.item_type === 'Service'">
+                            <button :disabled="object.status === 'Completed'" :id="`id_tedit${item.id}`" @click="t_show_save(item.id)" class="btn btn-sm btn-success"><i class="large material-icons">create</i></button>
+                            <button :id="`id_tsave${item.id}`" :disabled="loading" @click="total_price(object.id, item.id)" hidden="hidden" class="btn btn-sm btn-primary ml-2"><i class="large material-icons">check</i></button>
+                            <button :id="`id_tclear${item.id}`" hidden="hidden" @click="t_hide_save(item.id)" class="btn btn-sm btn-warning ml-2"><i class="large material-icons">clear</i></button>
+                          </span>
                         </span>
-                        <span v-else-if="item.item.item_type === 'Service'">
-                          <button :disabled="object.status === 'Completed'" :id="`id_tedit${item.id}`" @click="t_show_save(item.id)" class="btn btn-sm btn-success"><i class="large material-icons">create</i></button>
-                          <button :id="`id_tsave${item.id}`" :disabled="loading" @click="total_price(object.id, item.id)" hidden="hidden" class="btn btn-sm btn-primary ml-2"><i class="large material-icons">check</i></button>
-                          <button :id="`id_tclear${item.id}`" hidden="hidden" @click="t_hide_save(item.id)" class="btn btn-sm btn-warning ml-2"><i class="large material-icons">clear</i></button>
+                        <span v-else>
+                          <button class="btn btn-sm btn-info" :disabled="object.status === 'Completed'" data-toggle="modal" :data-target="`#subs${item.id}`">
+                            <i class="fa fa-object-ungroup"></i>
+                          </button>
+                          <div class="modal fade" :id="`subs${item.id}`" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="staticBackdropLabel">{{item.item.item_name}} Sub Items</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                  <table class="table">
+                                    <thead>
+                                      <tr>
+                                        <th>Item</th>
+                                        <th>Quantity</th>
+                                        <th>Unit Price (GHS)</th>
+                                        <th>Total (GHS)</th>
+                                        <th>Actions</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr :key="sub.id" v-for="sub in item.subs">
+                                        <td>{{sub.sub_item.name}}</td>
+                                        <td>
+                                          <input type="text" :id="`iq${sub.id}`" disabled v-model="sub.quantity" class="form-control">
+                                          <!--{{sub.quantity}}-->
+                                        </td>
+                                        <td>
+                                          <input type="text" :id="`iup${sub.id}`" v-model="sub.unit_price" disabled class="form-control">
+                                          <!--{{sub.unit_price}}-->
+                                        </td>
+                                        <td>{{sub.total_amount}}</td>
+                                        <td>
+                                          <button class="btn btn-sm btn-success" :id="`ise${sub.id}`" @click="isub_enable(sub.id)">
+                                            <i class="material-icons">create</i>
+                                          </button>
+                                          <button class="btn btn-sm btn-primary ml-1" :id="`iss${sub.id}`" hidden :disabled="loading" @click="isub_save(sub.id, item.id)">
+                                            <i class="material-icons">check</i>
+                                          </button>
+                                          <button class="btn btn-sm btn-warning ml-1" :id="`isc${sub.id}`" @click="isub_disable(sub.id)" hidden>
+                                            <i class="material-icons">clear</i>
+                                          </button>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+
+                              </div>
+                            </div>
+                          </div>
                         </span>
+
                       </td>
 
                     </tr>
@@ -176,20 +273,6 @@
             </div>
             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
               <div class="card-body">
-                <!--<div class="row">-->
-                <!--<div class="col"></div>-->
-                <!--<div class="col-md-3" align="right">-->
-                <!--<div class="row">-->
-                <!--<div class="col">-->
-                <!--<select v-model="type" class="form-control" @change="exp(object.id)">-->
-                <!--<option value="">Export to...</option>-->
-                <!--<option value="csv">CSV</option>-->
-                <!--<option value="excel">Excel</option>-->
-                <!--</select>-->
-                <!--</div>-->
-                <!--</div>-->
-                <!--</div>-->
-                <!--</div>-->
                 <div class="table-responsive">
                   <table class="table mb-0">
                     <thead class="bg-light">
@@ -197,13 +280,14 @@
                       <th scope="col" class="border-0">Staff ID</th>
                       <th scope="col" class="border-0">Name</th>
                       <!--<th scope="col" class="border-0">Position</th>-->
-                      <th scope="col" class="border-0">Category</th>
+                      <th scope="col" class="border-0">Type</th>
+                      <th scope="col" class="border-0">Status</th>
                       <th scope="col" class="border-0">Grade</th>
                       <th scope="col" class="border-0">Notch</th>
                       <th scope="col" class="border-0">Monthly Basic (GHS)</th>
                       <th scope="col" class="border-0">Yearly Basic (GHS)</th>
-                      <th scope="col" class="border-0">Status</th>
-                      <!--<th scope="col" class="border-0">Actions</th>-->
+
+                      <th scope="col" class="border-0">Actions</th>
                     </tr>
                     </thead>
                     <tbody :key="employ.id" v-for="employ in object.employees_compensations">
@@ -212,25 +296,40 @@
                       <td>{{employ.first_name}} {{employ.last_name}}</td>
                       <!--<td>{{employ.position}}</td>-->
                       <td>{{employ.employee_type_display}}</td>
+                      <td>{{employ.status}}</td>
                       <td>{{employ.rank}}</td>
                       <td>{{employ.notch}}</td>
-                      <td>{{formatPrice(employ.monthly_basic)}}</td>
-                      <td>{{formatPrice(employ.period_basic)}}</td>
-                      <td>{{employ.status}}</td>
-                      <!--<td></td>-->
+                      <td>
+                        <span v-if="employ.employee_type === 'P'">
+                          {{formatPrice(employ.monthly_basic)}}
+                        </span>
+                        <span v-else>
+                          <input type="text" v-model="employ.monthly_basic" :id="`cmb${employ.id}`" disabled class="form-control">
+                        </span>
 
-                      <!--<td>-->
-                      <!--<span v-if="item.unit_price" :id="`price${item.id}`">GHS {{item.unit_price}}</span>-->
-                      <!--<span>-->
-                      <!--<input type="number" :id="`id_price${item.id}`" hidden="hidden" class="form-control">-->
-                      <!--</span>-->
-                      <!--</td>-->
-                      <!--<td ><span v-if="item.total_amount">GHS {{item.total_amount}}</span></td>-->
-                      <!--<td>-->
-                      <!--<button :id="`id_edit${item.id}`" @click="show_save(item.id)" class="btn btn-sm btn-success"><i class="large material-icons">create</i></button>-->
-                      <!--<button :id="`id_save${item.id}`" @click="unit_price(object.id, item.id)" hidden="hidden" class="btn btn-sm btn-primary ml-2"><i class="large material-icons">check</i></button>-->
-                      <!--<button :id="`id_clear${item.id}`" hidden="hidden" @click="hide_save(item.id)" class="btn btn-sm btn-warning ml-2"><i class="large material-icons">clear</i></button>-->
-                      <!--</td>-->
+                      </td>
+                      <td>
+                        <span v-if="employ.employee_type === 'P'">
+                          {{formatPrice(employ.period_basic)}}
+                        </span>
+                        <span v-else>
+                          <input type="text" v-model="employ.period_basic" :id="`cpb${employ.id}`" disabled class="form-control">
+                        </span>
+                      </td>
+                      <td>
+                        <span v-if="employ.employee_type !== 'P'">
+                          <button class="btn btn-sm btn-success" :disabled="object.status === 'Completed'" :id="`ce${employ.id}`" @click="com_enable(employ.id)">
+                            <i class="material-icons">create</i>
+                          </button>
+                          <button class="btn btn-sm btn-primary ml-1" hidden :id="`cs${employ.id}`" @click="com_save(employ.id)" :disabled="loading">
+                            <i class="material-icons">check</i>
+                          </button>
+                          <button class="btn btn-sm btn-warning ml-1" hidden :id="`cc${employ.id}`" @click="com_disable(employ.id)">
+                            <i class="material-icons">clear</i>
+                          </button>
+                        </span>
+
+                      </td>
                     </tr>
                     </tbody>
                   </table>
@@ -244,12 +343,12 @@
             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
               <div class="card-body">
                 <div class="list-group" :key="asset.id" v-for="asset in object.assets">
-                  <div class="list-group-item">
+                  <div class="list-group-item" v-if="asset.is_selected">
                     <div class="row">
-                      <div class="col-md-1">
-                        <input class="form-check-input" disabled type="checkbox" :checked="asset.is_selected" value="" id="defaultCheck1">
-                      </div>
-                      <div class="col-md-6">{{asset.asset.asset_name}}</div>
+                      <!--<div class="col-md-1">-->
+                        <!--<input class="form-check-input" disabled type="checkbox" :checked="asset.is_selected" value="" id="defaultCheck1">-->
+                      <!--</div>-->
+                      <div class="col-md-7">{{asset.asset.asset_name}}</div>
                       <div class="col-md-5" align="right">
                         <d-row>
                           <div class="col-md-7">
@@ -257,13 +356,56 @@
                             <input type="number" :id="`id_asset${asset.id}`" hidden="hidden" class="form-control">
                           </div>
                           <div class="col-md-5">
-                            <button :disabled="object.status === 'Completed' || !asset.is_selected" :id="`id_asset_edit${asset.id}`" @click="a_show_save(asset.id)" class="btn mr-1 small btn-sm btn-success"><span class="material-icons small">create</span></button>
-                            <button :id="`id_asset_save${asset.id}`" hidden="hidden" @click="asset_amount(object.id, asset.id)" :disabled="loading" class="btn mr-1 small btn-sm btn-primary"><span class="material-icons small">check</span></button>
-                            <button :id="`id_asset_clear${asset.id}`" hidden="hidden" @click="a_hide_save(asset.id)" class="btn small btn-sm btn-warning"><span class="material-icons small">clear</span></button>
+                            <span v-if="!asset.subs.length">
+                              <button :disabled="object.status === 'Completed' || !asset.is_selected" :id="`id_asset_edit${asset.id}`" @click="a_show_save(asset.id)" class="btn mr-1 small btn-sm btn-success"><span class="material-icons small">create</span></button>
+                              <button :id="`id_asset_save${asset.id}`" hidden="hidden" @click="asset_amount(object.id, asset.id)" :disabled="loading" class="btn mr-1 small btn-sm btn-primary"><span class="material-icons small">check</span></button>
+                              <button :id="`id_asset_clear${asset.id}`" hidden="hidden" @click="a_hide_save(asset.id)" class="btn small btn-sm btn-warning"><span class="material-icons small">clear</span></button>
+                            </span>
+                            <span v-else>
+                              <a :href="`#assCol${asset.id}`" :disabled="object.status === 'Completed'" aria-expanded="false" :aria-controls="`assCol${asset.id}`" data-toggle="collapse" role="button" class="mr-1 btn btn-sm btn-info"><i class="fa fa-sort"></i></a>
+                            </span>
                           </div>
                         </d-row>
                       </div>
                     </div>
+                  </div>
+                  <div class="collapse multi-collapse" :id="`assCol${asset.id}`">
+                    <table class="table pt-2">
+                      <thead>
+                      <tr>
+                        <th>Asset</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Total</th>
+                        <th>Actions</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr :key="sub.id" v-for="sub in asset.subs">
+                        <td>{{sub.sub_asset.name}}</td>
+                        <td>
+                          <input type="number" :id="`aq${sub.id}`" v-model="sub.quantity" disabled class="form-control">
+                          <!--{{sub.quantity}}-->
+                        </td>
+                        <td>
+                          <input type="number" :id="`aup${sub.id}`" v-model="sub.unit_price" disabled class="form-control">
+                          <!--{{sub.unit_price}}-->
+                        </td>
+                        <td>{{sub.total_amount}}</td>
+                        <td>
+                          <button class="btn btn-sm btn-success" :disabled="object.status === 'Completed'" :id="`ase${sub.id}`" @click="esub_enable(sub.id)">
+                            <i class="material-icons">create</i>
+                          </button>
+                          <button class="btn btn-sm btn-primary ml-1" :id="`ass${sub.id}`" hidden :disabled="loading" @click="esub_save(sub.id, asset.id)">
+                            <i class="material-icons">check</i>
+                          </button>
+                          <button class="btn btn-sm btn-warning ml-1" :id="`asc${sub.id}`" hidden @click="esub_disable(sub.id)">
+                            <i class="material-icons">clear</i>
+                          </button>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>
@@ -271,29 +413,95 @@
                 <span class="font-weight-bolder">Sub Total = </span> <span>GHS {{formatPrice(object.asset_total)}}</span>
               </div>
             </div>
-            <!--<div class="tab-pane fade" id="about" role="tabpanel" aria-labelledby="about-tab">-->
-            <!--<div class="card-body">-->
-            <!--<div class="list-group" :key="imprest.id" v-for="imprest in object.imprests">-->
-            <!--<div class="list-group-item">-->
-            <!--<div class="row">-->
-            <!--<div class="col-md-7">{{imprest.imprest.item_name}}</div>-->
-            <!--<div class="col-md-5" align="right">-->
-            <!--<d-row>-->
-            <!--<div class="col-md-7">-->
-            <!--<input type="text" class="form-control">-->
-            <!--</div>-->
-            <!--<div class="col-md-5">-->
-            <!--<button class="btn mr-1 small btn-sm btn-primary"><span class="material-icons small">create</span></button>-->
-            <!--<button class="btn mr-1 small btn-sm btn-primary"><span class="material-icons small">create</span></button>-->
-            <!--<button class="btn small btn-sm btn-primary"><span class="material-icons small">create</span></button>-->
-            <!--</div>-->
-            <!--</d-row>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
+            <div class="tab-pane fade" id="about" role="tabpanel" aria-labelledby="about-tab">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="mma">Motorbike Maintenance Allowance</label>
+                      <input type="number" id="mma" v-model="object.motor_maintenance" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="bma">Bicycle Maintenance Allowance</label>
+                      <input type="number" id="bma" v-model="object.bic_maintenance" class="form-control">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="ta">Training Allowance</label>
+                      <input type="number" id="ta" v-model="object.training_allowance" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="aa">Acting Allowance</label>
+                      <input type="number" id="aa" v-model="object.acting_allowance" class="form-control">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="ds">Driver Subsidy</label>
+                      <input type="number" id="ds" v-model="object.driver_allowance" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="ea">Entertainment Allowance</label>
+                      <input type="number" id="ea" v-model="object.entertain_allowance" class="form-control">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="dga">Disability Guide Allowance</label>
+                      <input type="number" id="dga" v-model="object.disability_allowance" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="oa">Overtime Allowance</label>
+                      <input type="number" id="oa" v-model="object.overtime_allowance" class="form-control">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="tsa">Tools Allowance</label>
+                      <input type="number" id="tsa" v-model="object.tools_allowance" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="ua">Utility Allowance</label>
+                      <input type="number" id="ua" v-model="object.utility_allowance" class="form-control">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="ca">Cashier Allowance</label>
+                      <input type="number" id="ca" v-model="object.cashier_allowance" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="lsa">Long Service Awards</label>
+                      <input type="number" id="lsa" v-model="object.long_service_awards" class="form-control">
+                    </div>
+                  </div>
+                </div>
+                <button class="btn-block btn btn-sm btn-info" :disabled="loading || object.status === 'Completed'" @click="allowances(object.id)">Save</button>
+              </div>
+            </div>
           </div>
           <div class="card-footer" >
             <div class="row">
@@ -329,10 +537,201 @@
         pc: 0,
         at: 0,
         tt: 0,
+        nep: 0,
+        ep: 0,
+        temp: 0,
+        pt: 0,
+        nabco: 0,
+        gratuity: 0,
+        lsa: 0,
+        compensate: 0,
         // unit_price: '',
       };
     },
     methods: {
+      isub_enable(subid){
+        document.getElementById(`iq${subid}`).disabled = false;
+        document.getElementById(`iup${subid}`).disabled = false;
+        document.getElementById(`ise${subid}`).hidden = true;
+        document.getElementById(`iss${subid}`).hidden = false;
+        document.getElementById(`isc${subid}`).hidden = false;
+      },
+      isub_disable(subid){
+        document.getElementById(`iq${subid}`).disabled = true;
+        document.getElementById(`iup${subid}`).disabled = true;
+        document.getElementById(`ise${subid}`).hidden = false;
+        document.getElementById(`iss${subid}`).hidden = true;
+        document.getElementById(`isc${subid}`).hidden = true;
+      },
+      isub_save(subid, ib){
+        const quantity = document.getElementById(`iq${subid}`).value;
+        const price = document.getElementById(`iup${subid}`).value;
+        if(quantity && price > 0){
+          this.loading = true;
+          axios.post(`${config.apiUrl}/budget/bsip/${ib}/${subid}/`, {
+            quantity: quantity,
+            price: price,
+          }, {
+            headers: {
+              Authorization: `JWT ${config.get_token()}`,
+            }
+          }).then((response) => {
+            this.loading = false;
+            console.log(response);
+            this.$noty.success('Sub Item Price recorded');
+            this.isub_disable(subid);
+            this.details();
+          }).catch(({response}) => {
+            this.loading = false;
+            console.log(response);
+            const errors = response.data;
+            if(response.status === 401){
+              this.$noty.error(`Oops! Your session has expired.`);
+              localStorage.removeItem('auth');
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              this.$router.push('/login');
+            }else{
+              this.$noty.error(`Oops! ${errors.detail}`);
+            }
+          })
+        }
+      },
+      com_enable(eid){
+        document.getElementById(`cmb${eid}`).disabled = false;
+        document.getElementById(`cpb${eid}`).disabled = false;
+        document.getElementById(`ce${eid}`).hidden = true;
+        document.getElementById(`cs${eid}`).hidden = false;
+        document.getElementById(`cc${eid}`).hidden = false;
+      },
+      com_disable(eid){
+        document.getElementById(`cmb${eid}`).disabled = true;
+        document.getElementById(`cpb${eid}`).disabled = true;
+        document.getElementById(`ce${eid}`).hidden = false;
+        document.getElementById(`cs${eid}`).hidden = true;
+        document.getElementById(`cc${eid}`).hidden = true;
+      },
+      com_save(eid){
+        const monthly = document.getElementById(`cmb${eid}`).value;
+        const yearly = document.getElementById(`cpb${eid}`).value;
+        if(monthly > 0 && yearly > 0){
+          this.loading = true;
+          axios.post(`${config.apiUrl}/budget/bcs/${eid}/`, {
+            monthly: monthly,
+            yearly: yearly
+          }, {
+            headers: {
+              Authorization: `JWT ${config.get_token()}`,
+            }
+          }).then((response) => {
+            this.loading = false;
+            console.log(response);
+            this.$noty.success('Compensation recorded');
+            this.com_disable(eid);
+            this.details();
+          }).catch(({response}) => {
+            this.loading = false;
+            console.log(response);
+            const errors = response.data;
+            if(response.status === 401){
+              this.$noty.error(`Oops! Your session has expired.`);
+              localStorage.removeItem('auth');
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              this.$router.push('/login');
+            }else{
+              this.$noty.error(`Oops! ${errors.detail}`);
+            }
+          })
+        }
+      },
+      esub_enable(aid){
+        document.getElementById(`aq${aid}`).disabled = false;
+        document.getElementById(`aup${aid}`).disabled = false;
+        document.getElementById(`ase${aid}`).hidden = true;
+        document.getElementById(`ass${aid}`).hidden = false;
+        document.getElementById(`asc${aid}`).hidden = false;
+      },
+      esub_disable(aid){
+        document.getElementById(`aq${aid}`).disabled = true;
+        document.getElementById(`aup${aid}`).disabled = true;
+        document.getElementById(`ase${aid}`).hidden = false;
+        document.getElementById(`ass${aid}`).hidden = true;
+        document.getElementById(`asc${aid}`).hidden = true;
+      },
+      esub_save(aid, ab){
+        const quantity = document.getElementById(`aq${aid}`).value;
+        const price = document.getElementById(`aup${aid}`).value;
+        if(quantity && price > 0){
+          this.loading = true;
+          axios.post(`${config.apiUrl}/budget/bsap/${ab}/${aid}/`, {
+            quantity: quantity,
+            price: price,
+          }, {
+            headers: {
+              Authorization: `JWT ${config.get_token()}`,
+            }
+          }).then((response) => {
+            this.loading = false;
+            console.log(response);
+            this.$noty.success('Sub asset price recorded');
+            this.esub_disable(aid);
+            this.details();
+          }).catch(({response}) => {
+            this.loading = false;
+            console.log(response);
+            const errors = response.data;
+            if(response.status === 401){
+              this.$noty.error(`Oops! Your session has expired.`);
+              localStorage.removeItem('auth');
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              this.$router.push('/login');
+            }else{
+              this.$noty.error(`Oops! ${errors.detail}`);
+            }
+          })
+        }
+      },
+      allowances(uid){
+        this.loading = true;
+        axios.post(`${config.apiUrl}/budget/ba/${uid}/`, {
+          mm: this.object.motor_maintenance,
+          aa: this.object.acting_allowance,
+          bm: this.object.bic_maintenance,
+          ta: this.object.training_allowance,
+          da: this.object.driver_allowance,
+          ea: this.object.entertain_allowance,
+          dda: this.object.disability_allowance,
+          oa: this.object.overtime_allowance,
+          tta: this.object.tools_allowance,
+          ua: this.object.utility_allowance,
+          ca: this.object.cashier_allowance,
+          lsa: this.object.long_service_awards
+        }, {
+          headers: {
+            Authorization: `JWT ${config.get_token()}`
+          }
+        }).then((response) => {
+          this.loading = false;
+          console.log(response);
+          this.$noty.success('Allowances recorded');
+          this.details();
+        }).catch(({response}) => {
+          this.loading = false;
+          console.log(response);
+          const errors = response.data;
+          if(response.status === 401){
+            this.$noty.error(`Oops! Your session has expired.`);
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            this.$router.push('/login');
+          }else{
+            this.$noty.error(`Oops! ${errors.detail}`);
+          }
+        })
+      },
       formatPrice(value) {
         let val = (value/1).toFixed(2).replace(',', '.');
         return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
@@ -343,6 +742,7 @@
         this.cb = this.object.consolidated_basic_salary;
         this.allawa = this.object.allowances;
         this.object.items.forEach(item => {
+          console.log(item.total_amount);
           this.gst = this.gst + Number(item.total_amount);
         });
 
@@ -360,8 +760,24 @@
             Authorization: `JWT ${config.get_token()}`,
           },
         }).then((response) => {
-          this.object = response.data;
-          console.log(response);
+          const results = response.data;
+          this.object = results.object;
+          this.gst = results.goods_services_total;
+          this.at = results.asset_total;
+          this.nep = results.non_mgt;
+          this.ep = results.mgt;
+          this.temp = results.temporary;
+          this.contract = results.contract;
+          this.pt = results.part_time;
+          this.nabco = results.nabco;
+          this.ssf = results.ssf;
+          this.gratuity = results.gratuity;
+          this.pc = results.pension_cost;
+          this.lsa = results.lsa;
+          this.allawa = results.allowances;
+          this.compensate = results.compensate;
+          this.tt = results.budget_total;
+          console.log(response.data);
           this.$noty.success('Everything looks great');
         }).catch(({response}) => {
           console.log(response);
@@ -603,9 +1019,10 @@
           }
         })
       },
-      complete(id) {
+      complete() {
         this.loading = true;
-        axios.get(`${config.apiUrl}/budget/cub/${id}/`, {
+        const slug = this.$route.params.unit_id;
+        axios.post(`${config.apiUrl}/budget/ubd/${slug}/`, {}, {
           headers: {
             Authorization: `JWT ${config.get_token()}`,
           },
@@ -638,7 +1055,7 @@
     },
     watch: {
       object() {
-        this.totals();
+        // this.totals();
         // edit_btn = document.getElementById('id_edit');
       },
     },

@@ -52,7 +52,7 @@
                         </d-col>
                         <d-col md="6">
                           <label for="id_role">User Role</label>
-                          <select name="role" v-model="role" id="id_role" class="form-control">
+                          <select name="role" v-model="role" id="id_role" class="custom-select">
                             <option value="">Choose...</option>
                             <option value="AD">Administrator</option>
                             <option value="BO">Budget Officer</option>
@@ -68,7 +68,7 @@
 
                       <div class="form-group">
                         <label for="id_division">Division</label>
-                        <select class="form-control" v-model="division" id="id_division">
+                        <select class="custom-select" v-model="division" id="id_division">
                           <option value="">Choose...</option>
                           <option :key="div.id" v-for="div in divisions" :value="`${div.id}`">{{div.name}}</option>
                         </select>
@@ -77,14 +77,14 @@
                       <d-form-row>
                         <d-col md="6" class="form-group">
                           <label for="id_depart">Department</label>
-                          <select name="depart" v-model="depart" id="id_depart" class="form-control">
+                          <select name="depart" v-model="depart" id="id_depart" class="custom-select">
                             <option value="">Choose...</option>
                             <option :key="dep.id" v-for="dep in departs.departments" :value="`${dep.id}`">{{dep.name}}</option>
                           </select>
                         </d-col>
                         <d-col md="6">
                           <label for="id_unit">Unit</label>
-                          <select name="unit" v-model="unit" id="id_unit" class="form-control">
+                          <select name="unit" v-model="unit" id="id_unit" class="custom-select">
                             <option value="">Choose...</option>
                             <option :key="un.id" v-for="un in units.units" :value="`${un.id}`">{{un.unit_name}}</option>
                           </select>
@@ -174,7 +174,7 @@ export default {
         ).then((response) => {
           this.formloading = false;
           console.log(response);
-          this.$noty.success('New user has been created successfuly');
+          this.$noty.success('New user has been created successfully');
           this.$router.push('/users');
         }).catch(({ response }) => {
           this.formloading = false;

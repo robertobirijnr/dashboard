@@ -32,7 +32,7 @@
                             <input type="text" v-model="unit_name" placeholder="Enter Unit Name" class="form-control">
                         </td>
                         <td>
-                            <select name="depart" v-model="depart" class="form-control">
+                            <select name="depart" v-model="depart" class="custom-select">
                                 <option value="">Choose...</option>
                                 <option :key="dpt.id" v-for="dpt in departs" :value="`${dpt.id}`">{{dpt.name}}</option>
                             </select>

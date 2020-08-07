@@ -41,12 +41,12 @@
 
    <d-row>
       <!-- Users Overview -->
-      <d-col lg="4" md="6" sm="12" class="mb-4 pl-5">
+      <d-col lg="6" md="6" sm="12">
          <Summary />
       </d-col>
 
       <!-- Users by Device (lite) -->
-      <d-col lg="6" md="6" sm="12" class="mb-4 pl-5">
+      <d-col lg="6" md="6" sm="12">
         <barChart/>
       </d-col>
     </d-row>

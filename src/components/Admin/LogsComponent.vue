@@ -25,7 +25,7 @@
                 </thead>
                 <tbody>
                 <tr :key="object.id" v-for="object in object_list">
-                  <td><router-link :to="{name: 'update-user', 'params': {'userId': object.created_by.id}}">{{object.created_by.staff_id}}</router-link></td>
+                  <td><router-link :to="{name: 'update-user', 'params': {'userId': object.created_by.slug}}">{{object.created_by.staff_id}}</router-link></td>
                   <td>{{object.activity_id}}</td>
                   <td>{{object.model}}</td>
                   <td>{{object.model_id}}</td>

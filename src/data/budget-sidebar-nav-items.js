@@ -39,11 +39,18 @@ export default function () {
         name: 'implementations',
       },
     },
+    // {
+    //   title: 'Requisitions',
+    //   htmlBefore: '<i class="material-icons">emoji_people</i>',
+    //   to: {
+    //     name: 'requisitions',
+    //   },
+    // },
     {
-      title: 'Requisitions',
+      title: 'Reports',
       htmlBefore: '<i class="material-icons">emoji_people</i>',
       to: {
-        name: 'requisitions',
+        name: 'budget-reports',
       },
     },
     ];
@@ -69,12 +76,12 @@ export default function () {
       name: 'implementations',
     },
   },
-  {
-    title: 'Requisitions',
-    htmlBefore: '<i class="material-icons">emoji_people</i>',
-    to: {
-      name: 'requisitions',
-    },
-  },
+  // {
+  //   title: 'Requisitions',
+  //   htmlBefore: '<i class="material-icons">emoji_people</i>',
+  //   to: {
+  //     name: 'requisitions',
+  //   },
+  // },
   ];
 }

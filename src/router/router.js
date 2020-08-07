@@ -28,6 +28,21 @@ const router = new Router({
       name: 'Login',
       component: () => import('../views/Auth/Login.vue'),
     },
+    {
+      path: '/confirm-email',
+      name: 'confirm-email',
+      component: () => import('../views/Auth/confirmEmail.vue'),
+    },
+    {
+      path: '/reset-password/:slug',
+      name: 'reset-password',
+      component: () => import('../views/Auth/resetPassword.vue'),
+    },
+    {
+      path: '/email-success/:slug',
+      name: 'email-success',
+      component: () => import('../views/Auth/confirmToken.vue'),
+    },
     // {
     //   path: '/department',
     //   name: 'department',
@@ -69,6 +84,22 @@ const router = new Router({
       path: '/budget-dashboard',
       name: 'budget-dashboard',
       component: () => import('../views/Budget/Dashboard.vue'),
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/budget-reports',
+      name: 'budget-reports',
+      component: () => import('../views/Budget/reports.vue'),
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/report-details/:slug',
+      name: 'report-details',
+      component: () => import('../views/Budget/report_details.vue'),
       meta: {
         requiresAuth: true,
       },

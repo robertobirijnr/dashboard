@@ -43,13 +43,13 @@ export default function () {
         name: 'unit',
       },
     },
-    {
-      title: 'Requisitions',
-      htmlBefore: '<i class="material-icons">emoji_people</i>',
-      to: {
-        name: 'admin-requisitions',
-      },
-    },
+    // {
+    //   title: 'Requisitions',
+    //   htmlBefore: '<i class="material-icons">emoji_people</i>',
+    //   to: {
+    //     name: 'admin-requisitions',
+    //   },
+    // },
     {
       title: 'Activity Logs',
       htmlBefore: '<i class="material-icons">vertical_split</i>',

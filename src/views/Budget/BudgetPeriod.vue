@@ -26,7 +26,13 @@
                     </div>
                     <div class="modal-body">
                       <div class="form-group">
-                        <input type="date" v-model="start_date" placeholder="Enter unit code" class="form-control" />
+                        <label for="id_start">Start Date</label>
+                        <input type="date" id="id_start" v-model="start_date" placeholder="Enter unit code" class="form-control" />
+                      </div>
+
+                      <div class="form-group">
+                        <label for="id_dead">Submission Deadline</label>
+                        <input type="date" id="id_dead" v-model="deadline" placeholder="Enter unit code" class="form-control" />
                       </div>
 
                     </div>
@@ -46,7 +52,7 @@
               <table class="table mb-0">
               <thead class="bg-light">
                 <tr>
-                  <th scope="col" class="border-0">#</th>
+                  <th scope="col" class="border-0">Period</th>
                   <!--<th scope="col" class="border-0">Period</th>-->
                   <th scope="col" class="border-0">Start Date</th>
                   <th scope="col" class="border-0">End Date</th>
@@ -56,13 +62,13 @@
               </thead>
               <tbody :key="object.id" v-for="object in object_list">
                 <tr>
-                  <td>{{object.budget_period_id}}</td>
+                  <td>{{object.period}}</td>
                   <!--<td>{{object.period}}</td>-->
                   <td>{{object.start_date}}</td>
                   <td>{{object.end_date}}</td>
                   <td>{{object.status}}</td>
                   <td>
-                    <router-link :to="{name: 'period-details', params: {period_id: object.budget_period_id}}" class="btn btn-sm btn-primary mr-1">
+                    <router-link :to="{name: 'period-details', params: {period_id: object.slug}}" class="btn btn-sm btn-primary mr-1">
                       Details
                     </router-link>
                     <router-link :hidden="userRole === 'UU'" :to="{name: 'budget_summary', params: {period_id: object.budget_period_id}}" class="btn btn-sm btn-primary">
@@ -93,6 +99,7 @@ export default {
       object_list: {},
       loading: false,
       start_date: '',
+      deadline: '',
     };
   },
   computed: {
@@ -102,10 +109,11 @@ export default {
   },
   methods: {
     new_period(){
-      if(this.start_date){
+      if(this.start_date && this.deadline){
         this.loading = true;
         axios.post(`${config.apiUrl}/budget/nbp/`, {
           start_date: this.start_date,
+          deadline: this.deadline,
         }, {
           headers: {
             Authorization: `JWT ${config.get_token()}`
@@ -114,12 +122,16 @@ export default {
           this.loading = false;
           console.log(response);
           $('#newPeriod').modal('hide');
+          this.start_date = '';
+          this.deadline = '';
           this.$noty.success("Great! New Budget Period added");
           this.periods();
           // this.$router.push('/budget-periods');
         }).catch((response) => {
-          this.laoding = false;
+          this.loading = false;
           console.log(response);
+          this.start_date = '';
+          this.deadline = '';
           this.$noty.error("Oops! Something went terribly wrong!");
         });
       }

@@ -26,7 +26,7 @@
                 <tbody>
                     <tr>
                         <td>
-                          <select v-model="div" class="form-control">
+                          <select v-model="div" class="custom-select">
                             <option value="">Choose...</option>
                             <option :key="div.id" v-for="div in divisions" :value="`${div.id}`">{{div.name}}</option>
                           </select>
@@ -50,8 +50,8 @@
                         <td>{{object.abbreviation}}</td>
                         <td>{{object.name}}</td>
                         <td>
-                            <router-link :to="`/department-detail/${object.depart_id}`" class="btn btn-sm btn-primary">
-                                Details
+                            <router-link :to="`/department-detail/${object.slug}`" class="btn btn-sm btn-primary">
+                              <i class="fa fa-tasks" aria-hidden="true"></i>
                             </router-link>
                         </td>
                     </tr>

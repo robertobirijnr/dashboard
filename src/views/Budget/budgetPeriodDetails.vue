@@ -7,92 +7,94 @@
         <h3 class="page-title">{{object.period}} Budget Details</h3>
       </div>
     </div>
-
-    <!-- Default Light Table -->
-    <div class="row">
-      <!--{{unit_budget.status}}-->
-      <div class="col-md-4">
-        <div class="card">
-          <!--<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop">-->
-            <!--Launch static backdrop modal-->
-          <!--</button>-->
-          <div class="modal fade" id="confirmModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-                <!--<div class="modal-header">-->
-                  <!--<h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>-->
-                  <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-                    <!--<span aria-hidden="true">&times;</span>-->
-                  <!--</button>-->
-                <!--</div>-->
-                <div class="modal-body">
-                  <i class="fa fa-spinner fa-spin" style="font-size:24px; color: crimson"></i> Please wait whiles your budget is being confirmed. This may take a minute or more
+    <div class="row mb-3">
+      <div class="col-md-12">
+        <div class="card bg-warning text-white">
+          <div class="card-header">
+            <div class="row">
+              <div class="col" style="border-right: 2px solid black">
+                <div class="row">
+                  <div class="col">Start Date</div>
+                  <div class="col">{{object.start_date}}</div>
                 </div>
-                <!--<div class="modal-footer">-->
-                  <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
-                  <!--<button type="button" class="btn btn-primary">Understood</button>-->
-                <!--</div>-->
+              </div>
+              <div class="col" style="border-right: 2px solid black">
+                <div class="row">
+                  <div class="col">End Date</div>
+                  <div class="col">{{object.end_date}}</div>
+                </div>
+              </div>
+              <div class="col" style="border-right: 2px solid black">
+                <div class="row">
+                  <div class="col">Deadline</div>
+                  <div class="col">{{object.deadline}}</div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="row">
+                  <div class="col">Status</div>
+                  <div class="col">{{object.status}}</div>
+                </div>
               </div>
             </div>
           </div>
-              <div class="card-body">
-                <div class="list-group-flush">
-                  <div class="list-group-item">
-                    <div class="row">
-                      <div class="col">Start Date</div>
-                      <div class="col" align="right">{{object.start_date}}</div>
-                    </div>
-                  </div>
-                  <div class="list-group-item" v-if="object.period === 'Quarterly'">
-                    <div class="row">
-                      <div class="col">Quarter</div>
-                      <div class="col" align="right">{{object.quarter}}</div>
-                    </div>
-                  </div>
-                  <div class="list-group-item" v-else-if="object.period === 'Half Year'">
-                    <div class="row">
-                      <div class="col">Half Year</div>
-                      <div class="col" align="right">{{object.half}}</div>
-                    </div>
-                  </div>
-                  <div class="list-group-item">
-                    <div class="row">
-                      <div class="col">End Date</div>
-                      <div class="col" align="right">{{object.end_date}}</div>
-                    </div>
-                  </div>
-                  <div class="list-group-item">
-                    <div class="row">
-                      <div class="col">Status</div>
-                      <div class="col" align="right">{{object.status}}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+        </div>
       </div>
-      <div class="col-md-8">
+
+
+    </div>
+    <!-- Default Light Table -->
+    <div class="row">
+      <div class="modal fade" id="confirmModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <!--<div class="modal-header">-->
+            <!--<h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>-->
+            <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+            <!--<span aria-hidden="true">&times;</span>-->
+            <!--</button>-->
+            <!--</div>-->
+            <div class="modal-body">
+              <i class="fa fa-spinner fa-spin" style="font-size:24px; color: crimson"></i> Please wait whiles your budget is being confirmed. This may take a minute or more
+            </div>
+            <!--<div class="modal-footer">-->
+            <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+            <!--<button type="button" class="btn btn-primary">Understood</button>-->
+            <!--</div>-->
+          </div>
+        </div>
+      </div>
+      <!--{{unit_budget.status}}-->
+      <div class="col-md-12">
         <div class="card" v-if="userRole === 'BO'">
           <div class="card-header">
             <div class="row">
               <div class="col">Units Budgets</div>
               <div class="col" align="right">
-                <button @click="open_period(object.id)" :disabled="loading" class="btn btn-sm btn-success" v-if="object.status === 'Close'">Open</button>
-                <button class="btn btn-sm btn-warning" :disabled="loading" @click="close_period(object.id)" v-else>Close</button>
+                <button @click="open_period(object.id)" title="Click to open this budget period for submissions" :disabled="loading" class="btn btn-sm btn-success" v-if="object.status === 'Close'">Open</button>
+                <button class="btn btn-sm btn-warning" title="Click to close this budget period" :disabled="loading" @click="close_period(object.id)" v-else>Close</button>
               </div>
             </div>
           </div>
           <div class="card-body ">
             <div v-if="object.unit_budgets.length">
               <div class="list-group-flush">
-                <router-link  :key="unit.id" v-for="unit in object.unit_budgets" :to="{name: 'unitBudget-details', params: {unit_id: unit.unit_budget_id}}" class="list-group-item bg-white text-black list-group-item-action flex-column align-items-start">
-                  <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{unit.unit_name}}</h5>
-                    <!-- <small class="text-muted">3 days ago</small> -->
+                <div  :key="unit.id" v-for="unit in object.unit_budgets" class="list-group-item bg-white text-black list-group-item-action flex-column align-items-start">
+                  <div class="row">
+                    <div class="col-md-10">
+                      <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{unit.unit_name}}</h5>
+                        <!-- <small class="text-muted">3 days ago</small> -->
+                      </div>
+                      <p class="mb-1 text-black">{{unit.status}}</p>
+                    </div>
+                    <div class="col-md-2 mt-2">
+                      <router-link :to="{name: 'unitBudget-details', params: {unit_id: unit.slug}}" class="btn btn-primary btn-sm">View</router-link>
+                    </div>
                   </div>
-                  <p class="mb-1 text-black">{{unit.status}}</p>
+
                   <!-- <small class="text-muted">Donec id elit non mi porta.</small> -->
-                </router-link>
+                </div>
               </div>
             </div>
             <div v-else>
@@ -100,11 +102,11 @@
             </div>
           </div>
         </div>
-        <div class="card" v-if="userRole === 'UU' && unit_budget.status === 'Pending'">
+        <div class="card" v-if="userRole === 'UU' && unit_budget.status === 'Pending' || unit_budget.status === 'Confirmed'">
           <div class="card-header">
             <div class="row">
               <div class="col-md-6">{{unit_budget.unit_name}} Unit Budget </div>
-              <div class="col-md-6" align="right">
+              <div class="col-md-6" align="right" v-if="unit_budget.status !== 'Confirmed'">
                 <button @click="confirm_budget(unit_budget.id)" id="id_confirm" :disabled="!unit_budget.items.length || !unit_budget.assets.length" class="btn btn-icon btn-xs btn-success" title="Confirm your selections">
                   <span v-if="!loading">Confirm</span><span v-else>Confirming...</span>
                 </button>
@@ -115,25 +117,34 @@
           <div class="card-body">
             <ul class="nav nav-tabs" id="myTabs" role="tablist">
               <li class="nav-item">
-                <a class="nav-link active" id="home1-tab" data-toggle="tab" href="#home1" role="tab" aria-controls="home1" aria-selected="true">Goods and Services</a>
+                <a class="nav-link active" id="home1-tab" @click="clear()" data-toggle="tab" href="#home1" role="tab" aria-controls="home1" aria-selected="true">Goods and Services</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" id="profile1-tab" data-toggle="tab" href="#profile1" role="tab" aria-controls="profile1" aria-selected="false">Compensations</a>
+                <a class="nav-link" id="profile1-tab" @click="clear()" data-toggle="tab" href="#profile1" role="tab" aria-controls="profile1" aria-selected="false">Compensations</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" id="contact1-tab" data-toggle="tab" href="#contact1" role="tab" aria-controls="contact1" aria-selected="false">Assets</a>
+                <a class="nav-link" id="contact1-tab" @click="clear()" data-toggle="tab" href="#contact1" role="tab" aria-controls="contact1" aria-selected="false">Assets</a>
               </li>
               <!--<li class="nav-item">-->
-                <!--<a class="nav-link" id="about1-tab" data-toggle="tab" href="#about1" role="tab" aria-controls="about1" aria-selected="false">Imprest</a>-->
+              <!--<a class="nav-link" id="about1-tab" data-toggle="tab" href="#about1" role="tab" aria-controls="about1" aria-selected="false">Imprest</a>-->
               <!--</li>-->
             </ul>
             <div class="tab-content" id="myTabsContent">
               <div class="tab-pane fade show active mt-2" id="home1" role="tabpanel" aria-labelledby="home1-tab">
                 <div class="row">
-                  <div class="col-md-12">
-                        <span :key="item.id" v-for="item in unit_budget.items" style="margin-right:5px">
-                            <span class="badge badge-primary" :title="`${item.item.category_name}`" >{{item.item.item_name}} <span v-if="item.item.item_type === 'Service'">(GHS {{formatPrice(item.total_amount)}})</span><span v-else>({{item.quantity}})</span> <span class="material-icons small" style="cursor: pointer" @click="remove_budget_item(unit_budget.id, item.item.id)" >clear</span></span>
-                        </span>
+                  <div class="col-md-6">
+                    <i class="text-black-50 small">Items: </i><span :key="item.id" v-for="item in unit_budget.items" style="margin-right:5px">
+                      <span class="badge badge-primary" :title="`${item.item.category_name}`" >{{item.item.item_name}} <span v-if="item.item.item_type === 'Service'">(GHS {{formatPrice(item.total_amount)}})</span><span v-else-if="item.subs.length > 0"></span><span v-else>({{item.quantity}})</span> <span class="material-icons small" style="cursor: pointer" @click="remove_budget_item(unit_budget.id, item.item.id)" >clear</span></span>
+                    </span>
+                  </div>
+                  <div class="col-md-6">
+                    <i class="text-black-50 small">Subs: </i>
+                    <span :key="item.id" v-for="item in unit_budget.items" style="margin-right: 5px;">
+
+                      <span :key="sub.id" v-for="sub in item.subs">
+                        <span class="badge badge-info" :title="sub.item_name">{{sub.sub_item.name}} ({{sub.quantity}}) <span @click="remove_budget_sub('gs', sub.id)" class="material-icons small" style="cursor: pointer">clear</span></span>
+                      </span>
+                    </span>
                   </div>
                 </div>
                 <hr>
@@ -145,23 +156,30 @@
                     </div>
                     <div class="form-group">
                       <label>Category</label>
-                      <select name="category" v-model="category" id="id_category" class="form-control">
+                      <select name="category" v-model="category" id="id_category" class="custom-select">
                         <option value="">Select Category</option>
                         <option v-for="category in categories" :key="category.id" :value="`${category.id}`" >{{category.name}}</option>
                       </select>
                     </div>
                     <div class="form-group">
                       <label>Items</label>
-                      <select name="item" v-model="item" id="id_item" class="form-control">
+                      <select name="item" v-model="item" id="id_item" class="custom-select">
                         <option value="">Select Item</option>
                         <option v-for="item in items" :key="item.id" :value="`${item.id}`">{{item.item_name}}</option>
+                      </select>
+                    </div>
+                    <div class="form-group" :hidden="!sub_items.length">
+                      <label>Sub Items</label>
+                      <select name="sub" id="sub" v-model="sub_item" class="custom-select">
+                        <option value="">Select Sub Item</option>
+                        <option :key="sub.id" v-for="sub in sub_items" :value="`${sub.id}`">{{sub.name}}</option>
                       </select>
                     </div>
                     <div class="form-group" :hidden="item_obj.item_type === 'Service'">
                       <label>Quantity</label>
                       <input type="number" name="quantity" v-model="quantity" class="form-control">
                     </div>
-                    <div class="form-group" :hidden="item_obj.item_type === 'Good'">
+                    <div class="form-group" :hidden="item_obj.item_type === 'Good' || sub_items.length > 0">
                       <label>Amount</label>
                       <input type="number" name="amount" :disabled="item_obj.item_type === 'Good' || item === ''" v-model="amount" class="form-control">
                     </div>
@@ -175,7 +193,7 @@
                 <div class="row">
                   <div class="col-md-12">
                         <span :key="salary.id" v-for="salary in unit_budget.employees_compensations" style="margin-right:5px">
-                            <span class="badge badge-primary" :title="`GHS ${formatPrice(salary.period_basic)}`" >{{salary.first_name}} {{salary.last_name}} (GHS {{formatPrice(salary.monthly_basic)}}) <span @click="remove_budget_com(unit_budget.id, salary.id)" class="material-icons small" style="cursor: pointer">clear</span></span>
+                            <span class="badge badge-primary" :title="`GHS ${formatPrice(salary.period_basic)}`" >{{salary.first_name}} {{salary.last_name}} <span v-if="salary.employee_type === 'P'">(GHS {{formatPrice(salary.monthly_basic)}})</span><span v-else>({{salary.employee_type_display}})</span> <span @click="remove_budget_com(unit_budget.id, salary.id)" class="material-icons small" style="cursor: pointer">clear</span></span>
                         </span>
                   </div>
                 </div>
@@ -192,17 +210,17 @@
                     </div>
                   </div>
                   <!--<div class="col">-->
-                    <!--<div class="form-group">-->
-                      <!--<label for="id_p1">Postion</label>-->
-                      <!--<select v-model="position" id="id_p1" class="custom-select">-->
-                        <!--<option value="">Choose...</option>-->
-                        <!--<option value="Office Manager">Office Manager</option>-->
-                        <!--<option value="Accounts Officer">Accounts Officer</option>-->
-                        <!--<option value="Tax Audit">Tax Audit</option>-->
-                        <!--<option value="Secretary">Secretary</option>-->
-                      <!--</select>-->
-                      <!--&lt;!&ndash;<input type="text" id="id_p1" v-model="number" class="form-control" placeholder="Pos">&ndash;&gt;-->
-                    <!--</div>-->
+                  <!--<div class="form-group">-->
+                  <!--<label for="id_p1">Postion</label>-->
+                  <!--<select v-model="position" id="id_p1" class="custom-select">-->
+                  <!--<option value="">Choose...</option>-->
+                  <!--<option value="Office Manager">Office Manager</option>-->
+                  <!--<option value="Accounts Officer">Accounts Officer</option>-->
+                  <!--<option value="Tax Audit">Tax Audit</option>-->
+                  <!--<option value="Secretary">Secretary</option>-->
+                  <!--</select>-->
+                  <!--&lt;!&ndash;<input type="text" id="id_p1" v-model="number" class="form-control" placeholder="Pos">&ndash;&gt;-->
+                  <!--</div>-->
                   <!--</div>-->
                 </div>
 
@@ -224,7 +242,7 @@
                   <div class="col">
                     <div class="form-group">
                       <label for="id_type1">Employee Type</label>
-                      <select v-model="em_type" id="id_type1" class="custom-select">
+                      <select v-model="em_type1" id="id_type1" class="custom-select">
                         <option value="">Choose...</option>
                         <option value="P">Permanent Staff</option>
                         <option value="C">Contract Staff</option>
@@ -234,6 +252,22 @@
                       </select>
                     </div>
                   </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="id_status1">Staff Status</label>
+                      <select v-model="status" id="id_status1" class="custom-select">
+                        <option value="">Choose...</option>
+                        <option value="At Post">At Post</option>
+                        <option value="On Leave">On Leave</option>
+                        <option value="On Paid Leave">On Paid Leave</option>
+                        <option value="About to Retire">About to Retire</option>
+                        <option value="Interdiction">Interdiction</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" id="id_rn1" hidden="hidden">
                   <div class="col">
                     <div class="form-group">
                       <label for="id_rank1">Rank</label>
@@ -261,9 +295,6 @@
                       </select>
                     </div>
                   </div>
-                </div>
-
-                <div class="row">
                   <div class="col">
                     <div class="form-group">
                       <label for="id_notch1">Notch</label>
@@ -279,22 +310,9 @@
                       </select>
                     </div>
                   </div>
-                  <div class="col">
-                    <div class="form-group">
-                      <label for="id_status1">Staff Status</label>
-                      <select v-model="status" id="id_status1" class="custom-select">
-                        <option value="">Choose...</option>
-                        <option value="At Post">At Post</option>
-                        <option value="On Leave">On Leave</option>
-                        <option value="On Paid Leave">On Paid Leave</option>
-                        <option value="About to Retire">About to Retire</option>
-                        <option value="Interdiction">Interdiction</option>
-                      </select>
-                    </div>
-                  </div>
                 </div>
 
-                <div class="row">
+                <div class="row" id="id_my1" hidden="hidden">
                   <div class="col">
                     <div class="form-group">
                       <label for="id_basic1">Monthly Basic Salary</label>
@@ -315,10 +333,17 @@
               </div>
               <div class="tab-pane fade mt-2" id="contact1" role="tabpanel" aria-labelledby="contact1-tab">
                 <div class="row">
-                  <div class="col-md-12">
-                        <span :key="asset.id" v-for="asset in unit_budget.assets" style="margin-right:5px">
-                            <span class="badge badge-primary">{{asset.asset.asset_name}} <span @click="remove_budget_asset(unit_budget.id, asset.id)" class="material-icons small" style="cursor: pointer">clear</span></span>
-                        </span>
+                  <div class="col-md-6">
+                    <i class="text-black-50 small">Assets: </i> <span :key="asset.id" v-for="asset in unit_budget.assets" style="margin-right:5px">
+                      <span v-if="asset.is_selected" class="badge badge-primary">{{asset.asset.asset_name}} <span @click="remove_budget_asset(unit_budget.id, asset.id)" class="material-icons small" style="cursor: pointer">clear</span></span>
+                    </span>
+                  </div>
+                  <div class="col-md-6">
+                    <i class="text-black-50 small">Subs: </i> <span :key="asset.id" v-for="asset in unit_budget.assets" style="margin-right:5px">
+                      <span :key="sub.id" v-for="sub in asset.subs">
+                        <span class="badge badge-info">{{sub.sub_asset.name}} ({{sub.quantity}}) <span @click="remove_budget_sub('a', sub.id)" class="material-icons small" style="cursor: pointer">clear</span></span>
+                      </span>
+                    </span>
                   </div>
                 </div>
                 <hr>
@@ -333,33 +358,44 @@
                     <option :key="asset.id" v-for="asset in assets" :value="asset.id">{{asset.asset_name}}</option>
                   </select>
                 </div>
+                <div class="form-group" v-if="sub_assets.length">
+                  <label>Select Sub Asset</label>
+                  <select v-model="sub_asset" class="custom-select">
+                    <option value="">Choose...</option>
+                    <option :key="sub.id" v-for="sub in sub_assets" :value="sub.id">{{sub.name}}</option>
+                  </select>
+                </div>
+                <div class="form-group" v-if="sub_assets.length">
+                  <label>Quantity</label>
+                  <input type="number" v-model="quantity" class="form-control">
+                </div>
                 <div class="form-group">
                   <button :disabled="formLoading" @click="new_budget_asset(unit_budget.id)" class="btn btn-sm btn-block btn-primary">Submit</button>
                 </div>
               </div>
               <!--<div class="tab-pane fade mt-2" id="about1" role="tabpanel" aria-labelledby="about1-tab">-->
-                <!--<div class="row">-->
-                  <!--<div class="col-md-12">-->
-                        <!--<span :key="item.id" v-for="item in unit_budget.imprests" style="margin-right:5px">-->
-                            <!--<span class="badge badge-primary">{{item.imprest.item_name}} <span @click="remove_budget_imprest(unit_budget.id, item.id)" class="material-icons small" style="cursor: pointer">clear</span></span>-->
-                        <!--</span>-->
-                  <!--</div>-->
-                <!--</div>-->
-                <!--<hr>-->
-                <!--<div class="mb-2">Any More?</div>-->
-                <!--<div class="errors text-danger small" v-if="errors">-->
-                  <!--{{errors.detail}}-->
-                <!--</div>-->
-                <!--<div class="form-group">-->
-                  <!--<label for="id_imprest1">Select Item</label>-->
-                  <!--<select id="id_imprest1" v-model="item" class="form-control">-->
-                    <!--<option value="">Choose...</option>-->
-                    <!--<option :key="item.id" v-for="item in imprests" :value="item.id">{{item.item_name}}</option>-->
-                  <!--</select>-->
-                <!--</div>-->
-                <!--<div class="form-group">-->
-                  <!--<button :disabled="formLoading" @click="new_budget_imprest(unit_budget.id)" class="btn btn-sm btn-block btn-primary">Submit</button>-->
-                <!--</div>-->
+              <!--<div class="row">-->
+              <!--<div class="col-md-12">-->
+              <!--<span :key="item.id" v-for="item in unit_budget.imprests" style="margin-right:5px">-->
+              <!--<span class="badge badge-primary">{{item.imprest.item_name}} <span @click="remove_budget_imprest(unit_budget.id, item.id)" class="material-icons small" style="cursor: pointer">clear</span></span>-->
+              <!--</span>-->
+              <!--</div>-->
+              <!--</div>-->
+              <!--<hr>-->
+              <!--<div class="mb-2">Any More?</div>-->
+              <!--<div class="errors text-danger small" v-if="errors">-->
+              <!--{{errors.detail}}-->
+              <!--</div>-->
+              <!--<div class="form-group">-->
+              <!--<label for="id_imprest1">Select Item</label>-->
+              <!--<select id="id_imprest1" v-model="item" class="form-control">-->
+              <!--<option value="">Choose...</option>-->
+              <!--<option :key="item.id" v-for="item in imprests" :value="item.id">{{item.item_name}}</option>-->
+              <!--</select>-->
+              <!--</div>-->
+              <!--<div class="form-group">-->
+              <!--<button :disabled="formLoading" @click="new_budget_imprest(unit_budget.id)" class="btn btn-sm btn-block btn-primary">Submit</button>-->
+              <!--</div>-->
               <!--</div>-->
             </div>
 
@@ -370,9 +406,9 @@
           <div class="card-body">
 
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-              <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Goods And Services</a>
-              <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Compensation</a>
-              <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Asset</a>
+              <a class="nav-item nav-link active" id="nav-home-tab" @click="clear()" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Goods And Services</a>
+              <a class="nav-item nav-link" id="nav-profile-tab" @click="clear()" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Compensation</a>
+              <a class="nav-item nav-link" id="nav-contact-tab" @click="clear()" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Asset</a>
               <!--<a class="nav-item nav-link" id="nav-about-tab" data-toggle="tab" href="#nav-about" role="tab" aria-controls="nav-about" aria-selected="false">Imprest</a>-->
             </div>
 
@@ -382,23 +418,30 @@
                 <span v-if="errors" class="mt-2 text-danger">{{errors.detail}}</span>
                 <div class="form-group">
                   <label >Category</label>
-                  <select name="category" v-model="category" id="id_cat" class="form-control">
+                  <select name="category" v-model="category" id="id_cat" class="custom-select">
                     <option value="">Select Category</option>
                     <option v-for="category in categories" :key="category.id" :value="`${category.id}`" >{{category.name}}</option>
                   </select>
                 </div>
                 <div class="form-group">
                   <label >Items</label>
-                  <select name="item" v-model="item" id="item1" class="form-control">
+                  <select name="item" v-model="item" id="item1" class="custom-select">
                     <option value="">Select Item</option>
                     <option v-for="item in items" :key="item.id" :value="`${item.id}`">{{item.item_name}}</option>
+                  </select>
+                </div>
+                <div class="form-group" :hidden="!sub_items.length">
+                  <label>Sub Items</label>
+                  <select name="sub" id="sub1" v-model="sub_item" class="custom-select">
+                    <option value="">Select Sub Item</option>
+                    <option :key="sub.id" v-for="sub in sub_items" :value="sub.id">{{sub.name}}</option>
                   </select>
                 </div>
                 <div class="form-group" :hidden="item_obj.item_type === 'Service'">
                   <label>Quantity</label>
                   <input type="number" name="quantity" :disabled="item_obj.item_type === 'Service'" v-model="quantity" class="form-control">
                 </div>
-                <div class="form-group" :hidden="item_obj.item_type === 'Good'">
+                <div class="form-group" :hidden="item_obj.item_type === 'Good' || sub_items.length > 0">
                   <label>Amount</label>
                   <input type="number" name="amount" :disabled="item_obj.item_type === 'Good' || item === ''" v-model="amount" class="form-control">
                 </div>
@@ -416,19 +459,6 @@
                       <input type="text" id="id_snb" v-model="number" class="form-control" placeholder="Staff Number">
                     </div>
                   </div>
-                  <!--<div class="col">-->
-                    <!--<div class="form-group">-->
-                      <!--<label for="id_p">Position</label>-->
-                      <!--<select v-model="position" id="id_p" class="form-control">-->
-                        <!--<option value="">Choose...</option>-->
-                        <!--<option value="Office Manager">Office Manager</option>-->
-                        <!--<option value="Accounts Officer">Accounts Officer</option>-->
-                        <!--<option value="Tax Audit">Tax Audit</option>-->
-                        <!--<option value="Secretary">Secretary</option>-->
-                      <!--</select>-->
-                      <!--&lt;!&ndash;<input type="text" id="id_p" v-model="position" class="form-control" placeholder="Position">&ndash;&gt;-->
-                    <!--</div>-->
-                  <!--</div>-->
                 </div>
 
                 <div class="row">
@@ -461,6 +491,22 @@
                   </div>
                   <div class="col">
                     <div class="form-group">
+                      <label for="id_status">Staff Status</label>
+                      <select v-model="status" id="id_status" class="custom-select">
+                        <option value="">Choose...</option>
+                        <option value="At Post">At Post</option>
+                        <option value="On Leave">On Leave</option>
+                        <option value="On Paid Leave">On Paid Leave</option>
+                        <option value="About to Retire">About to Retire</option>
+                        <option value="Interdiction">Interdiction</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" id="id_rn" hidden="hidden">
+                  <div class="col">
+                    <div class="form-group">
                       <label for="id_rank">Rank</label>
                       <select id="id_rank" v-model="rank" class="c_rank form-control">
                         <option value="">Choose...</option>
@@ -486,10 +532,6 @@
                       </select>
                     </div>
                   </div>
-                </div>
-
-
-                <div class="row">
                   <div class="col">
                     <div class="form-group">
                       <label for="id_notch">Notch</label>
@@ -505,22 +547,9 @@
                       </select>
                     </div>
                   </div>
-                  <div class="col">
-                    <div class="form-group">
-                      <label for="id_status">Staff Status</label>
-                      <select v-model="status" id="id_status" class="custom-select">
-                        <option value="">Choose...</option>
-                        <option value="At Post">At Post</option>
-                        <option value="On Leave">On Leave</option>
-                        <option value="On Paid Leave">On Paid Leave</option>
-                        <option value="About to Retire">About to Retire</option>
-                        <option value="Interdiction">Interdiction</option>
-                      </select>
-                    </div>
-                  </div>
                 </div>
 
-                <div class="row">
+                <div class="row" id="id_my" hidden="hidden">
                   <div class="col">
                     <div class="form-group">
                       <label for="id_basic">Monthly Basic Salary</label>
@@ -529,7 +558,7 @@
                   </div>
                   <div class="col">
                     <div class="form-group">
-                      <label for="id_period">{{object.period}} Basic Salary</label>
+                      <label for="id_period">Yearly Basic Salary</label>
                       <input type="text" disabled class="form-control c_period" id="id_period">
                     </div>
                   </div>
@@ -541,36 +570,47 @@
 
               </div>
               <div class="tab-pane fade pt-2" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
-                <span v-if="msg3" class="small text-warning">{{msg3}} <hr></span>
+                <span v-if="msg3" class="small text-warning">{{msg3}} </span><hr>
                 <span v-if="errors" class="mt-2 text-danger">{{errors.detail}}</span>
                 <div class="form-group">
                   <label for="id_asset">Select Asset</label>
-                  <select id="id_asset" v-model="asset" class="form-control">
+                  <select id="id_asset" v-model="asset" class="custom-select">
                     <option value="">Choose...</option>
                     <option :key="asset.id" v-for="asset in assets" :value="asset.id">{{asset.asset_name}}</option>
                   </select>
+                </div>
+                <div class="form-group" v-if="sub_assets.length">
+                  <label>Select Sub Asset</label>
+                  <select v-model="sub_asset" class="custom-select">
+                    <option value="">Choose...</option>
+                    <option :key="sub.id" v-for="sub in sub_assets" :value="sub.id">{{sub.name}}</option>
+                  </select>
+                </div>
+                <div class="form-group" v-if="sub_assets.length">
+                  <label>Quantity</label>
+                  <input type="number" v-model="quantity" class="form-control">
                 </div>
                 <div class="form-group">
                   <button :disabled="formLoading" @click="new_budget('a')" class="btn btn-sm btn-block btn-primary">Submit</button>
                 </div>
               </div>
               <!--<div class="tab-pane fade pt-2" id="nav-about" role="tabpanel" aria-labelledby="nav-about-tab">-->
-                <!--<div class="form-group">-->
-                  <!--<label for="id_im">Item</label>-->
-                  <!--<select v-model="item" id="id_im" class="custom-select">-->
-                    <!--<option value="">Choose...</option>-->
-                    <!--<option :key="imprest.id" v-for="imprest in imprests" :value="imprest.id">{{imprest.item_name}}</option>-->
-                  <!--</select>-->
-                <!--</div>-->
-                <!--<div class="form-group">-->
-                  <!--<button @click="new_budget('i')" :disabled="formLoading" class="btn btn-sm btn-block btn-primary">Submit</button>-->
-                <!--</div>-->
+              <!--<div class="form-group">-->
+              <!--<label for="id_im">Item</label>-->
+              <!--<select v-model="item" id="id_im" class="custom-select">-->
+              <!--<option value="">Choose...</option>-->
+              <!--<option :key="imprest.id" v-for="imprest in imprests" :value="imprest.id">{{imprest.item_name}}</option>-->
+              <!--</select>-->
+              <!--</div>-->
+              <!--<div class="form-group">-->
+              <!--<button @click="new_budget('i')" :disabled="formLoading" class="btn btn-sm btn-block btn-primary">Submit</button>-->
+              <!--</div>-->
               <!--</div>-->
             </div>
 
           </div>
         </div>
-        <div class="card" v-else-if="userRole === 'UU' && unit_budget.status === 'Confirmed'">
+        <div class="card" v-else-if="userRole === 'UU' && object.status === 'Deadline'">
           <div class="card-header">{{unit_budget.unit_name}} Budget Details</div>
           <div class="card-body">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -584,7 +624,7 @@
                 <a class="nav-link" id="contact2-tab" data-toggle="tab" href="#contact2" role="tab" aria-controls="contact2" aria-selected="false">Assets</a>
               </li>
               <!--<li class="nav-item">-->
-                <!--<a class="nav-link" id="about2-tab" data-toggle="tab" href="#about2" role="tab" aria-controls="about2" aria-selected="false">Imprests</a>-->
+              <!--<a class="nav-link" id="about2-tab" data-toggle="tab" href="#about2" role="tab" aria-controls="about2" aria-selected="false">Imprests</a>-->
               <!--</li>-->
             </ul>
             <div class="tab-content" id="myTabContent">
@@ -637,19 +677,19 @@
                 </div>
               </div>
               <div class="tab-pane fade" id="contact2" role="tabpanel" aria-labelledby="contact2-tab">
-                <div class="list-group" :key="asset.id" v-for="asset in unit_budget.assets">
-                  <div class="list-group-item">
+                <div class="list-group">
+                  <div class="list-group-item" :key="asset.id" v-for="asset in unit_budget.assets" v-if="asset.is_selected">
                     <div class="row">
-                      <div class="col-md-1"><input class="form-check-input" disabled type="checkbox" :checked="asset.is_selected" value="" id="defaultCheck1"></div>
+                      <!--<div class="col-md-1"><input class="form-check-input" disabled type="checkbox" :checked="asset.is_selected" value="" id="defaultCheck1"></div>-->
                       <div class="col">{{asset.asset.asset_name}}</div>
                     </div>
                   </div>
                 </div>
               </div>
               <!--<div class="tab-pane fade" id="about2" role="tabpanel" aria-labelledby="about2-tab">-->
-                <!--<div class="list-group" :key="item.id" v-for="item in unit_budget.imprests">-->
-                  <!--<div class="list-group-item">{{item.imprest.item_name}}</div>-->
-                <!--</div>-->
+              <!--<div class="list-group" :key="item.id" v-for="item in unit_budget.imprests">-->
+              <!--<div class="list-group-item">{{item.imprest.item_name}}</div>-->
+              <!--</div>-->
               <!--</div>-->
             </div>
 
@@ -669,7 +709,7 @@
                 <a class="nav-link" id="contact3-tab" data-toggle="tab" href="#contact3" role="tab" aria-controls="contact3" aria-selected="false">Assets</a>
               </li>
               <!--<li class="nav-item">-->
-                <!--<a class="nav-link" id="about2-tab" data-toggle="tab" href="#about2" role="tab" aria-controls="about2" aria-selected="false">Imprests</a>-->
+              <!--<a class="nav-link" id="about2-tab" data-toggle="tab" href="#about2" role="tab" aria-controls="about2" aria-selected="false">Imprests</a>-->
               <!--</li>-->
             </ul>
             <div class="tab-content" id="my-TabContent">
@@ -678,20 +718,60 @@
                   <table class="table table-stripe">
                     <thead>
                     <tr class="small" align="center">
-                      <th>Item</th>
                       <th>Category</th>
+                      <th>Item</th>
                       <th>Type</th>
                       <th>Quantity</th>
                       <th>Amount (GHS)</th>
+                      <th></th>
                     </tr>
                     </thead>
                     <tbody :key="item.id" v-for="item in unit_budget.items">
                     <tr class="small" align="center">
-                      <td>{{item.item.item_name}}</td>
                       <td>{{item.item.category_name}}</td>
+                      <td>{{item.item.item_name}}</td>
                       <td>{{item.item.item_type}}</td>
                       <td>{{item.quantity}}</td>
                       <td>{{formatPrice(item.total_amount)}}</td>
+                      <td v-if="item.subs.length">
+                        <button class="btn btn-sm btn-info" data-toggle="modal" :data-target="`#item${item.id}`">
+                          <i class="fa fa-object-ungroup"></i>
+                        </button>
+                        <div class="modal fade" :id="`item${item.id}`" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">{{item.item.item_name}} Sub Items</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <table class="table">
+                                  <thead>
+                                  <tr>
+                                    <th>Item</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Price</th>
+                                    <th>Total Amount</th>
+                                  </tr>
+                                  </thead>
+                                  <tbody>
+                                  <tr :key="sub.id" v-for="sub in item.subs">
+                                    <td>{{sub.sub_item.name}}</td>
+                                    <td>{{sub.quantity}}</td>
+                                    <td>{{sub.unit_price}}</td>
+                                    <td>{{sub.total_amount}}</td>
+                                  </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+
                     </tr>
                     </tbody>
                   </table>
@@ -722,20 +802,45 @@
                 </div>
               </div>
               <div class="tab-pane fade" id="contact3" role="tabpanel" aria-labelledby="contact3-tab">
-                <div class="list-group" :key="asset.id" v-for="asset in unit_budget.assets">
+                <div class="list-group" :key="asset.id" v-for="asset in unit_budget.assets" v-if="asset.is_selected">
                   <div class="list-group-item">
                     <div class="row">
-                      <div class="col-md-1"><input class="form-check-input" disabled type="checkbox" :checked="asset.is_selected" value="" id="defaultCheck2"></div>
-                      <div class="col">{{asset.asset.asset_name}}</div>
+                      <!--<div class="col-md-1"><input class="form-check-input" disabled type="checkbox" :checked="asset.is_selected" value="" id="defaultCheck2"></div>-->
+                      <div class="col-md-11">{{asset.asset.asset_name}}</div>
+                      <div class="col-md-1" v-if="asset.subs.length">
+                        <a :href="`#asset${asset.id}`" data-toggle="collapse" role="button" :aria-controls="`asset${asset.id}`" aria-expanded="false" class="btn btn-sm btn-info">
+                          <i class="fa fa-sort"></i>
+                        </a>
+                      </div>
                     </div>
+                  </div>
+                  <div class="collapse multiple-collapse" :id="`asset${asset.id}`">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Asset</th>
+                          <th>Quantity</th>
+                          <th>Unit Price (GHS)</th>
+                          <th>Total Amount (GHS)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr :key="sub.id" v-for="sub in asset.subs">
+                          <td>{{sub.sub_asset.name}}</td>
+                          <td>{{sub.quantity}}</td>
+                          <td>{{sub.unit_price}}</td>
+                          <td>{{sub.total_amount}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
 
                 </div>
               </div>
               <!--<div class="tab-pane fade" id="about2" role="tabpanel" aria-labelledby="about2-tab">-->
-                <!--<div class="list-group" :key="item.id" v-for="item in unit_budget.imprests">-->
-                  <!--<div class="list-group-item">{{item.imprest.item_name}}</div>-->
-                <!--</div>-->
+              <!--<div class="list-group" :key="item.id" v-for="item in unit_budget.imprests">-->
+              <!--<div class="list-group-item">{{item.imprest.item_name}}</div>-->
+              <!--</div>-->
               <!--</div>-->
             </div>
 
@@ -756,15 +861,20 @@
         object: {},
         categories: {},
         items: {},
+        sub_items: {},
+        sub_assets: {},
         unit_budget: {},
         quantity: '',
         amount: '',
         item: '',
+        sub_item: '',
         asset: '',
+        sub_asset: '',
         assets: {},
         imprests: {},
         item_obj: {},
         em_type: '',
+        em_type1: '',
         category: '',
         errors: {},
         formLoading: false,
@@ -802,6 +912,31 @@
       formatPrice(value) {
         let val = (value/1).toFixed(2).replace(',', '.');
         return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+      },
+      clear(){
+        this.quantity = '';
+        this.amount = '';
+        this.item = '';
+        this.sub_item = '';
+        this.asset = '';
+        this.sub_asset = '';
+        this.em_type = '';
+        this.em_type1 = '';
+        this.category = '';
+        this.msg = '';
+        this.msg2 = '';
+        this.msg3 = '';
+        this.fname = '';
+        this.lname = '';
+        this.number = '';
+        this.rank = '';
+        this.notch = '';
+        this.rank1 = '';
+        this.notch1 = '';
+        this.errors = {};
+        this.basic = 0.0;
+        this.year_salary = 0.0;
+        this.status = '';
       },
       open_period(id){
         this.loading = true;
@@ -910,6 +1045,26 @@
           });
         }
       },
+      item_subs_list(value){
+        if(value){
+          axios.get(`${config.apiUrl}/api/isi/${value}/`, {
+            headers: { Authorization: `JWT ${config.get_token()}` },
+          }).then((response) => {
+            const results = response.data;
+            this.sub_items = results.subs;
+          })
+        }
+      },
+      asset_subs_list(value){
+        if(value){
+          axios.get(`${config.apiUrl}/api/asa/${value}/`, {
+            headers: { Authorization: `JWT ${config.get_token()}` },
+          }).then((response) => {
+            const results = response.data;
+            this.sub_assets = results.subs;
+          })
+        }
+      },
       item_details(id){
         if(id){
           axios.get(`${config.apiUrl}/api/id/${id}/`, {
@@ -989,7 +1144,7 @@
           }
         }
         else if (type === 'ec'){
-          if(id && this.fname && this.lname && this.number && this.rank && this.notch && this.status){
+          if(id && this.fname && this.lname && this.number && this.em_type && this.status){
             this.formLoading = true;
             axios.post(`${config.apiUrl}/budget/nub/${type}/`, {
               budget_period: id,
@@ -998,7 +1153,7 @@
               number: this.number,
               rank: this.rank,
               notch: this.notch,
-              emt: this.em_type,
+              em_type: this.em_type,
               status: this.status,
               // position: this.position,
             }, {
@@ -1044,6 +1199,8 @@
             this.formLoading = true;
             axios.post(`${config.apiUrl}/budget/nub/${type}/`, {
               asset: this.asset,
+              quantity: this.quantity,
+              sub_asset: this.sub_asset,
               budget_period: id,
             }, {
               headers: {
@@ -1102,6 +1259,7 @@
               ub_id: ubid,
               item: this.item,
               quantity: this.quantity,
+              sub_item: this.sub_item,
               amount: this.amount,
             },
             {
@@ -1114,6 +1272,7 @@
             this.category = '';
             this.item = '';
             this.amount = '';
+            this.sub_item = '';
             this.errors = {};
             this.$noty.success('New Goods and Services Item added');
             this.current_unit_budget();
@@ -1134,7 +1293,7 @@
         }
       },
       new_budget_com(ubid){
-        if(ubid && this.fname && this.lname && this.number && this.rank1 && this.notch1 && this.status){
+        if(ubid && this.fname && this.lname && this.number && this.em_type1 && this.status){
           this.formLoading = true;
           axios.post(`${config.apiUrl}/budget/nubc/`, {
             ub_id: ubid,
@@ -1143,7 +1302,7 @@
             number: this.number,
             rank: this.rank1,
             notch: this.notch1,
-            emt: this.em_type,
+            emt: this.em_type1,
             amount: this.amount,
             // position: this.position,
             status: this.status
@@ -1173,14 +1332,14 @@
             this.formLoading = false;
             console.log(response.data);
             if(response.status === 401){
-                this.$noty.error(`Oops! Your session has expired.`);
-                localStorage.removeItem('auth');
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                this.$router.push('/login');
-              }else{
-                this.$noty.error(`Oops! ${this.errors.detail}`);
-              }
+              this.$noty.error(`Oops! Your session has expired.`);
+              localStorage.removeItem('auth');
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              this.$router.push('/login');
+            }else{
+              this.$noty.error(`Oops! ${this.errors.detail}`);
+            }
             this.current_unit_budget();
           });
         }
@@ -1191,6 +1350,8 @@
           axios.post(`${config.apiUrl}/budget/nuba/`, {
             ub_id: ubid,
             asset: this.asset,
+            sub_asset: this.sub_asset,
+            quantity: this.quantity,
           }, {
             headers: {
               Authorization: `JWT ${config.get_token()}`
@@ -1198,11 +1359,17 @@
           }).then((res) => {
             this.formLoading = false;
             this.asset = '';
+            this.sub_asset = '';
+            this.quantity = '';
             this.errors = {};
             this.$noty.success('New Asset Item added');
             this.current_unit_budget();
           }).catch(({response}) => {
             this.formLoading = false;
+            this.asset = '';
+            this.sub_asset = '';
+            this.quantity = '';
+            // this.errors = {};
             this.errors = response.data;
             this.current_unit_budget();
             console.log(response);
@@ -1300,6 +1467,28 @@
           }
         })
       },
+      remove_budget_sub(type, sub){
+        axios.post(`${config.apiUrl}/budget/rbs/${sub}/${type}/`, {}, {
+          headers: {
+            Authorization: `JWT ${config.get_token()}`
+          }
+        }).then((res) => {
+          this.current_unit_budget();
+          console.log(res);
+          this.$noty.success("Sub Removed");
+        }).catch(({res}) => {
+          console.log(res.data);
+          if(res.status === 401){
+            this.$noty.error(`Oops! Your session has expired.`);
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            this.$router.push('/login');
+          }else{
+            this.$noty.error("Oops! Something went terribly wrong!");
+          }
+        })
+      },
       remove_budget_imprest(ubid, imp){
         axios.post(`${config.apiUrl}/budget/rubim/${ubid}/${imp}/`, {}, {
           headers: { Authorization: `JWT ${config.get_token()}` },
@@ -1376,6 +1565,7 @@
         // var sel = document.getElementById('item1').value;
         if(this.item){
           this.item_details(this.item);
+          this.item_subs_list(this.item);
           // if(this.item_obj.item_type === 'Good'){
           //   document.getElementById('id_fg_qnty').hidden = false;
           // }else{
@@ -1383,6 +1573,11 @@
           // }
         }
 
+      },
+      asset(){
+        if(this.asset){
+          this.asset_subs_list(this.asset);
+        }
       },
       notch(){
 
@@ -1402,7 +1597,29 @@
         }else{
           document.getElementById('id_submit1').disabled = true;
         }
-      }
+      },
+      em_type(){
+        const value = document.getElementById('id_type').value;
+        if(value === 'P'){
+          document.getElementById('id_rn').hidden = false;
+          document.getElementById('id_my').hidden = false;
+        }else{
+          document.getElementById('id_rn').hidden = true;
+          document.getElementById('id_my').hidden = true;
+        }
+
+
+      },
+      em_type1(){
+        const value1 = document.getElementById('id_type1').value;
+        if(value1 === 'P'){
+          document.getElementById('id_rn1').hidden = false;
+          document.getElementById('id_my1').hidden = false;
+        }else{
+          document.getElementById('id_rn1').hidden = true;
+          document.getElementById('id_my1').hidden = true;
+        }
+      },
     }
 
   };

@@ -48,17 +48,17 @@
     </div>
     <br><br>
 
-      <d-row>
-      <!-- Users Overview -->
-      <d-col lg="4" md="6" sm="12" class="mb-4">
-        <Summary />
-      </d-col>
+      <!--<d-row>-->
+      <!--&lt;!&ndash; Users Overview &ndash;&gt;-->
+      <!--<d-col lg="4" md="6" sm="12" class="mb-4">-->
+        <!--<Summary />-->
+      <!--</d-col>-->
 
-      <!-- Users by Device (lite) -->
-      <d-col lg="8" md="6" sm="12" class="mb-4">
-        <barChart/>
-      </d-col>
-    </d-row>
+      <!--&lt;!&ndash; Users by Device (lite) &ndash;&gt;-->
+      <!--<d-col lg="8" md="6" sm="12" class="mb-4">-->
+        <!--<barChart/>-->
+      <!--</d-col>-->
+    <!--</d-row>-->
 
   </d-container>
 </template>
