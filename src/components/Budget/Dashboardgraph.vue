@@ -2,6 +2,21 @@
   <div>
     <div class="container">
       <div class="card-deck text-white ">
+        <router-link to="/budget-divisions" class="card card-small card-link text-center" >
+          <div class="card-block card-body bg-info text-white">
+            <h4 class="card-title text-uppercase text-white">DIVISIONS</h4>
+            <p class="card-text display-3">
+              {{divisions}}
+            </p>
+          </div>
+          <div class="card-footer bg-primary text-white">
+            <div class="row">
+              <span class="col">Departments: {{departments}}</span>
+              <span class="col">Units: {{units}}</span>
+
+            </div>
+          </div>
+        </router-link>
         <router-link to="/budget-periods" class="card card-small card-link text-center" >
           <div class="card-block card-body bg-info text-white">
             <h4 class="card-title text-uppercase text-white">Budget Periods</h4>
@@ -10,7 +25,7 @@
             </p>
           </div>
           <div class="card-footer bg-primary text-white">
-            <div class="ror">
+            <div class="row">
               <span class="col">Opened: {{opened}}</span>
               <span class="col">Closed: {{closed}}</span>
 
@@ -26,7 +41,7 @@
             </p>
           </div>
           <div class="card-footer bg-warning text-white">
-            <div class="ror">
+            <div class="ror small">
               <span class="col">Pending: {{pending}}</span>
               <span class="col">Confirmed: {{confirmed}}</span>
               <span class="col">Completed: {{completed}}</span>
@@ -87,6 +102,9 @@ export default {
       confirmed: '',
       completed: '',
       activities: {},
+      divisions: '',
+      departments: '',
+      units: '',
       loading: false,
     };
   },
@@ -114,6 +132,9 @@ export default {
         this.confirmed = results.confirmed;
         this.completed = results.completed;
         this.activities = results.activities;
+        this.divisions = results.divisions;
+        this.departments = results.departments;
+        this.units =results.units;
       }).catch(({ response }) => {
         console.log(response);
         if (response.status === 401) {

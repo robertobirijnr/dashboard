@@ -29,6 +29,19 @@
             <div class="tab-content" id="myTabContent">
 
               <div class="tab-pane fade" :key="object.id" v-for="object in object_list" :id="`division-${object.id}`" role="tabpanel" :aria-labelledby="`division-${object.id}-tab`">
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col mt-1"><label :for="`id_assign${object.id}`">Assign Division to a Budget Officer:</label></div>
+                      <div class="col">
+                        <select :id="`id_assign${object.id}`" :v-model="object.assign_to !== null ? object.assign_to.id : null" class="custom-select" @change="assignto(object.id)">
+                          <option value="">Choose...</option>
+                          <option :key="off.id" v-for="off in offs"  :value="`${off.id}`" :selected="object.assign_to !== null ? off.id === object.assign_to.id : ''">{{off.full_name}}</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <div class="row">
                   <div class="col-md-5">
                     <ul class="nav flex-column nav-tabs" id="nav-tab" role="tablist" aria-orientation="vertical">
@@ -133,135 +146,168 @@
 </template>
 
 <script>
-import axios from 'axios';
-import config from '@/config';
+  import axios from 'axios';
+  import config from '@/config';
 
-export default {
-  // name: "Divisions"
-  data() {
-    return {
-      object_list: {},
-      loading: false,
-      code: '',
-      abbr: '',
-      name: '',
-      msg: '',
-    };
-  },
-  methods: {
-    divisions() {
-      this.loading = true;
-      axios.get(`${config.apiUrl}/api/divisions/`, {
-        headers: {
-          Authorization: `JWT ${config.get_token()}`,
-        },
-      }).then((res) => {
-        this.loading = false;
-        this.object_list = res.data;
-        this.$noty.success('Everything works great!');
-      }).catch((res) => {
-        this.loading = false;
-        console.log(res);
-      });
+  export default {
+    // name: "Divisions"
+    data() {
+      return {
+        object_list: {},
+        loading: false,
+        code: '',
+        abbr: '',
+        name: '',
+        msg: '',
+        offs: {},
+      };
     },
-    newDiv() {
-      if (this.name && this.code && this.abbr) {
+    methods: {
+      divisions() {
         this.loading = true;
-        axios.post(`${config.apiUrl}/api/ndv/`, {
-          code: this.code,
-          abbr: this.abbr,
-          name: this.name,
-        }, {
+        axios.get(`${config.apiUrl}/api/divisions/`, {
           headers: {
             Authorization: `JWT ${config.get_token()}`,
           },
         }).then((res) => {
           this.loading = false;
-          console.log(res);
-          this.code = '';
-          this.name = '';
-          this.abbr = '';
-          this.divisions();
-          this.$noty.success('New Division added');
+          this.object_list = res.data;
+          this.$noty.success('Everything works great!');
         }).catch((res) => {
           this.loading = false;
           console.log(res);
         });
-      } else {
-        this.msg = 'All fields are required';
-        this.$noty.danger(this.msg);
-      }
-    },
-    newDepart(id) {
-      if (this.code && this.name && this.abbr) {
+      },
+      officers(){
         this.loading = true;
-        axios.post(`${config.apiUrl}/api/nd/${id}/`, {
-          code: this.code,
-          abbr: this.abbr,
-          name: this.name,
-        }, {
+        axios.get(`${config.apiUrl}/api/offs/`, {
           headers: {
             Authorization: `JWT ${config.get_token()}`,
           },
         }).then((res) => {
           this.loading = false;
-          console.log(res);
-          this.divisions();
-          this.code = '';
-          this.name = '';
-          this.abbr = '';
-          this.$noty.success('New Department added');
-        }).catch((res) => {
-          console.log(res);
+          this.offs = res.data;
         });
-      } else {
-        this.msg = 'All fields are required';
-        this.$noty.danger(this.msg);
-      }
-    },
-    show_modal(id) {
-      $(`#newUnit${id}`).modal('show');
-      this.msg = '';
-    },
-    newUnit(id) {
-      if (this.code && this.name && this.abbr) {
+      },
+      assignto(div_id){
+        this.$noty.info('Assigning...');
         this.loading = true;
-        axios.post(`${config.apiUrl}/api/nu/${id}/`, {
-          code: this.code,
-          abbr: this.abbr,
-          unit_name: this.name,
+        const assign = document.getElementById(`id_assign${div_id}`).value;
+        axios.post(`${config.apiUrl}/api/ad/${div_id}/`, {
+          assign: assign
         }, {
           headers: {
             Authorization: `JWT ${config.get_token()}`,
           },
-        }).then((res) => {
+        }).then((response) => {
           this.loading = false;
-          console.log(res);
+          this.$noty.success('Division assigned!');
+          console.log(response);
           this.divisions();
-          this.code = '';
-          this.name = '';
-          this.abbr = '';
-          $(`#newUnit${id}`).modal('hide');
-        }).catch((res) => {
-          console.log(res);
+        }).catch(({response}) => {
+          this.loading = false;
+          console.log(response);
         });
-      } else {
-        this.msg = 'All fields are required';
-        this.$noty.danger(this.msg);
-      }
-    },
-  },
-  mounted() {
-    this.divisions();
-  },
-  watch: {
-    msg() {
-      if (this.name && this.code && this.abbr) {
+      },
+      newDiv() {
+        if (this.name && this.code && this.abbr) {
+          this.loading = true;
+          axios.post(`${config.apiUrl}/api/ndv/`, {
+            code: this.code,
+            abbr: this.abbr,
+            name: this.name,
+          }, {
+            headers: {
+              Authorization: `JWT ${config.get_token()}`,
+            },
+          }).then((res) => {
+            this.loading = false;
+            console.log(res);
+            this.code = '';
+            this.name = '';
+            this.abbr = '';
+            this.divisions();
+            this.$noty.success('New Division added');
+          }).catch((res) => {
+            this.loading = false;
+            console.log(res);
+          });
+        } else {
+          this.msg = 'All fields are required';
+          this.$noty.danger(this.msg);
+        }
+      },
+      newDepart(id) {
+        if (this.code && this.name && this.abbr) {
+          this.loading = true;
+          axios.post(`${config.apiUrl}/api/nd/${id}/`, {
+            code: this.code,
+            abbr: this.abbr,
+            name: this.name,
+          }, {
+            headers: {
+              Authorization: `JWT ${config.get_token()}`,
+            },
+          }).then((res) => {
+            this.loading = false;
+            console.log(res);
+            this.divisions();
+            this.code = '';
+            this.name = '';
+            this.abbr = '';
+            this.$noty.success('New Department added');
+          }).catch((res) => {
+            console.log(res);
+          });
+        } else {
+          this.msg = 'All fields are required';
+          this.$noty.danger(this.msg);
+        }
+      },
+      show_modal(id) {
+        $(`#newUnit${id}`).modal('show');
         this.msg = '';
-      }
+      },
+      newUnit(id) {
+        if (this.code && this.name && this.abbr) {
+          this.loading = true;
+          axios.post(`${config.apiUrl}/api/nu/${id}/`, {
+            code: this.code,
+            abbr: this.abbr,
+            unit_name: this.name,
+          }, {
+            headers: {
+              Authorization: `JWT ${config.get_token()}`,
+            },
+          }).then((res) => {
+            this.loading = false;
+            console.log(res);
+            this.divisions();
+            this.code = '';
+            this.name = '';
+            this.abbr = '';
+            $(`#newUnit${id}`).modal('hide');
+          }).catch((res) => {
+            console.log(res);
+          });
+        } else {
+          this.msg = 'All fields are required';
+          this.$noty.danger(this.msg);
+        }
+      },
     },
-  },
-};
+    mounted() {
+      this.divisions();
+      this.officers();
+    },
+    watch: {
+      msg() {
+        if (this.name && this.code && this.abbr) {
+          this.msg = '';
+        }
+      },
+    },
+  };
 </script>
 
 <style scoped>

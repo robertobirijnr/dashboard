@@ -11,7 +11,7 @@
       <div class="col">
         <div class="card mb-4 h-100">
           <div class="card-header">
-            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+            <button type="button" v-if="userRole === 'BH'" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
               New Salary Scale
             </button>
 
@@ -110,7 +110,7 @@
                     <td>{{object.notch}}</td>
                     <td>GHS {{formatPrice(object.monthly_basic)}}</td>
                     <td>
-                      <button v-on:click="current_scale(object.id)" class="btn-sm btn btn-primary"><span class="fa fa-pencil"></span></button>
+                      <button v-on:click="current_scale(object.id)" v-if="userRole === 'BH'" class="btn-sm btn btn-primary"><span class="fa fa-pencil"></span></button>
                       <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                           <div class="modal-content">
@@ -218,6 +218,11 @@
         level1: '',
         msg: {},
       };
+    },
+    computed: {
+      userRole() {
+        return this.$root.auth.user.user_role;
+      },
     },
     mounted() {
       this.scales();

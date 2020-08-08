@@ -66,20 +66,20 @@
       </div>
       <!--{{unit_budget.status}}-->
       <div class="col-md-12">
-        <div class="card" v-if="userRole === 'BO'">
+        <div class="card" v-if="userRole === 'BH' || userRole === 'BO'">
           <div class="card-header">
             <div class="row">
               <div class="col">Units Budgets</div>
-              <div class="col" align="right">
+              <div class="col" align="right" v-if="userRole === 'BH'">
                 <button @click="open_period(object.id)" title="Click to open this budget period for submissions" :disabled="loading" class="btn btn-sm btn-success" v-if="object.status === 'Close'">Open</button>
                 <button class="btn btn-sm btn-warning" title="Click to close this budget period" :disabled="loading" @click="close_period(object.id)" v-else>Close</button>
               </div>
             </div>
           </div>
           <div class="card-body ">
-            <div v-if="object.unit_budgets.length">
+            <div v-if="unit_budgets.length">
               <div class="list-group-flush">
-                <div  :key="unit.id" v-for="unit in object.unit_budgets" class="list-group-item bg-white text-black list-group-item-action flex-column align-items-start">
+                <div  :key="unit.id" v-for="unit in unit_budgets" class="list-group-item bg-white text-black list-group-item-action flex-column align-items-start">
                   <div class="row">
                     <div class="col-md-10">
                       <div class="d-flex w-100 justify-content-between">
@@ -894,6 +894,7 @@
         year_salary: 0.0,
         basic: 0.0,
         status: '',
+        unit_budgets: {},
       };
     },
     computed: {
@@ -992,7 +993,9 @@
             Authorization: `JWT ${config.get_token()}`,
           },
         }).then((response) => {
-          this.object = response.data;
+          const results = response.data;
+          this.object = results.budget_period;
+          this.unit_budgets = results.unit_budgets;
           console.log(response);
           this.$noty.success('Everything looks great!');
         }).catch(({response}) => {

@@ -3,7 +3,7 @@
 export default function () {
   const auth = JSON.parse(localStorage.getItem('user'));
   // console.log(auth);
-  if (auth.user_role === 'BO') {
+  if (auth.user_role === 'BO' || auth.user_role === 'BH') {
     return [{
       title: 'Dashboard',
       to: {
@@ -39,13 +39,13 @@ export default function () {
         name: 'implementations',
       },
     },
-    // {
-    //   title: 'Requisitions',
-    //   htmlBefore: '<i class="material-icons">emoji_people</i>',
-    //   to: {
-    //     name: 'requisitions',
-    //   },
-    // },
+    {
+      title: 'Budget Division Setup',
+      htmlBefore: '<i class="material-icons">emoji_people</i>',
+      to: {
+        name: 'budget-divisions',
+      },
+    },
     {
       title: 'Reports',
       htmlBefore: '<i class="material-icons">emoji_people</i>',

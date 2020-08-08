@@ -13,7 +13,7 @@
       <div class="col">
         <div class="card card-small mb-4 h-100">
           <div class="card-header border-bottom">
-            <div v-if="userRole === 'BO'">
+            <div v-if="userRole === 'BH'">
               <button type="button" data-toggle="modal" data-target="#newPeriod" class="btn btn-primary">New Period</button>
               <div class="modal fade" id="newPeriod" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">

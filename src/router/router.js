@@ -222,6 +222,14 @@ const router = new Router({
       },
     },
     {
+      path: '/budget-divisions',
+      name: 'budget-divisions',
+      component: () => import('../views/Budget/budget_divisions.vue'),
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
       path: '/budget_summary/:period_id',
       name: 'budget_summary',
       component: () => import('../views/Budget/budget_summary.vue'),

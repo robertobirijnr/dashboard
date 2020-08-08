@@ -2,7 +2,7 @@
   <d-container fluid>
     <d-row>
       <!-- Main Sidebar -->
-      <main-sidebar :items="sidebarItems" title="Budget System" />
+      <main-sidebar :items="userRole === 'AD' ? asidebarItems : bsidebarItems" :title="userRole === 'AD' ? 'Administration' : 'Budget System'" />
 
       <d-col class="main-content offset-lg-2 offset-md-3 p-0" tag="main" lg="10" md="9" sm="12">
 
@@ -21,7 +21,8 @@
 </template>
 
 <script>
-  import getSidebarItems from '@/data/budget-sidebar-nav-items';
+  import budgetSidebarItems from '@/data/budget-sidebar-nav-items';
+  import adminSidebarItems from '@/data/admin-sidebar-nav-items';
 
   // Main layout components
   import MainNavbar from '@/components/layout/MainNavbar/MainNavbar.vue';
@@ -37,9 +38,16 @@
       MainFooter,
       Report,
     },
+    computed: {
+      userRole() {
+        return this.$root.auth.user.user_role;
+      },
+    },
     data() {
       return {
-        sidebarItems: getSidebarItems(),
+        asidebarItems: adminSidebarItems(),
+        bsidebarItems : budgetSidebarItems(),
+        title : this.userRole === 'AD' ? 'Administration' : 'Budget System'
       };
     },
   }

@@ -28,18 +28,18 @@
                       <d-form-row>
                         <d-col md="12" class="form-group">
                           <label for="id_staff_id">Staff ID</label>
-                          <d-input v-model="staff_id" id="id_staff_id" type="text" placeholder="Staff ID" />
+                          <input v-model="staff_id" id="id_staff_id" class="form-control" type="text" placeholder="Staff ID" />
                         </d-col>
                       </d-form-row>
 
                       <d-form-row>
                         <d-col md="6" class="form-group">
                           <label for="id_first_name">First Name</label>
-                          <d-input v-model="first_name" id="id_first_name" type="text" placeholder="First Name" />
+                          <input v-model="first_name" id="id_first_name" class="form-control" type="text" placeholder="First Name" />
                         </d-col>
                         <d-col md="6">
                           <label for="id_last_name">Last Name</label>
-                          <d-input v-model="last_name" id="id_last_name" type="text" placeholder="Last Name" />
+                          <input v-model="last_name" id="id_last_name" class="form-control" type="text" placeholder="Last Name" />
 
                         </d-col>
                       </d-form-row>
@@ -47,7 +47,7 @@
                       <d-form-row>
                         <d-col md="6" class="form-group">
                           <label for="feEmailAddress">Email Address</label>
-                          <d-input v-model="email" id="feEmailAddress" type="email" placeholder="Email" />
+                          <input v-model="email" id="feEmailAddress" class="form-control" type="email" placeholder="Email" />
                           <span class="small text-danger" v-if="errors">{{errors.detail}}</span>
                         </d-col>
                         <d-col md="6">
@@ -55,6 +55,7 @@
                           <select name="role" v-model="role" id="id_role" class="custom-select">
                             <option value="">Choose...</option>
                             <option value="AD">Administrator</option>
+                            <option value="BH">Budget Head</option>
                             <option value="BO">Budget Officer</option>
                             <option value="UU">Unit User</option>
                             <option value="DU">Department User</option>
@@ -93,12 +94,12 @@
 
                       <div class="form-group">
                         <label for="id_password1">Password</label>
-                        <d-input v-model="pass1" id="id_password1" type="password" placeholder="" />
+                        <input v-model="pass1" class="form-control" id="id_password1" type="password" placeholder="" />
                       </div>
 
                       <div class="form-group">
-                        <label for="id_password2">Confirm Password</label>
-                        <d-input v-model="pass2" id="id_password2" type="password" placeholder="" />
+                        <label for="password2">Confirm Password</label>
+                        <input v-model="pass2" class="form-control" id="password2" type="password" placeholder="" />
                         <span class="small text-danger" v-if="msg">{{msg}}</span>
                       </div>
 

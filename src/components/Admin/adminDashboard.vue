@@ -9,15 +9,19 @@
     </d-row>
     <div class="container">
       <div class="card-deck text-white ">
-        <router-link to="/departments" class="card card-small card-link text-center" >
+        <router-link to="/divisions" class="card card-small card-link text-center" >
           <div class="card-block card-body bg-info text-white">
-            <h4 class="card-title text-uppercase text-white">Departments</h4>
+            <h4 class="card-title text-uppercase text-white">Divisions</h4>
             <p class="card-text display-3">
-              {{departs}}
+              {{divisions}}
             </p>
           </div>
           <div class="card-footer bg-primary text-white">
-            Units {{units}}
+            <div class="row">
+              <span class="col">Departments: {{departs}}</span>
+              <span class="col">Units: {{units}}</span>
+
+            </div>
           </div>
         </router-link>
 
@@ -80,6 +84,7 @@ export default {
     return {
       departs: '',
       units: '',
+      divisions: '',
       cats: '',
       items: '',
       users: '',
@@ -108,6 +113,7 @@ export default {
         this.cats = results.categories;
         this.items = results.items;
         this.users = results.users;
+        this.divisions = results.divisions;
       }).catch((res) => {
         console.log(res);
       });
