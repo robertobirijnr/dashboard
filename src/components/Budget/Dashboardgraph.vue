@@ -2,7 +2,7 @@
   <div>
     <div class="container">
       <div class="card-deck text-white ">
-        <router-link to="/budget-divisions" class="card card-small card-link text-center" >
+        <router-link :to="userRole !== 'UU' ? '/budget-divisions' : '#'" class="card card-small card-link text-center" >
           <div class="card-block card-body bg-info text-white">
             <h4 class="card-title text-uppercase text-white">DIVISIONS</h4>
             <p class="card-text display-3">
@@ -33,7 +33,7 @@
           </div>
         </router-link>
 
-        <router-link to="/unit-budgets" class="card card-link card-small text-center">
+        <router-link :to="userRole !== 'UU' ?'/unit-budgets' : '#'" class="card card-link card-small text-center">
           <div class="card-block card-body bg-warning">
             <h4 class="card-title text-uppercase text-white">Unit Budgets</h4>
             <p class="card-text display-3 text-white">
@@ -111,6 +111,11 @@ export default {
   filters: {
     moment(date) {
       return moment(date).fromNow();
+    },
+  },
+  computed: {
+    userRole() {
+      return this.$root.auth.user.user_role;
     },
   },
   methods: {

@@ -33,7 +33,11 @@
             </p>
           </div>
           <div class="card-footer bg-warning text-white">
-            Items {{items}}
+            <div class="row">
+              <div class="col">Items: {{items}}</div>
+              <div class="col">Assets: {{assets}}</div>
+            </div>
+
           </div>
         </router-link>
 
@@ -87,6 +91,7 @@ export default {
       divisions: '',
       cats: '',
       items: '',
+      assets: '',
       users: '',
       activities: {},
       loading: false,
@@ -111,6 +116,7 @@ export default {
         this.departs = results.departments;
         this.units = results.units;
         this.cats = results.categories;
+        this.assets = results.assets;
         this.items = results.items;
         this.users = results.users;
         this.divisions = results.divisions;

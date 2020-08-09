@@ -56,6 +56,7 @@
                   <!--<th scope="col" class="border-0">Period</th>-->
                   <th scope="col" class="border-0">Start Date</th>
                   <th scope="col" class="border-0">End Date</th>
+                  <th scope="col" class="border-0">Submission Deadline</th>
                   <th scope="col" class="border-0">Status</th>
                   <th></th>
                 </tr>
@@ -66,6 +67,7 @@
                   <!--<td>{{object.period}}</td>-->
                   <td>{{object.start_date}}</td>
                   <td>{{object.end_date}}</td>
+                  <td>{{object.deadline}}</td>
                   <td>{{object.status}}</td>
                   <td>
                     <router-link :to="{name: 'period-details', params: {period_id: object.slug}}" class="btn btn-sm btn-primary mr-1">
@@ -161,10 +163,24 @@ export default {
         // this.$noty.error(`Oops! ${error.detail}!`);
       });
     },
+    deadlines(){
+      const today = new Date();
+      const date = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
+      // console.log(date);
+      axios.get(`${config.apiUrl}/budget/deadline/${date}/`, {
+        headers: {
+          Authorization: `JWT ${config.get_token()}`
+        }
+      }).then((res) => {
+        console.log(res.data);
+        this.periods();
+      })
+    },
   },
   mounted() {
     // console.log(config.get_token());
     this.periods();
+    this.deadlines();
   },
 };
 </script>

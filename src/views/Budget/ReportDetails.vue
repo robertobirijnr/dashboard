@@ -131,8 +131,10 @@
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             this.$router.push('/login');
+          }else if(response.status === 400){
+            this.$noty.error(`Oops! No unit budgets completed under this period`);
           }else{
-            this.$noty.error(`Oops! ${this.errors.detail}`);
+            this.$noty.error('Oops! Something went terribly wrong!');
           }
         })
       },
@@ -160,8 +162,10 @@
           localStorage.removeItem('token');
           localStorage.removeItem('user');
           this.$router.push('/login');
+        }else if(response.status === 400){
+          this.$noty.error(`Oops! No unit budgets completed under this division`);
         }else{
-          this.$noty.error(`Oops! ${this.errors.detail}`);
+          this.$noty.error('Oops! Something went terribly wrong!');
         }
       })
     },
@@ -189,8 +193,10 @@
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             this.$router.push('/login');
+          }else if(response.status === 400){
+            this.$noty.error(`Oops! No unit budgets completed under this department`);
           }else{
-            this.$noty.error(`Oops! ${errors.detail}`);
+            this.$noty.error('Oops! Something went terribly wrong!');
           }
         })
       },

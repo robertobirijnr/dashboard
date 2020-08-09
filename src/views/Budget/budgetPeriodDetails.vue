@@ -102,7 +102,7 @@
             </div>
           </div>
         </div>
-        <div class="card" v-if="userRole === 'UU' && unit_budget.status === 'Pending' || unit_budget.status === 'Confirmed'">
+        <div class="card" v-if="userRole === 'UU' && unit_budget.status === 'Pending' || unit_budget.status === 'Confirmed' && object.status !== 'Deadline'">
           <div class="card-header">
             <div class="row">
               <div class="col-md-6">{{unit_budget.unit_name}} Unit Budget </div>
@@ -139,9 +139,9 @@
                   </div>
                   <div class="col-md-6">
                     <i class="text-black-50 small">Subs: </i>
-                    <span :key="item.id" v-for="item in unit_budget.items" style="margin-right: 5px;">
+                    <span :key="item.id" v-for="item in unit_budget.items" >
 
-                      <span :key="sub.id" v-for="sub in item.subs">
+                      <span :key="sub.id" v-for="sub in item.subs" style="margin-right: 5px;">
                         <span class="badge badge-info" :title="sub.item_name">{{sub.sub_item.name}} ({{sub.quantity}}) <span @click="remove_budget_sub('gs', sub.id)" class="material-icons small" style="cursor: pointer">clear</span></span>
                       </span>
                     </span>
@@ -339,8 +339,8 @@
                     </span>
                   </div>
                   <div class="col-md-6">
-                    <i class="text-black-50 small">Subs: </i> <span :key="asset.id" v-for="asset in unit_budget.assets" style="margin-right:5px">
-                      <span :key="sub.id" v-for="sub in asset.subs">
+                    <i class="text-black-50 small">Subs: </i> <span :key="asset.id" v-for="asset in unit_budget.assets" >
+                      <span :key="sub.id" v-for="sub in asset.subs" style="margin-right:5px">
                         <span class="badge badge-info">{{sub.sub_asset.name}} ({{sub.quantity}}) <span @click="remove_budget_sub('a', sub.id)" class="material-icons small" style="cursor: pointer">clear</span></span>
                       </span>
                     </span>
@@ -401,7 +401,7 @@
 
           </div>
         </div>
-        <div class="card" v-else-if="userRole === 'UU' && unit_budget.detail">
+        <div class="card" v-else-if="userRole === 'UU' && unit_budget.detail && object.status !== 'Deadline'">
           <div class="card-header">New Unit Budget </div>
           <div class="card-body">
 
@@ -908,8 +908,22 @@
       this.current_unit_budget();
       this.asset_list();
       this.imprest_list();
+      this.deadlines();
     },
     methods: {
+      deadlines(){
+        const today = new Date();
+        const date = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
+        // console.log(date);
+        axios.get(`${config.apiUrl}/budget/deadline/${date}/`, {
+          headers: {
+            Authorization: `JWT ${config.get_token()}`
+          }
+        }).then((res) => {
+          console.log(res.data);
+          this.details();
+        })
+      },
       formatPrice(value) {
         let val = (value/1).toFixed(2).replace(',', '.');
         return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")

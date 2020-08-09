@@ -59,7 +59,7 @@
                       </div>
                     </div>
                   </div>
-              </div>
+                </div>
               </div>
 
             </div>
@@ -97,6 +97,21 @@
           this.dep = results.ndep;
           this.div = results.ndiv;
           this.unit = results.nunits;
+          this.$noty.success('Everything looks great!');
+        }).catch(({ response }) => {
+          this.loading = false;
+          console.log(response);
+          const error = response.data;
+
+          if(response.status === 401){
+            this.$noty.error(`Oops! Your session has expired.`);
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            this.$router.push('/login');
+          }else{
+            this.$noty.error(`Oops! ${error.detail}!`);
+          }
         });
       }
     },
