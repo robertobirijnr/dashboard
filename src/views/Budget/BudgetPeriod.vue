@@ -46,8 +46,9 @@
             </div>
 
           </div>
-          <div class="card-body p-0 pb-3 text-center" v-if="object_list.length">
-            <center v-if="loading">Loading...</center>
+          <div class="card-body p-0 pb-3 text-center">
+            <center v-if="loading"><Spinner/></center>
+            <span v-else-if="!object_list.length">Nothing to show here!</span>
             <div class="table-responsive" v-else>
               <table class="table mb-0">
               <thead class="bg-light">
@@ -82,9 +83,9 @@
             </table>
             </div>
           </div>
-          <div class="card-body pb-3" v-else>
-            Nothing to show here!
-          </div>
+          <!--<div class="card-body pb-3" v-else>-->
+            <!--Nothing to show here!-->
+          <!--</div>-->
         </div>
       </div>
     </div>

@@ -13,7 +13,7 @@
         <User/>
 
         <!--&lt;!&ndash; Main Footer &ndash;&gt;-->
-        <!--<main-footer />-->
+        <main-footer />
       </d-col>
 
     </d-row>
