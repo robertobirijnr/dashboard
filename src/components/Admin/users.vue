@@ -11,7 +11,7 @@
     <!-- Default Light Table -->
     <div class="row">
       <div class="col">
-        <div class="card card-small mb-4">
+        <div class="card mb-4">
           <div class="card-header border-bottom">
             <router-link to="/create-user" class="btn btn-primary">Create New User</router-link>
           </div>
