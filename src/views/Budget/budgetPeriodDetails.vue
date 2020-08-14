@@ -355,14 +355,14 @@
                   <label for="id_asset1">Select Asset</label>
                   <select id="id_asset1" v-model="asset" class="form-control">
                     <option value="">Choose...</option>
-                    <option :key="asset.id" v-for="asset in assets" :value="asset.id">{{asset.asset_name}}</option>
+                    <option :key="asset.id" v-for="asset in assets" :value="`${asset.id}`">{{asset.asset_name}}</option>
                   </select>
                 </div>
                 <div class="form-group" v-if="sub_assets.length">
                   <label>Select Sub Asset</label>
                   <select v-model="sub_asset" class="custom-select">
                     <option value="">Choose...</option>
-                    <option :key="sub.id" v-for="sub in sub_assets" :value="sub.id">{{sub.name}}</option>
+                    <option :key="sub.id" v-for="sub in sub_assets" :value="`${sub.id}`">{{sub.name}}</option>
                   </select>
                 </div>
                 <div class="form-group" v-if="sub_assets.length">
@@ -434,7 +434,7 @@
                   <label>Sub Items</label>
                   <select name="sub" id="sub1" v-model="sub_item" class="custom-select">
                     <option value="">Select Sub Item</option>
-                    <option :key="sub.id" v-for="sub in sub_items" :value="sub.id">{{sub.name}}</option>
+                    <option :key="sub.id" v-for="sub in sub_items" :value="`${sub.id}`">{{sub.name}}</option>
                   </select>
                 </div>
                 <div class="form-group" :hidden="item_obj.item_type === 'Service'">
@@ -576,14 +576,14 @@
                   <label for="id_asset">Select Asset</label>
                   <select id="id_asset" v-model="asset" class="custom-select">
                     <option value="">Choose...</option>
-                    <option :key="asset.id" v-for="asset in assets" :value="asset.id">{{asset.asset_name}}</option>
+                    <option :key="asset.id" v-for="asset in assets" :value="`${asset.id}`">{{asset.asset_name}}</option>
                   </select>
                 </div>
                 <div class="form-group" v-if="sub_assets.length">
                   <label>Select Sub Asset</label>
                   <select v-model="sub_asset" class="custom-select">
                     <option value="">Choose...</option>
-                    <option :key="sub.id" v-for="sub in sub_assets" :value="sub.id">{{sub.name}}</option>
+                    <option :key="sub.id" v-for="sub in sub_assets" :value="`${sub.id}`">{{sub.name}}</option>
                   </select>
                 </div>
                 <div class="form-group" v-if="sub_assets.length">

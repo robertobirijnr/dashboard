@@ -94,9 +94,12 @@
 <script>
 import axios from 'axios';
 import config from '@/config';
-
+import Spinner from '@/components/common/Spinner.vue';
 
 export default {
+  components: {
+    Spinner,
+  },
   data() {
     return {
       object_list: {},
