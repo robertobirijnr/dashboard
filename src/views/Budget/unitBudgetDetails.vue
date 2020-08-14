@@ -9,6 +9,7 @@
     </div>
 
     <!-- Default Light Table -->
+
     <div class="row">
       <div class="col">
         <div class="card card-small mb-4">
@@ -312,6 +313,9 @@
                         <span v-if="employ.employee_type === 'P'">
                           {{formatPrice(employ.period_basic)}}
                         </span>
+                        <span v-else-if="employ.employee_type === 'C' || employ.employee_type === 'T'">
+                          <input type="text" v-model="employ.period_basic" disabled class="form-control">
+                        </span>
                         <span v-else>
                           <input type="text" v-model="employ.period_basic" :id="`cpb${employ.id}`" disabled class="form-control">
                         </span>
@@ -523,13 +527,18 @@
 
   import axios from 'axios';
   import config from '@/config';
+  import Spinner from '@/components/common/Spinner.vue';
 
   export default {
+    components: {
+      Spinner,
+    },
     data() {
       return {
         object: {},
         type: '',
         loading: false,
+        pageloading: false,
         gst: 0,
         cb: 0,
         allawa: 0,
@@ -599,22 +608,29 @@
       },
       com_enable(eid){
         document.getElementById(`cmb${eid}`).disabled = false;
-        document.getElementById(`cpb${eid}`).disabled = false;
+        if(document.getElementById(`cpb${eid}`) !== null){
+          document.getElementById(`cpb${eid}`).disabled = false;
+        }
         document.getElementById(`ce${eid}`).hidden = true;
         document.getElementById(`cs${eid}`).hidden = false;
         document.getElementById(`cc${eid}`).hidden = false;
       },
       com_disable(eid){
         document.getElementById(`cmb${eid}`).disabled = true;
-        document.getElementById(`cpb${eid}`).disabled = true;
+        if(document.getElementById(`cpb${eid}`) !== null){
+          document.getElementById(`cpb${eid}`).disabled = true;
+        }
         document.getElementById(`ce${eid}`).hidden = false;
         document.getElementById(`cs${eid}`).hidden = true;
         document.getElementById(`cc${eid}`).hidden = true;
       },
       com_save(eid){
         const monthly = document.getElementById(`cmb${eid}`).value;
-        const yearly = document.getElementById(`cpb${eid}`).value;
-        if(monthly > 0 && yearly > 0){
+        var yearly;
+        if(document.getElementById(`cpb${eid}`) !== null){
+          yearly = document.getElementById(`cpb${eid}`).value;
+        }
+        if(monthly > 0 && (yearly > 0 || document.getElementById(`cpb${eid}`) === null)){
           this.loading = true;
           axios.post(`${config.apiUrl}/budget/bcs/${eid}/`, {
             monthly: monthly,
@@ -754,12 +770,14 @@
         this.tt = this.gst + this.at + Number(this.cb) + Number(this.allawa) + Number(this.ssf) + Number(this.pc);
       },
       details() {
+        this.pageloading = true;
         const budgetid = this.$route.params.unit_id;
         axios.get(`${config.apiUrl}/budget/ubd/${budgetid}/`, {
           headers: {
             Authorization: `JWT ${config.get_token()}`,
           },
         }).then((response) => {
+          this.pageloading = false;
           const results = response.data;
           this.object = results.object;
           this.gst = results.goods_services_total;
@@ -780,6 +798,7 @@
           console.log(response.data);
           this.$noty.success('Everything looks great');
         }).catch(({response}) => {
+          this.pageloading = false;
           console.log(response);
           const errors = response.data;
           if(response.status === 401){
