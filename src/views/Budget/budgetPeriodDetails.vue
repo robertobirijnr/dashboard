@@ -44,7 +44,8 @@
 
     </div>
     <!-- Default Light Table -->
-    <div class="row">
+    <center v-if="pageloading"><Spinner/></center>
+    <div  class="row" v-else>
       <div class="modal fade" id="confirmModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
@@ -854,8 +855,11 @@
 
   import axios from 'axios';
   import config from '@/config';
-
+  import Spinner from '@/components/common/Spinner.vue';
   export default {
+    components: {
+      Spinner,
+    },
     data() {
       return {
         object: {},
@@ -879,6 +883,7 @@
         errors: {},
         formLoading: false,
         loading: false,
+        pageloading: false,
         msg: '',
         msg2: '',
         msg3: '',
@@ -1001,18 +1006,21 @@
         });
       },
       details() {
+        this.pageloading = true;
         const id = this.$route.params.period_id;
         axios.get(`${config.apiUrl}/budget/obp/${id}`, {
           headers: {
             Authorization: `JWT ${config.get_token()}`,
           },
         }).then((response) => {
+          this.pageloading = false;
           const results = response.data;
           this.object = results.budget_period;
           this.unit_budgets = results.unit_budgets;
           console.log(response);
           this.$noty.success('Everything looks great!');
         }).catch(({response}) => {
+          this.pageloading = false;
           console.log(response);
           if(response.status === 401){
             this.$noty.error(`Oops! Your session has expired.`);
