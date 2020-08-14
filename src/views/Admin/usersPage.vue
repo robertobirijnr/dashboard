@@ -12,8 +12,8 @@
         <!-- Content -->
         <User/>
 
-        <!-- Main Footer -->
-        <main-footer />
+        <!--&lt;!&ndash; Main Footer &ndash;&gt;-->
+        <!--<main-footer />-->
       </d-col>
 
     </d-row>

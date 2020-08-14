@@ -55,7 +55,7 @@
                           <select name="role" v-model="role" id="id_role" class="custom-select">
                             <option value="">Choose...</option>
                             <option value="AD">Administrator</option>
-                            <option value="BH">Budget Head</option>
+                            <option value="BH">Budget Admin</option>
                             <option value="BO">Budget Officer</option>
                             <option value="UU">Unit User</option>
                             <option value="DU">Department User</option>
