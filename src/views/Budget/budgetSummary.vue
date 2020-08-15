@@ -15,30 +15,44 @@
                 <div class="col"><button @click="exporrt(object.id)" :disabled="!budgets.length" class="btn-sm btn btn-primary">EXTRACT</button></div>
                 <!--{{departments}}-->
                 <div class="col" align="right">
-                  <div class="btn-group mr-2">
-                    <button type="button" :disabled="!departments.length" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Departments Summary
-                    </button>
-                    <div class="dropdown-menu">
-                      <router-link class="dropdown-item" :key="depart.id" v-for="depart in departments" :to="`/department-budget-summary/${object.budget_period_id}/${depart.id}`">{{depart.name}}</router-link>
-                      <!--<a class="dropdown-item" href="#">Another action</a>-->
-                      <!--<a class="dropdown-item" href="#">Something else here</a>-->
-                      <!--<div class="dropdown-divider"></div>-->
-                      <!--<a class="dropdown-item" href="#">Separated link</a>-->
+                  <div class="row">
+                    <div class="col">
+                      <select :disabled="!departments.length" class="custom-select" v-model="depart_id" @change="depart_to(depart_id, object.slug)">
+                        <option value="">Select Department</option>
+                        <option :key="depart.id" v-for="depart in departments" :value="`${depart.depart_id}`">{{depart.name}}</option>
+                      </select>
+                    </div>
+                    <div class="col">
+                      <select :disabled="!divisions.length" class="custom-select" v-model="div_id" @change="div_to(div_id, object.slug)">
+                        <option value="">Select Division</option>
+                        <option :key="div.id" v-for="div in divisions" :value="`${div.division_id}`">{{div.name}}</option>
+                      </select>
                     </div>
                   </div>
-                  <div class="btn-group">
-                    <button type="button" :disabled="!divisions.length" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Divisions Summary
-                    </button>
-                    <div class="dropdown-menu">
-                      <router-link class="dropdown-item"  :key="div.id" v-for="div in divisions" :to="`/division-budget-summary/${object.budget_period_id}/${div.id}`">{{div.name}}</router-link>
-                      <!--<a class="dropdown-item" href="#">Another action</a>-->
-                      <!--<a class="dropdown-item" href="#">Something else here</a>-->
-                      <!--<div class="dropdown-divider"></div>-->
-                      <!--<a class="dropdown-item" href="#">Separated link</a>-->
-                    </div>
-                  </div>
+                  <!--<div class="btn-group mr-2">-->
+                    <!--<button type="button" :disabled="!departments.length" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+                      <!--Departments Summary-->
+                    <!--</button>-->
+                    <!--<div class="dropdown-menu">-->
+                      <!--<router-link class="dropdown-item" :key="depart.id" v-for="depart in departments" :to="`/department-budget-summary/${object.slug}/${depart.depart_id}`">{{depart.name}}</router-link>-->
+                      <!--&lt;!&ndash;<a class="dropdown-item" href="#">Another action</a>&ndash;&gt;-->
+                      <!--&lt;!&ndash;<a class="dropdown-item" href="#">Something else here</a>&ndash;&gt;-->
+                      <!--&lt;!&ndash;<div class="dropdown-divider"></div>&ndash;&gt;-->
+                      <!--&lt;!&ndash;<a class="dropdown-item" href="#">Separated link</a>&ndash;&gt;-->
+                    <!--</div>-->
+                  <!--</div>-->
+                  <!--<div class="btn-group">-->
+                    <!--<button type="button" :disabled="!divisions.length" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+                      <!--Divisions Summary-->
+                    <!--</button>-->
+                    <!--<div class="dropdown-menu">-->
+                      <!--<router-link class="dropdown-item"  :key="div.id" v-for="div in divisions" :to="`/division-budget-summary/${object.budget_period_id}/${div.id}`">{{div.name}}</router-link>-->
+                      <!--&lt;!&ndash;<a class="dropdown-item" href="#">Another action</a>&ndash;&gt;-->
+                      <!--&lt;!&ndash;<a class="dropdown-item" href="#">Something else here</a>&ndash;&gt;-->
+                      <!--&lt;!&ndash;<div class="dropdown-divider"></div>&ndash;&gt;-->
+                      <!--&lt;!&ndash;<a class="dropdown-item" href="#">Separated link</a>&ndash;&gt;-->
+                    <!--</div>-->
+                  <!--</div>-->
                 </div>
               </div>
 
@@ -208,6 +222,8 @@
   export default {
     data() {
       return {
+        depart_id: '',
+        div_id: '',
         object: {},
         budgets: {},
         ubc: '',
@@ -231,6 +247,16 @@
       };
     },
     methods: {
+      depart_to(depart_id, slug){
+        if(depart_id){
+          this.$router.push(`/department-budget-summary/${slug}/${depart_id}`);
+        }
+      },
+      div_to(div_id, slug){
+        if(div_id){
+          this.$router.push(`/division-budget-summary/${slug}/${div_id}`);
+        }
+      },
       formatPrice(value) {
         let val = (value/1).toFixed(2).replace(',', '.');
         return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")

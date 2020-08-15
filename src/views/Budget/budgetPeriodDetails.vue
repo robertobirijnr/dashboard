@@ -371,7 +371,7 @@
                   <input type="number" v-model="quantity" class="form-control">
                 </div>
                 <div class="form-group">
-                  <button :disabled="formLoading" @click="new_budget_asset(unit_budget.id)" class="btn btn-sm btn-block btn-primary">Submit</button>
+                  <button :disabled="formLoading || !asset" @click="new_budget_asset(unit_budget.id)" class="btn btn-sm btn-block btn-primary">Submit</button>
                 </div>
               </div>
               <!--<div class="tab-pane fade mt-2" id="about1" role="tabpanel" aria-labelledby="about1-tab">-->

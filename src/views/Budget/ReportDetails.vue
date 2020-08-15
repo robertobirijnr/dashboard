@@ -16,11 +16,12 @@
             <div class="list-group-flush">
               <div class="list-group-item" :key="div.id" v-for="div in divisions">
                 <div class="row">
-                  <div class="col-md-10">
+                  <div class="col-md-9">
                     {{div.name}}
                   </div>
-                  <div class="col-md-2">
+                  <div class="col-md-3">
                     <button @click="div_exporrt(object.id, div.id, div.name)" class="btn btn-sm btn-outline-accent mr-2">Extract</button>
+                    <router-link :to="`/division-budget-summary/${object.slug}/${div.division_id}`" class="btn btn-sm btn-outline-success mr-2">Summary</router-link>
                     <a :href="`#div${div.id}`" class="btn btn-sm btn-primary" aria-expanded="false" :aria-controls="`div${div.id}`" data-toggle="collapse" role="button">
                       <i class="fa fa-sort"></i>
                     </a>
@@ -30,11 +31,12 @@
                   <div class="list-group-flush">
                     <div class="list-group-item" :key="dep.id" v-for="dep in div.departments">
                       <div class="row">
-                        <div class="col-md-10">
+                        <div class="col-md-9">
                           {{dep.name}}
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                           <button @click="dep_exporrt(object.id, dep.id, dep.name)" class="btn btn-sm btn-outline-accent mr-2">Extract</button>
+                          <router-link :to="`/department-budget-summary/${object.slug}/${dep.depart_id}`" class="mr-2 btn btn-sm btn-outline-success">Summary</router-link>
                           <a :href="`#dep${dep.id}`" class="btn btn-sm btn-primary" aria-expanded="false" :aria-controls="`dep${dep.id}`" data-toggle="collapse" role="button">
                             <i class="fa fa-sort"></i>
                           </a>
@@ -44,11 +46,13 @@
                         <div class="list-group-flush">
                           <div class="list-group-item" :key="unit.id" v-for="unit in dep.units">
                             <div class="row">
-                              <div class="col-md-10">
+                              <div class="col-md-9">
                                 {{unit.unit_name}}
                               </div>
-                              <div class="col-md-2">
+                              <div class="col-md-3">
+                                <input type="hidden" :id="`unit${unit.id}`" :value="`${unit.id}`">
                                 <button @click="unit_exporrt(unit.id, unit.unit_name)" class="btn btn-sm btn-outline-accent mr-2">Extract</button>
+                                <button @click="unit_bugdet(unit.id, object.id)" class="btn btn-sm btn-outline-success">Summary</button>
                               </div>
                             </div>
                           </div>
@@ -56,7 +60,7 @@
                       </div>
                     </div>
                   </div>
-              </div>
+                </div>
               </div>
 
             </div>
@@ -77,6 +81,7 @@
         loading: false,
         divisions: {},
         errors: {},
+        budget: {},
       };
     },
     methods: {
@@ -139,36 +144,36 @@
         })
       },
       div_exporrt(pid, did, division){
-      this.$noty.info('Exporting...');
-      axios.get(`${config.apiUrl}/budget/exdvbs/${pid}/${did}`, {
-        responseType: 'blob',
-        headers: {
-          Authorization: `JWT ${config.get_token()}`,
-        }
-      }).then((res) => {
-        const url = URL.createObjectURL(new Blob([res.data], {type: 'application/vnd.ms-excel'}));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', `${division}.xls`);
-        document.body.appendChild(link);
-        link.click();
-        this.$noty('Export Successful');
-      }).catch(({response}) => {
-        console.log(response);
-        this.errors = response.data;
-        if(response.status === 401){
-          this.$noty.error(`Oops! Your session has expired.`);
-          localStorage.removeItem('auth');
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
-          this.$router.push('/login');
-        }else if(response.status === 400){
-          this.$noty.error(`Oops! No unit budgets completed under this division`);
-        }else{
-          this.$noty.error('Oops! Something went terribly wrong!');
-        }
-      })
-    },
+        this.$noty.info('Exporting...');
+        axios.get(`${config.apiUrl}/budget/exdvbs/${pid}/${did}`, {
+          responseType: 'blob',
+          headers: {
+            Authorization: `JWT ${config.get_token()}`,
+          }
+        }).then((res) => {
+          const url = URL.createObjectURL(new Blob([res.data], {type: 'application/vnd.ms-excel'}));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', `${division}.xls`);
+          document.body.appendChild(link);
+          link.click();
+          this.$noty('Export Successful');
+        }).catch(({response}) => {
+          console.log(response);
+          this.errors = response.data;
+          if(response.status === 401){
+            this.$noty.error(`Oops! Your session has expired.`);
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            this.$router.push('/login');
+          }else if(response.status === 400){
+            this.$noty.error(`Oops! No unit budgets completed under this division`);
+          }else{
+            this.$noty.error('Oops! Something went terribly wrong!');
+          }
+        })
+      },
       dep_exporrt(pid, did, department){
         this.$noty.info('Exporting...');
         axios.get(`${config.apiUrl}/budget/exdbs/${pid}/${did}`, {
@@ -231,9 +236,37 @@
           }
         })
       },
+      unit_bugdet(unit_id, period_id){
+        if(unit_id && period_id){
+          axios.get(`${config.apiUrl}/budget/cdub/${unit_id}/${period_id}/`, {
+            headers: {
+              Authorization: `JWT ${config.get_token()}`
+            }
+          }).then((response) => {
+            this.budget = response.data;
+            console.log(this.budget);
+
+            this.$router.push(`/unit-budget/${this.budget.slug}`);
+          }).catch(({response}) => {
+            const errors = response.data;
+            if(response.status === 401){
+              this.$noty.error(`Oops! Your session has expired.`);
+              localStorage.removeItem('auth');
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              this.$router.push('/login');
+            }else{
+              this.$noty.error(`Oops! ${errors.detail}`);
+            }
+          });
+        }
+
+      },
     },
     mounted(){
       this.period();
+    },
+    watch: {
     }
   }
 </script>

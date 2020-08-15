@@ -94,20 +94,20 @@
                             <th>{{formatPrice(at)}}</th>
                           </tr>
                           <!--<tr>-->
-                            <!--<td>Allowances</td>-->
-                            <!--<td>{{formatPrice(allawa)}}</td>-->
+                          <!--<td>Allowances</td>-->
+                          <!--<td>{{formatPrice(allawa)}}</td>-->
                           <!--</tr>-->
                           <!--<tr>-->
-                            <!--<td>Social Security Fund</td>-->
-                            <!--<td>{{formatPrice(ssf)}}</td>-->
+                          <!--<td>Social Security Fund</td>-->
+                          <!--<td>{{formatPrice(ssf)}}</td>-->
                           <!--</tr>-->
                           <!--<tr>-->
-                            <!--<td>Pension Costs</td>-->
-                            <!--<td>{{formatPrice(pc)}}</td>-->
+                          <!--<td>Pension Costs</td>-->
+                          <!--<td>{{formatPrice(pc)}}</td>-->
                           <!--</tr>-->
                           <!--<tr>-->
-                            <!--<td>Assets</td>-->
-                            <!--<td>{{formatPrice(at)}}</td>-->
+                          <!--<td>Assets</td>-->
+                          <!--<td>{{formatPrice(at)}}</td>-->
                           <!--</tr>-->
                           <tr>
                             <th>Total</th>
@@ -313,7 +313,7 @@
                         <span v-if="employ.employee_type === 'P'">
                           {{formatPrice(employ.period_basic)}}
                         </span>
-                        <span v-else-if="employ.employee_type === 'C' || employ.employee_type === 'T'">
+                        <span v-else-if="employ.employee_type !== 'P'">
                           <input type="text" v-model="employ.period_basic" disabled class="form-control">
                         </span>
                         <span v-else>
@@ -350,7 +350,7 @@
                   <div class="list-group-item" v-if="asset.is_selected">
                     <div class="row">
                       <!--<div class="col-md-1">-->
-                        <!--<input class="form-check-input" disabled type="checkbox" :checked="asset.is_selected" value="" id="defaultCheck1">-->
+                      <!--<input class="form-check-input" disabled type="checkbox" :checked="asset.is_selected" value="" id="defaultCheck1">-->
                       <!--</div>-->
                       <div class="col-md-7">{{asset.asset.asset_name}}</div>
                       <div class="col-md-5" align="right">
@@ -418,7 +418,7 @@
               </div>
             </div>
             <div class="tab-pane fade" id="about" role="tabpanel" aria-labelledby="about-tab">
-              <div class="card-body">
+              <div class="card-body" v-if="object.status !== 'Completed'">
                 <div class="row">
                   <div class="col">
                     <div class="form-group">
@@ -505,6 +505,147 @@
                 </div>
                 <button class="btn-block btn btn-sm btn-info" :disabled="loading || object.status === 'Completed'" @click="allowances(object.id)">Save</button>
               </div>
+              <div class="card-body" v-else>
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                    <tr>
+                      <th>Items</th>
+                      <th>Amount GHS</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                      <td>Motorbike Maintenance Allowance</td>
+                      <td>{{formatPrice(object.motor_maintenance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Bicycle Maintenance Allowance</td>
+                      <td>{{formatPrice(object.bic_maintenance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Car Maintenance Allowance</td>
+                      <td>{{formatPrice(object.car_maintenance_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Training Allowance</td>
+                      <td>{{formatPrice(object.training_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Duty Allowance</td>
+                      <td>{{formatPrice(object.duty_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Professional Allowance</td>
+                      <td>{{formatPrice(object.professional_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Acting Allowance</td>
+                      <td>{{formatPrice(object.acting_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Entertainment Allowance</td>
+                      <td>{{formatPrice(object.entertain_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Fuel Allowance</td>
+                      <td>{{formatPrice(object.fuel_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Disability Guide Allowance</td>
+                      <td>{{formatPrice(object.disability_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Housing Allowance</td>
+                      <td>{{formatPrice(object.rent_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Risk Allowance</td>
+                      <td>{{formatPrice(object.risk_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Overtime Allowance</td>
+                      <td>{{formatPrice(object.overtime_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Tools Allowance</td>
+                      <td>{{formatPrice(object.tools_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Housing Allowance</td>
+                      <td>{{formatPrice(object.rent_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Travel & Transport Allowance</td>
+                      <td>{{formatPrice(object.transport_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Domestic Servant Allowance</td>
+                      <td>{{formatPrice(object.house_help_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Garden Boy Allowance</td>
+                      <td>{{formatPrice(object.garden_boy_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Day Watchman Allowance</td>
+                      <td>{{formatPrice(object.watchman_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Utility Allowance</td>
+                      <td>{{formatPrice(object.utility_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Responsibility Allowance</td>
+                      <td>{{formatPrice(object.responsibility_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Clothing Allowance</td>
+                      <td>{{formatPrice(object.clothing_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Cashier Allowance</td>
+                      <td>{{formatPrice(object.cashier_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Bonus</td>
+                      <td>{{formatPrice(object.annual_bonus)}}</td>
+                    </tr>
+                    <tr>
+                      <th>Total Allowance</th>
+                      <th>{{formatPrice(object.allowances)}}</th>
+                    </tr>
+                    <tr>
+                      <th>Social Contributions</th>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>13% SSF Contributions</td>
+                      <td>{{formatPrice(object.social_security_fund)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Gratuity</td>
+                      <td>{{formatPrice(object.gratuity)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Staff Welfare Benefit</td>
+                      <td>{{formatPrice(object.pension_costs)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Long Service Awards</td>
+                      <td>{{formatPrice(object.long_service_awards)}}</td>
+                    </tr>
+                    <tr>
+                      <th>Sub Total</th>
+                      <th>{{formatPrice(sct)}}</th>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="card-footer" align="right">
+                <span class="font-weight-bolder">Sub Total = </span> <span>GHS {{formatPrice(scat)}}</span>
+              </div>
             </div>
           </div>
           <div class="card-footer" >
@@ -556,6 +697,15 @@
         compensate: 0,
         // unit_price: '',
       };
+    },
+    computed:{
+      sct(){
+        const sum = Number(this.object.social_security_fund) + Number(this.object.gratuity) + Number(this.object.pension_costs) + Number(this.object.long_service_awards);
+        return sum;
+      },
+      scat(){
+        return Number(this.object.allowances) + this.sct;
+      }
     },
     methods: {
       isub_enable(subid){

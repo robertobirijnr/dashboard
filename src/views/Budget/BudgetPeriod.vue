@@ -74,7 +74,7 @@
                     <router-link :to="{name: 'period-details', params: {period_id: object.slug}}" class="btn btn-sm btn-primary mr-1">
                       Details
                     </router-link>
-                    <router-link :hidden="userRole === 'UU'" :to="{name: 'budget_summary', params: {period_id: object.budget_period_id}}" class="btn btn-sm btn-primary">
+                    <router-link :hidden="userRole === 'UU'" :to="{name: 'budget_summary', params: {period_id: object.slug}}" class="btn btn-sm btn-primary">
                       Budget Summary
                     </router-link>
                   </td>

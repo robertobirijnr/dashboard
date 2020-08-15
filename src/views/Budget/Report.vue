@@ -25,8 +25,11 @@
                       <div class="col-md-12 mb-1">
                         <router-link :to="`/report-details/${object.slug}`" class="btn btn-sm btn-primary">View</router-link>
                       </div>
-                      <div class="col-md-12">
+                      <div class="col-md-12 mb-1">
                         <button class="btn btn-sm btn-primary" @click="exporrt(object.id, object.period)">Extract</button>
+                      </div>
+                      <div class="col-md-12">
+                        <router-link :to="{name: 'budget_summary', params: {period_id: object.slug}}" class="btn btn-sm btn-primary">Summary</router-link>
                       </div>
                     </div>
                   </div>
