@@ -18,41 +18,48 @@ export default function () {
         name: 'budget-periods',
       },
     },
-    {
-      title: 'Units Budgets',
-      htmlBefore: '<i class="material-icons">note_add</i>',
-      to: {
-        name: 'unit-budgets',
+      {
+        title: 'Units Budgets',
+        htmlBefore: '<i class="material-icons">note_add</i>',
+        to: {
+          name: 'unit-budgets',
+        },
       },
-    },
-    {
-      title: 'Salary Scale',
-      htmlBefore: '<i class="material-icons">local_atm</i>',
-      to: {
-        name: 'salary-scale',
+      {
+        title: 'Salary Scale',
+        htmlBefore: '<i class="material-icons">local_atm</i>',
+        to: {
+          name: 'salary-scale',
+        },
       },
-    },
-    {
-      title: 'Implementations',
-      htmlBefore: '<i class="material-icons">fact_check</i>',
-      to: {
-        name: 'implementations',
+      {
+        title: 'Implementations',
+        htmlBefore: '<i class="material-icons">fact_check</i>',
+        to: {
+          name: 'implementations',
+        },
       },
-    },
-    {
-      title: 'Budget Division Setup',
-      htmlBefore: '<i class="material-icons">emoji_people</i>',
-      to: {
-        name: 'budget-divisions',
+      {
+        title: 'Budget Division Setup',
+        htmlBefore: '<i class="material-icons">emoji_people</i>',
+        to: {
+          name: 'budget-divisions',
+        },
       },
-    },
-    {
-      title: 'Reports',
-      htmlBefore: '<i class="material-icons">emoji_people</i>',
-      to: {
-        name: 'budget-reports',
+      {
+        title: 'Requisitions',
+        htmlBefore: '<i class="material-icons">emoji_people</i>',
+        to: {
+          name: 'requisitions',
+        },
       },
-    },
+      {
+        title: 'Reports',
+        htmlBefore: '<i class="material-icons">emoji_people</i>',
+        to: {
+          name: 'budget-reports',
+        },
+      },
     ];
   }
   return [{
@@ -69,19 +76,19 @@ export default function () {
       name: 'budget-periods',
     },
   },
-  {
-    title: 'Implementations',
-    htmlBefore: '<i class="material-icons">fact_check</i>',
-    to: {
-      name: 'implementations',
+    {
+      title: 'Implementations',
+      htmlBefore: '<i class="material-icons">fact_check</i>',
+      to: {
+        name: 'implementations',
+      },
     },
-  },
-  // {
-  //   title: 'Requisitions',
-  //   htmlBefore: '<i class="material-icons">emoji_people</i>',
-  //   to: {
-  //     name: 'requisitions',
-  //   },
-  // },
+    {
+      title: 'Requisitions',
+      htmlBefore: '<i class="material-icons">emoji_people</i>',
+      to: {
+        name: 'requisitions',
+      },
+    },
   ];
 }
