@@ -14,7 +14,7 @@
               id="main-logo"
               class="d-inline-block align-top mr-1"
               style="max-width: 25px;"
-              src="@/assets/images/shards-dashboards-logo.svg"
+              src="@/assets/images/gra_logo.png"
               alt="Shards Dashboard"
             />
             <span v-if="!hideLogoText" class="d-none text-white d-md-inline ml-1">{{title}}</span>

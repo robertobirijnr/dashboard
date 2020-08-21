@@ -11,13 +11,14 @@
         <div class="card">
           <div class="card-header">
             <div class="row">
-              <div class="col">
+              <div class="col-md-8">
                 <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
-              <li class="nav-item"><a href="#gs" id="gs-tab" data-toggle="tab" class="nav-link active" aria-selected="true">Goods & Services</a></li>
-              <li class="nav-item"><a href="#com" id="com-tab" data-toggle="tab" class="nav-link" aria-selected="false">Employees Compensations</a></li>
-              <li class="nav-item"><a href="#asset" id="asset-tab" data-toggle="tab" class="nav-link" aria-selected="false">Assets</a></li>
-              <li class="nav-item"><a href="#sum" id="sum-tab" data-toggle="tab" class="nav-link" aria-selected="false">Summary</a></li>
-            </ul>
+                  <li class="nav-item"><a href="#gs" id="gs-tab" data-toggle="tab" class="nav-link active" aria-selected="true">Goods & Services</a></li>
+                  <li class="nav-item"><a href="#com" id="com-tab" data-toggle="tab" class="nav-link" aria-selected="false">Employees Compensations</a></li>
+                  <li class="nav-item"><a href="#asset" id="asset-tab" data-toggle="tab" class="nav-link" aria-selected="false">Assets</a></li>
+                  <li class="nav-item"><a href="#about" id="about-tab" data-toggle="tab" class="nav-link" aria-selected="true">Allowances</a></li>
+                  <li class="nav-item"><a href="#sum" id="sum-tab" data-toggle="tab" class="nav-link" aria-selected="false">Summary</a></li>
+                </ul>
               </div>
               <div class="col" align="right">
                 <button @click="exporrt(object.id)" :disabled="!object" class="btn btn-primary btn-sm">EXTRACT</button>
@@ -39,18 +40,60 @@
                     <tr>
                       <th>Category</th>
                       <th>Item</th>
+                      <th>Item Type</th>
                       <th>Quantity</th>
-                      <th>Item Price</th>
-                      <th>Total Amount</th>
+                      <th>Subs</th>
+                      <th>Item Price GHS</th>
+                      <th>Total Amount GHS</th>
+                      <th></th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr :key="gs.id" v-for="gs in gs_list">
                       <td>{{gs.item.category_name}}</td>
                       <td>{{gs.item.item_name}}</td>
+                      <td>{{gs.item.item_type}}</td>
                       <td>{{gs.quantity}}</td>
-                      <td>GHS {{formatPrice(gs.unit_price)}}</td>
-                      <td>GHS {{formatPrice(gs.total_amount)}}</td>
+                      <td>{{gs.item.subs.length}}</td>
+                      <td>{{formatPrice(gs.unit_price)}}</td>
+                      <td>{{formatPrice(gs.total_amount)}}</td>
+                      <td v-if="gs.item.subs.length">
+                        <button class="btn btn-sm btn-info" data-toggle="modal" :data-target="`#subs${gs.id}`">
+                          <i class="fa fa-object-ungroup"></i>
+                        </button>
+                        <div class="modal fade" :id="`subs${gs.id}`" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">{{gs.item.item_name}} Sub Items</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <table class="table">
+                                  <thead>
+                                  <tr>
+                                    <th>Item</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Price (GHS)</th>
+                                    <th>Total (GHS)</th>
+                                  </tr>
+                                  </thead>
+                                  <tbody>
+                                  <tr :key="sub.id" v-for="sub in gs.subs">
+                                    <td>{{sub.sub_item.name}}</td>
+                                    <td>{{sub.quantity}}</td>
+                                    <td>{{formatPrice(sub.unit_price)}}</td>
+                                    <td>{{formatPrice(sub.total_amount)}}</td>
+                                  </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
                     </tr>
                     </tbody>
                   </table>
@@ -63,13 +106,14 @@
                   </div>
                 </div>
                 <div class="table-responsive">
-                  <table class="table table-borderless">
+                  <table v-if="com_list.length" class="table table-borderless">
                     <thead>
                     <tr>
                       <th>Staff ID</th>
                       <th>Full Name</th>
                       <th>Category</th>
-                      <th>G & N</th>
+                      <th>Grade</th>
+                      <th>Notch</th>
                       <th>Monthly Basic (GHS)</th>
                       <th>Yearly Basic (GHS)</th>
                       <th>Status</th>
@@ -80,13 +124,15 @@
                       <td>{{staff.staff_number}}</td>
                       <td>{{staff.first_name}} {{staff.last_name}}</td>
                       <td>{{staff.employee_type_display}}</td>
-                      <td>{{staff.rank}} & {{staff.notch}}</td>
+                      <td>{{staff.rank}}</td>
+                      <td>{{staff.notch}}</td>
                       <td>{{formatPrice(staff.monthly_basic)}}</td>
                       <td>{{formatPrice(staff.period_basic)}}</td>
                       <td>{{staff.status}}</td>
                     </tr>
                     </tbody>
                   </table>
+                  <span v-else>No compensations recorded!</span>
                 </div>
               </div>
               <div class="tab-pane fade" id="asset" role="tabpanel" aria-labelledby="asset-tab">
@@ -95,14 +141,182 @@
                     <input type="text" name="search" class="form-control" placeholder="Search by asset name" v-model="search">
                   </div>
                 </div>
-                <div class="list-group list-group-flush">
-                  <div class="list-group-item" :key="asset.id" v-for="asset in asset_list">
+                <div class="list-group list-group-flush" :key="asset.id" v-for="asset in asset_list">
+                  <div class="list-group-item"  v-if="asset.is_selected">
                     <div class="row">
-                      <div class="col">{{asset.asset.asset_name}}</div>
-                      <div class="col" align="right">GHS {{formatPrice(asset.amount)}}</div>
+                      <div class="col-md-7">{{asset.asset.asset_name}}</div>
+                      <div class="col-md-5" align="right">
+                        <div class="row">
+                          <div class="col-md-7">GHS {{formatPrice(asset.amount)}}</div>
+                          <div class="col" v-if="asset.subs.length">
+                            <a :href="`#assCol${asset.id}`" :disabled="object.status === 'Completed'" aria-expanded="false" :aria-controls="`assCol${asset.id}`" data-toggle="collapse" role="button" class="mr-1 btn btn-sm btn-info"><i class="fa fa-sort"></i></a>
+                          </div>
+                        </div>
+
+                      </div>
+
                     </div>
                   </div>
-
+                  <div class="collapse multi-collapse" :id="`assCol${asset.id}`">
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                        <tr>
+                          <th>Asset</th>
+                          <th>Quantity</th>
+                          <th>Unit Price GHS</th>
+                          <th>Total GHS</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                          <tr :key="sub.id" v-for="sub in asset.subs">
+                            <td>{{sub.sub_asset.name}}</td>
+                            <td>{{sub.quantity}}</td>
+                            <td>{{formatPrice(sub.unit_price)}}</td>
+                            <td>{{formatPrice(sub.total_amount)}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane fade" id="about" role="tabpanel" aria-labelledby="about-tab">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                    <tr>
+                      <th>Items</th>
+                      <th>Amount GHS</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                      <td>Motorbike Maintenance Allowance</td>
+                      <td>{{formatPrice(object.motor_maintenance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Bicycle Maintenance Allowance</td>
+                      <td>{{formatPrice(object.bic_maintenance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Car Maintenance Allowance</td>
+                      <td>{{formatPrice(object.car_maintenance_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Training Allowance</td>
+                      <td>{{formatPrice(object.training_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Duty Allowance</td>
+                      <td>{{formatPrice(object.duty_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Professional Allowance</td>
+                      <td>{{formatPrice(object.professional_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Acting Allowance</td>
+                      <td>{{formatPrice(object.acting_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Entertainment Allowance</td>
+                      <td>{{formatPrice(object.entertain_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Fuel Allowance</td>
+                      <td>{{formatPrice(object.fuel_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Disability Guide Allowance</td>
+                      <td>{{formatPrice(object.disability_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Housing Allowance</td>
+                      <td>{{formatPrice(object.rent_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Risk Allowance</td>
+                      <td>{{formatPrice(object.risk_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Overtime Allowance</td>
+                      <td>{{formatPrice(object.overtime_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Tools Allowance</td>
+                      <td>{{formatPrice(object.tools_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Housing Allowance</td>
+                      <td>{{formatPrice(object.rent_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Travel & Transport Allowance</td>
+                      <td>{{formatPrice(object.transport_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Domestic Servant Allowance</td>
+                      <td>{{formatPrice(object.house_help_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Garden Boy Allowance</td>
+                      <td>{{formatPrice(object.garden_boy_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Day Watchman Allowance</td>
+                      <td>{{formatPrice(object.watchman_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Utility Allowance</td>
+                      <td>{{formatPrice(object.utility_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Responsibility Allowance</td>
+                      <td>{{formatPrice(object.responsibility_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Clothing Allowance</td>
+                      <td>{{formatPrice(object.clothing_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Cashier Allowance</td>
+                      <td>{{formatPrice(object.cashier_allowance)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Bonus</td>
+                      <td>{{formatPrice(object.annual_bonus)}}</td>
+                    </tr>
+                    <tr>
+                      <th>Total Allowance</th>
+                      <th>{{formatPrice(object.allowances)}}</th>
+                    </tr>
+                    <tr>
+                      <th>Social Contributions</th>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>13% SSF Contributions</td>
+                      <td>{{formatPrice(object.social_security_fund)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Gratuity</td>
+                      <td>{{formatPrice(object.gratuity)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Staff Welfare Benefit</td>
+                      <td>{{formatPrice(object.pension_costs)}}</td>
+                    </tr>
+                    <tr>
+                      <td>Long Service Awards</td>
+                      <td>{{formatPrice(object.long_service_awards)}}</td>
+                    </tr>
+                    <tr>
+                      <th>Sub Total</th>
+                      <th>{{formatPrice(sct)}}</th>
+                    </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
               <div class="tab-pane fade" id="sum" role="tabpanel" aria-labelledby="sum-tab">
@@ -165,6 +379,10 @@ export default {
     };
   },
   computed: {
+    sct(){
+      const sum = Number(this.object.social_security_fund) + Number(this.object.gratuity) + Number(this.object.pension_costs) + Number(this.object.long_service_awards);
+      return sum;
+    },
     gs_list() {
       return this.object.items.filter(post => post.item.item_name.toLowerCase().includes(this.search.toLowerCase()));
     },

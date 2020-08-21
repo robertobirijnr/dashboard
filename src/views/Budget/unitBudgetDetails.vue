@@ -379,8 +379,8 @@
                       <tr>
                         <th>Asset</th>
                         <th>Quantity</th>
-                        <th>Unit Price</th>
-                        <th>Total</th>
+                        <th>Unit Price GHS</th>
+                        <th>Total GHS</th>
                         <th>Actions</th>
                       </tr>
                       </thead>
@@ -395,7 +395,7 @@
                           <input type="number" :id="`aup${sub.id}`" v-model="sub.unit_price" disabled class="form-control">
                           <!--{{sub.unit_price}}-->
                         </td>
-                        <td>{{sub.total_amount}}</td>
+                        <td>{{formatPrice(sub.total_amount)}}</td>
                         <td>
                           <button class="btn btn-sm btn-success" :disabled="object.status === 'Completed'" :id="`ase${sub.id}`" @click="esub_enable(sub.id)">
                             <i class="material-icons">create</i>

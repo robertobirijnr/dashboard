@@ -31,7 +31,7 @@
                   <td>{{object.budget_period}}</td>
                   <td>{{object.status}}</td>
                   <td>
-                    <router-link :to="`/implement-details/${object.unit_budget_id}`" class="btn btn-sm btn-primary">Details</router-link>
+                    <router-link :to="`/implement-details/${object.slug}`" class="btn btn-sm btn-primary">Details</router-link>
                   </td>
                 </tr>
                 </tbody>
