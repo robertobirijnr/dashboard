@@ -93,7 +93,8 @@
               <div class="col" align="right" v-if="userRole === 'BH'">
                 <button @click="open_period(object.id)" title="Click to open this budget period for submissions" :disabled="loading" class="btn btn-sm btn-success" v-if="object.status === 'Close'">Open</button>
                 <button class="btn btn-sm btn-warning" title="Click to close this budget period" :disabled="loading" @click="close_period(object.id)" :hidden="object.status === 'Completed'" v-else >Close</button>
-                <button class="btn btn-sm btn-success ml-1" title="Click to complete this budget period"  data-toggle="modal" data-target="#completeModal" :hidden="!completed || object.status === 'Completed'">Complete</button>
+                <button class="btn btn-sm btn-success ml-1" title="Click to complete this budget period"  data-toggle="modal" data-target="#completeModal" :hidden="unit_budgets.length === 0">Complete</button>
+                <!--{{unit_budgets.length}}-->
               </div>
             </div>
           </div>
@@ -1041,6 +1042,7 @@
             $('#completeModal').modal('hide');
             this.$noty.success('Budget Period Completed!');
           }).catch(({response}) => {
+            this.loading = false;
           this.pageloading = false;
           console.log(response);
           if(response.status === 401){
@@ -1049,6 +1051,9 @@
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             this.$router.push('/login');
+          }else{
+            const error = response.data;
+            this.$noty.error(`Oops! ${error.detail}`);
           }
         })
         }
