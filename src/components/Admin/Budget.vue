@@ -24,7 +24,7 @@
               <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                 <center v-if="listLoading"><Spinner/></center>
                 <div class="row" v-else>
-                  <div class="col-md-4">
+                  <div class="col-md-3">
                     <ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                       <li class=nav-item><a class="nav-link active" id="v-pills-profile-tab"
                                             data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="True">New Category</a></li>
@@ -69,7 +69,7 @@
 
                     </ul>
                   </div>
-                  <div class="col-md-8">
+                  <div class="col-md-9">
                     <div class="tab-content" id="v-pills-tabContent" >
                       <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
                         <div class="row mb-4">
@@ -94,7 +94,8 @@
                                   <div class="col-md-3">
                                     <input type="text" v-model="code" placeholder="Code" class="form-control">
                                   </div>
-                                  <div class="col-md-4">
+                                  <div class="col-md-3"><input type="text" v-model="item_name" placeholder="Item Name" class="form-control"></div>
+                                  <div class="col">
                                     <select class="custom-select" v-model="item_type">
                                       <option value="">Choose...</option>
                                       <option value="Good">Good</option>
@@ -102,7 +103,13 @@
                                       <!--<option value="Imprest">Imprest</option>-->
                                     </select>
                                   </div>
-                                  <div class="col-md-4"><input type="text" v-model="item_name" placeholder="Item Name" class="form-control"></div>
+                                  <div class="col">
+                                    <select class="custom-select" v-model="procure" :hidden="item_type === 'Good' || item_type === ''">
+                                      <option value="">Procure</option>
+                                      <option value="1">Yes</option>
+                                      <option value="0">No</option>
+                                    </select>
+                                  </div>
                                 </div>
 
                               </div>
@@ -324,6 +331,7 @@
         compensations: {},
         name: '',
         item_type: '',
+        procure: '',
         asset_name: '',
         isub_name: '',
         isub_code: '',
@@ -524,6 +532,7 @@
           item_name: this.item_name,
           type: this.item_type,
           code: this.code,
+          procure: this.procure,
         }, {
           headers: {
             Authorization: `JWT ${config.get_token()}`,
@@ -535,6 +544,7 @@
           this.item_name = '';
           this.code = '';
           this.item_type = '';
+          this.procure = '';
         }).catch(({ res }) => {
           this.loading = false;
           console.log(res);

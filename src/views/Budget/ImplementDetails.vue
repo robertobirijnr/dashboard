@@ -45,6 +45,7 @@
                       <th>Subs</th>
                       <th>Item Price GHS</th>
                       <th>Total Amount GHS</th>
+                      <th>To Be Procured</th>
                       <th></th>
                     </tr>
                     </thead>
@@ -57,6 +58,20 @@
                       <td>{{gs.item.subs.length}}</td>
                       <td>{{formatPrice(gs.unit_price)}}</td>
                       <td>{{formatPrice(gs.total_amount)}}</td>
+                      <td>
+                        <span v-if="gs.item.item_type === 'Service' && gs.item.is_procure === true">
+                          <div class="row">
+                            <div class="col-md-10">
+                              <input type="date" :value="gs.expected_at" :id="`gs${gs.id}`" class="form-control">
+                            </div>
+                            <div class="col-md-2">
+                              <button class="btn btn-sm btn-success" @click="expected_item(gs.id)"><i class="fa fa-save"></i></button>
+                            </div>
+                          </div>
+                        </span>
+
+
+                      </td>
                       <td v-if="gs.item.subs.length">
                         <button class="btn btn-sm btn-info" data-toggle="modal" :data-target="`#subs${gs.id}`">
                           <i class="fa fa-object-ungroup"></i>
@@ -141,20 +156,37 @@
                     <input type="text" name="search" class="form-control" placeholder="Search by asset name" v-model="search">
                   </div>
                 </div>
+                <div class="list-group-item">
+                  <div class="row">
+                    <div class="col-md-6">Asset Name</div>
+                    <div class="col">Amount</div>
+                    <div class="col">To be Procured</div>
+                  </div>
+                </div>
                 <div class="list-group list-group-flush" :key="asset.id" v-for="asset in asset_list">
                   <div class="list-group-item"  v-if="asset.is_selected">
                     <div class="row">
-                      <div class="col-md-7">{{asset.asset.asset_name}}</div>
-                      <div class="col-md-5" align="right">
+                      <div class="col-md-6">{{asset.asset.asset_name}}</div>
+
+                      <div class="col" align="right">
                         <div class="row">
-                          <div class="col-md-7">GHS {{formatPrice(asset.amount)}}</div>
+                          <div class="col-md-6">GHS {{formatPrice(asset.amount)}}</div>
                           <div class="col" v-if="asset.subs.length">
                             <a :href="`#assCol${asset.id}`" :disabled="object.status === 'Completed'" aria-expanded="false" :aria-controls="`assCol${asset.id}`" data-toggle="collapse" role="button" class="mr-1 btn btn-sm btn-info"><i class="fa fa-sort"></i></a>
                           </div>
                         </div>
-
                       </div>
-
+                      <div class="col">
+                        <div class="row">
+                          <div class="col-md-10"><input type="date" :id="`ea${asset.id}`" :value="asset.expected_at" class="form-control"></div>
+                          <div class="col-md-2">
+                            <button class="btn btn-sm btn-success" @click="expected_asset(asset.id)"><i class="fa fa-save"></i></button>
+                          </div>
+                        </div>
+                      </div>
+                      <!--<div class="col" v-else>-->
+                        <!--{{asset.expected_at}}-->
+                      <!--</div>-->
                     </div>
                   </div>
                   <div class="collapse multi-collapse" :id="`assCol${asset.id}`">
@@ -169,12 +201,12 @@
                         </tr>
                         </thead>
                         <tbody>
-                          <tr :key="sub.id" v-for="sub in asset.subs">
-                            <td>{{sub.sub_asset.name}}</td>
-                            <td>{{sub.quantity}}</td>
-                            <td>{{formatPrice(sub.unit_price)}}</td>
-                            <td>{{formatPrice(sub.total_amount)}}</td>
-                          </tr>
+                        <tr :key="sub.id" v-for="sub in asset.subs">
+                          <td>{{sub.sub_asset.name}}</td>
+                          <td>{{sub.quantity}}</td>
+                          <td>{{formatPrice(sub.unit_price)}}</td>
+                          <td>{{formatPrice(sub.total_amount)}}</td>
+                        </tr>
                         </tbody>
                       </table>
                     </div>
@@ -366,94 +398,152 @@
 </template>
 
 <script>
-import axios from 'axios';
-import config from '../../config';
+  import axios from 'axios';
+  import config from '../../config';
 
-export default {
-  name: 'ImplementDetails',
-  data() {
-    return {
-      object: {},
-      search: '',
-      errors: {},
-    };
-  },
-  computed: {
-    sct(){
-      const sum = Number(this.object.social_security_fund) + Number(this.object.gratuity) + Number(this.object.pension_costs) + Number(this.object.long_service_awards);
-      return sum;
+  export default {
+    name: 'ImplementDetails',
+    data() {
+      return {
+        object: {},
+        search: '',
+        errors: {},
+        loading: false,
+      };
     },
-    gs_list() {
-      return this.object.items.filter(post => post.item.item_name.toLowerCase().includes(this.search.toLowerCase()));
+    computed: {
+      sct(){
+        const sum = Number(this.object.social_security_fund) + Number(this.object.gratuity) + Number(this.object.pension_costs) + Number(this.object.long_service_awards);
+        return sum;
+      },
+      gs_list() {
+        return this.object.items.filter(post => post.item.item_name.toLowerCase().includes(this.search.toLowerCase()));
+      },
+      com_list() {
+        return this.object.employees_compensations.filter(post => post.staff_number.toLowerCase().includes(this.search.toLowerCase()));
+      },
+      asset_list() {
+        return this.object.assets.filter(post => post.asset.asset_name.toLowerCase().includes(this.search.toLowerCase()));
+      },
+      userRole() {
+        return this.$root.auth.user.user_role;
+      },
     },
-    com_list() {
-      return this.object.employees_compensations.filter(post => post.staff_number.toLowerCase().includes(this.search.toLowerCase()));
-    },
-    asset_list() {
-      return this.object.assets.filter(post => post.asset.asset_name.toLowerCase().includes(this.search.toLowerCase()));
-    },
-  },
-  methods: {
-    formatPrice(value) {
-      const val = (value / 1).toFixed(2).replace(',', '.');
-      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    },
-    details() {
-      const budget_id = this.$route.params.budget_id;
-      axios.get(`${config.apiUrl}/budget/ubds/${budget_id}`, {
-        headers: {
-          Authorization: `JWT ${config.get_token()}`,
-        },
-      }).then((res) => {
-        this.object = res.data;
-        this.$noty.success('Everything looks great!');
-      }).catch(({response}) => {
-        this.errors = response.data;
-        if(response.status === 401){
-          this.$noty.error(`Oops! Your session has expired.`);
-          localStorage.removeItem('auth');
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
-          this.$router.push('/login');
-        }else{
-          this.$noty.error(`Oops! ${this.errors.detail}`);
+    methods: {
+      formatPrice(value) {
+        const val = (value / 1).toFixed(2).replace(',', '.');
+        return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      },
+      details() {
+        const budget_id = this.$route.params.budget_id;
+        axios.get(`${config.apiUrl}/budget/ubds/${budget_id}`, {
+          headers: {
+            Authorization: `JWT ${config.get_token()}`,
+          },
+        }).then((res) => {
+          this.object = res.data;
+          this.$noty.success('Everything looks great!');
+        }).catch(({response}) => {
+          this.errors = response.data;
+          if(response.status === 401){
+            this.$noty.error(`Oops! Your session has expired.`);
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            this.$router.push('/login');
+          }else{
+            this.$noty.error(`Oops! ${this.errors.detail}`);
+          }
+        });
+      },
+      exporrt(uid){
+        this.$noty.info('Extracting...');
+        axios.get(`${config.apiUrl}/budget/exub/${uid}/`, {
+          responseType: 'blob',
+          headers: {
+            Authorization: `JWT ${config.get_token()}`,
+          }
+        }).then((res) => {
+          const url = URL.createObjectURL(new Blob([res.data], {type: 'application/vnd.ms-excel'}));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', `${this.object.unit_name}.xls`);
+          document.body.appendChild(link);
+          link.click();
+          this.$noty.success('Extracted Succesfully');
+        }).catch(({response}) => {
+          console.log(response);
+          this.errors = response.data;
+          if(response.status === 401){
+            this.$noty.error(`Oops! Your session has expired.`);
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            this.$router.push('/login');
+          }else{
+            this.$noty.error(`Oops! ${this.errors.detail}`);
+          }
+        })
+      },
+      expected_asset(abid){
+        const value = document.getElementById(`ea${abid}`).value;
+        if(value){
+          this.loading = true;
+          axios.post(`${config.apiUrl}/budget/abe/${abid}/`, {
+            expected: value
+          }, {
+            headers: {
+              Authorization: `JWT ${config.get_token()}`,
+            },
+          }).then((response) => {
+            this.loading = false;
+            this.$noty.success("Date Expected to be procured recorded!");
+          }).catch(({response}) => {
+            this.errors = response.data;
+            if(response.status === 401){
+              this.$noty.error(`Oops! Your session has expired.`);
+              localStorage.removeItem('auth');
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              this.$router.push('/login');
+            }else{
+              this.$noty.error(`Oops! ${this.errors.detail}`);
+            }
+          })
         }
-      });
-    },
-    exporrt(uid){
-      this.$noty.info('Extracting...');
-      axios.get(`${config.apiUrl}/budget/exub/${uid}/`, {
-        responseType: 'blob',
-        headers: {
-          Authorization: `JWT ${config.get_token()}`,
+      },
+      expected_item(ibid){
+        const value = document.getElementById(`gs${ibid}`).value;
+        if(value){
+          this.loading = true;
+          axios.post(`${config.apiUrl}/budget/ibe/${ibid}/`, {
+            expected: value
+          }, {
+            headers: {
+              Authorization: `JWT ${config.get_token()}`,
+            },
+          }).then((response) => {
+            this.loading = false;
+            this.$noty.success("Date Expected to be procured recorded!");
+          }).catch(({response}) => {
+            this.errors = response.data;
+            if(response.status === 401){
+              this.$noty.error(`Oops! Your session has expired.`);
+              localStorage.removeItem('auth');
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              this.$router.push('/login');
+            }else{
+              this.$noty.error(`Oops! ${this.errors.detail}`);
+            }
+          })
         }
-      }).then((res) => {
-        const url = URL.createObjectURL(new Blob([res.data], {type: 'application/vnd.ms-excel'}));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', `${this.object.unit_name}.xls`);
-        document.body.appendChild(link);
-        link.click();
-        this.$noty.success('Extracted Succesfully');
-      }).catch(({response}) => {
-        console.log(response);
-        this.errors = response.data;
-        if(response.status === 401){
-          this.$noty.error(`Oops! Your session has expired.`);
-          localStorage.removeItem('auth');
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
-          this.$router.push('/login');
-        }else{
-          this.$noty.error(`Oops! ${this.errors.detail}`);
-        }
-      })
+      }
     },
-  },
-  mounted() {
-    this.details();
-  },
-};
+    mounted() {
+      this.details();
+    },
+  };
 </script>
 
 <style scoped>

@@ -65,6 +65,25 @@
           </div>
         </div>
       </div>
+      <div class="modal fade" id="completeModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">Complete Budget Period?</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              Clicking on the understood button implies that all unit budgets have been computed, reports assessed, completed and ready to be procured
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" :disabled="loading" @click="complete_period(object.id)">Understood</button>
+            </div>
+          </div>
+        </div>
+      </div>
       <!--{{unit_budget.status}}-->
       <div class="col-md-12">
         <div class="card" v-if="userRole === 'BH' || userRole === 'BO'">
@@ -73,7 +92,8 @@
               <div class="col">Units Budgets</div>
               <div class="col" align="right" v-if="userRole === 'BH'">
                 <button @click="open_period(object.id)" title="Click to open this budget period for submissions" :disabled="loading" class="btn btn-sm btn-success" v-if="object.status === 'Close'">Open</button>
-                <button class="btn btn-sm btn-warning" title="Click to close this budget period" :disabled="loading" @click="close_period(object.id)" v-else>Close</button>
+                <button class="btn btn-sm btn-warning" title="Click to close this budget period" :disabled="loading" @click="close_period(object.id)" :hidden="object.status === 'Completed'" v-else >Close</button>
+                <button class="btn btn-sm btn-success ml-1" title="Click to complete this budget period"  data-toggle="modal" data-target="#completeModal" :hidden="!completed || object.status === 'Completed'">Complete</button>
               </div>
             </div>
           </div>
@@ -818,20 +838,20 @@
                   <div class="collapse multiple-collapse" :id="`asset${asset.id}`">
                     <table class="table">
                       <thead>
-                        <tr>
-                          <th>Asset</th>
-                          <th>Quantity</th>
-                          <th>Unit Price (GHS)</th>
-                          <th>Total Amount (GHS)</th>
-                        </tr>
+                      <tr>
+                        <th>Asset</th>
+                        <th>Quantity</th>
+                        <th>Unit Price (GHS)</th>
+                        <th>Total Amount (GHS)</th>
+                      </tr>
                       </thead>
                       <tbody>
-                        <tr :key="sub.id" v-for="sub in asset.subs">
-                          <td>{{sub.sub_asset.name}}</td>
-                          <td>{{sub.quantity}}</td>
-                          <td>{{sub.unit_price}}</td>
-                          <td>{{sub.total_amount}}</td>
-                        </tr>
+                      <tr :key="sub.id" v-for="sub in asset.subs">
+                        <td>{{sub.sub_asset.name}}</td>
+                        <td>{{sub.quantity}}</td>
+                        <td>{{sub.unit_price}}</td>
+                        <td>{{sub.total_amount}}</td>
+                      </tr>
                       </tbody>
                     </table>
                   </div>
@@ -865,6 +885,7 @@
         object: {},
         categories: {},
         items: {},
+        completed: '',
         sub_items: {},
         sub_assets: {},
         unit_budget: {},
@@ -1005,6 +1026,33 @@
           }
         });
       },
+      complete_period(id){
+        if(id){
+          this.loading = true;
+          axios.post(`${config.apiUrl}/budget/cmbp/`, {
+            budget_period: id
+          }, {
+            headers: {
+              Authorization: `JWT ${config.get_token()}`,
+            },
+          }).then((response) => {
+            this.loading = false;
+            this.details();
+            $('#completeModal').modal('hide');
+            this.$noty.success('Budget Period Completed!');
+          }).catch(({response}) => {
+          this.pageloading = false;
+          console.log(response);
+          if(response.status === 401){
+            this.$noty.error(`Oops! Your session has expired.`);
+            localStorage.removeItem('auth');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            this.$router.push('/login');
+          }
+        })
+        }
+      },
       details() {
         this.pageloading = true;
         const id = this.$route.params.period_id;
@@ -1017,6 +1065,7 @@
           const results = response.data;
           this.object = results.budget_period;
           this.unit_budgets = results.unit_budgets;
+          this.completed = results.all_completed;
           console.log(response);
           this.$noty.success('Everything looks great!');
         }).catch(({response}) => {
