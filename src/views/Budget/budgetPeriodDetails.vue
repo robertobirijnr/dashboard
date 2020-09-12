@@ -93,7 +93,7 @@
               <div class="col" align="right" v-if="userRole === 'BH'">
                 <button @click="open_period(object.id)" title="Click to open this budget period for submissions" :disabled="loading" class="btn btn-sm btn-success" v-if="object.status === 'Close'">Open</button>
                 <button class="btn btn-sm btn-warning" title="Click to close this budget period" :disabled="loading" @click="close_period(object.id)" :hidden="object.status === 'Completed'" v-else >Close</button>
-                <button class="btn btn-sm btn-success ml-1" title="Click to complete this budget period"  data-toggle="modal" data-target="#completeModal" :hidden="unit_budgets.length === 0">Complete</button>
+                <button class="btn btn-sm btn-success ml-1" title="Click to complete this budget period"  data-toggle="modal" data-target="#completeModal" :hidden="unit_budgets.length === 0 || object.status === 'Completed'">Complete</button>
                 <!--{{unit_budgets.length}}-->
               </div>
             </div>
