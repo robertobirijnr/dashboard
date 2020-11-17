@@ -59,8 +59,8 @@
                             <option value="BO">Budget Officer</option>
                             <option value="UU">Unit User</option>
                             <option value="DU">Department User</option>
-                            <!--<option value="PO">Procurement Officer</option>-->
-                            <!--<option value="PH">Procurement Head</option>-->
+                            <option value="PO">Procurement Officer</option>
+                            <option value="PH">Procurement Head</option>
                             <!--<option value="CG">Commissioner General</option>-->
                             <!--<option value="S">Procurement Secretariat</option>-->
                           </select>

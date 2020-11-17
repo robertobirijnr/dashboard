@@ -21,7 +21,7 @@
                   </div>
                   <div class="col-md-3">
                     <button @click="div_exporrt(object.id, div.id, div.name)" class="btn btn-sm btn-outline-accent mr-2">Extract</button>
-                    <router-link :to="`/division-budget-summary/${object.slug}/${div.division_id}`" class="btn btn-sm btn-outline-success mr-2">Summary</router-link>
+                    <router-link :to="userRole !== 'AD' ? `/division-budget-summary/${object.slug}/${div.division_id}` : `/admin-division-budget-summary/${object.slug}/${div.division_id}`" class="btn btn-sm btn-outline-success mr-2">Summary</router-link>
                     <a :href="`#div${div.id}`" class="btn btn-sm btn-primary" aria-expanded="false" :aria-controls="`div${div.id}`" data-toggle="collapse" role="button">
                       <i class="fa fa-sort"></i>
                     </a>
@@ -36,7 +36,7 @@
                         </div>
                         <div class="col-md-3">
                           <button @click="dep_exporrt(object.id, dep.id, dep.name)" class="btn btn-sm btn-outline-accent mr-2">Extract</button>
-                          <router-link :to="`/department-budget-summary/${object.slug}/${dep.depart_id}`" class="mr-2 btn btn-sm btn-outline-success">Summary</router-link>
+                          <router-link :to="userRole !== 'AD' ? `/department-budget-summary/${object.slug}/${dep.depart_id}` : `/admin-department-budget-summary/${object.slug}/${dep.depart_id}`" class="mr-2 btn btn-sm btn-outline-success">Summary</router-link>
                           <a :href="`#dep${dep.id}`" class="btn btn-sm btn-primary" aria-expanded="false" :aria-controls="`dep${dep.id}`" data-toggle="collapse" role="button">
                             <i class="fa fa-sort"></i>
                           </a>
@@ -52,7 +52,7 @@
                               <div class="col-md-3">
                                 <input type="hidden" :id="`unit${unit.id}`" :value="`${unit.id}`">
                                 <button @click="unit_exporrt(unit.id, unit.unit_name)" class="btn btn-sm btn-outline-accent mr-2">Extract</button>
-                                <button @click="unit_bugdet(unit.id, object.id)" class="btn btn-sm btn-outline-success">Summary</button>
+                                <button v-if="userRole !== 'AD'" @click="unit_bugdet(unit.id, object.id)" class="btn btn-sm btn-outline-success">Summary</button>
                               </div>
                             </div>
                           </div>
@@ -83,6 +83,11 @@
         errors: {},
         budget: {},
       };
+    },
+    computed: {
+      userRole(){
+        return this.$root.auth.user.user_role;
+      }
     },
     methods: {
       period(){

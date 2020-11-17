@@ -238,6 +238,14 @@ const router = new Router({
       },
     },
     {
+      path: '/admin-budget_summary/:period_id',
+      name: 'admin-budget_summary',
+      component: () => import('../components/Admin/budget_summary.vue'),
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
       path: '/implement-details/:budget_id',
       name: 'implement-details',
       component: () => import('../views/Budget/implement_details.vue'),
@@ -254,9 +262,25 @@ const router = new Router({
       },
     },
     {
+      path: '/admin-department-budget-summary/:period_id/:depart_id',
+      name: 'admin-department-budget-summary',
+      component: () => import('../components/Admin/department_summary.vue'),
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
       path: '/division-budget-summary/:period_id/:div_id',
       name: 'division-budget-summary',
       component: () => import('../views/Budget/division_summary.vue'),
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/admin-division-budget-summary/:period_id/:div_id',
+      name: 'admin-division-budget-summary',
+      component: () => import('../components/Admin/division_summary.vue'),
       meta: {
         requiresAuth: true,
       },

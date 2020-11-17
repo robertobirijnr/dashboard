@@ -114,7 +114,7 @@
                   </td>
                   <td>
                     <span v-if="object.sub_item">{{object.sub_item.sub_item.name}}</span>
-                    <span v-else>{{object.sub_asset}}</span>
+                    <span v-else>{{object.sub_asset.asset_name}}</span>
                   </td>
                   <td>{{object.quantity}}</td>
                   <td>{{object.status}}</td>

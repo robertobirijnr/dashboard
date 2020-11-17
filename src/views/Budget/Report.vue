@@ -29,7 +29,7 @@
                         <button class="btn btn-sm btn-primary" @click="exporrt(object.id, object.period)">Extract</button>
                       </div>
                       <div class="col-md-12">
-                        <router-link :to="{name: 'budget_summary', params: {period_id: object.slug}}" class="btn btn-sm btn-primary">Summary</router-link>
+                        <router-link :to="userRole !== 'AD' ? {name: 'budget_summary', params: {period_id: object.slug}} : {name: 'admin-budget_summary', params: {period_id: object.slug}}" class="btn btn-sm btn-primary">Summary</router-link>
                       </div>
                     </div>
                   </div>
@@ -53,6 +53,11 @@
       return{
         object_list: {}
       };
+    },
+    computed: {
+      userRole(){
+        return this.$root.auth.user.user_role;
+      }
     },
     methods: {
       periods() {

@@ -121,7 +121,10 @@
                           </div>
                           <div class="list-group-item" :key="item.id" v-for="item in object.items">
                             <div class="row">
-                              <div class="col-md-9">{{item.item_id}} | {{item.item_type}} | {{item.item_name}}</div>
+                              <div class="col-md-9">
+                                <span v-if="item.is_procure" ><span style="border-left: 2px solid gold; margin-right: 5px"></span>{{item.item_id}} | {{item.item_type}} | {{item.item_name}}</span>
+                                <span v-else>{{item.item_id}} | {{item.item_type}} | {{item.item_name}}</span>
+                              </div>
                               <div class="col-md-1" align="right">
                                 <!-- <DeleteItem /> -->
                                 <button class='btn btn-sm btn-primary'  data-toggle="modal" :data-target="`#item${item.id}`">

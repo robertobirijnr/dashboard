@@ -11,13 +11,16 @@
         <div class="card">
           <div class="card-header"></div>
           <div class="card-body">
+            <div class="col-md-4">
+              <input autofocus type="text" name="search" class="form-control" placeholder="Search by Unit Name" v-model="search">
+            </div>
             <center v-if="loading"><Spinner/></center>
             <span v-else-if="!object_list.length">Nothing to show here!</span>
             <div class="table-responsive" v-else>
               <table class="table table-borderless">
                 <thead>
                 <tr>
-                  <th>Budget ID</th>
+                  <th>Unit</th>
                   <!--<th>Unit</th>-->
                   <th>Budget Period</th>
                   <th>Status</th>
@@ -25,8 +28,8 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr :key="object.id" v-for="object in object_list">
-                  <td>#{{object.unit_budget_id}}</td>
+                <tr :key="object.id" v-for="object in search_list">
+                  <td>{{object.unit_name}}</td>
                   <!--<td>{{object.unit_name}}</td>-->
                   <td>{{object.budget_period}}</td>
                   <td>{{object.status}}</td>
@@ -61,10 +64,16 @@ export default {
       object_list: {},
       loading: false,
       errors: {},
+      search: '',
     };
   },
   mounted() {
     this.implements();
+  },
+  computed: {
+    search_list(){
+      return this.object_list.filter(post => post.unit_name.toLowerCase().includes(this.search.toLowerCase()));
+    },
   },
   methods: {
     implements() {
